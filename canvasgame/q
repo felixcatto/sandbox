@@ -1,0 +1,47 @@
+[1mdiff --git a/js/canvas.js b/js/canvas.js[m
+[1mindex bfafe86..4f22919 100644[m
+[1m--- a/js/canvas.js[m
+[1m+++ b/js/canvas.js[m
+[36m@@ -2,20 +2,20 @@[m [mwindow.addEventListener('load', function(){[m
+     // start point[m
+     console.log(mapJSON);[m
+ [m
+[31m-    // var body = $('body');[m
+[31m-    // var canvas = document.createElement('canvas');[m
+[31m-    // var mapWidth = mapJSON.tilesets[0].imagewidth;[m
+[31m-    // var mapHeight = mapJSON.tilesets[0].imageheight;[m
+[31m-    // canvas.width = mapWidth;[m
+[31m-    // canvas.height = mapHeight;[m
+[31m-    // body.append(canvas);[m
+[31m-    // var img = new Image();[m
+[31m-    // img.onload = function() {[m
+[31m-    //     console.log('yeah');[m
+[31m-    //     c = canvas.getContext("2d");[m
+[31m-    //     c.drawImage(img, 0, 0);[m
+[31m-    // }[m
+[31m-    // img.src = mapJSON.tilesets[0].image;[m
+[32m+[m[32m    var body = $('body');[m
+[32m+[m[32m    var canvas = document.createElement('canvas');[m
+[32m+[m[32m    var mapWidth = mapJSON.tilesets[0].imagewidth;[m
+[32m+[m[32m    var mapHeight = mapJSON.tilesets[0].imageheight;[m
+[32m+[m[32m    canvas.width = mapWidth;[m
+[32m+[m[32m    canvas.height = mapHeight;[m
+[32m+[m[32m    body.append(canvas);[m
+[32m+[m[32m    var img = new Image();[m
+[32m+[m[32m    img.onload = function() {[m
+[32m+[m[32m        console.log('yeah');[m
+[32m+[m[32m        c = canvas.getContext("2d");[m
+[32m+[m[32m        c.drawImage(img, 0, 0);[m
+[32m+[m[32m    }[m
+[32m+[m[32m    img.src = mapJSON.tilesets[0].image;[m
+ [m
+ [m
+ [m
+[36m@@ -297,6 +297,7 @@[m [mwindow.addEventListener('load', function(){[m
+ [m
+     //  start point[m
+     gMap = new TILEDMapClass();[m
+[32m+[m[32m    gMap.load();[m
+ [m
+ });[m
+ [m

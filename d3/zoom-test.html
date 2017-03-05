@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>zoom</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <style>
+        svg {
+            outline: 2px dotted steelblue;
+        }
+    </style>
+</head>
+<body>
+    <svg width="500" height="500"></svg>
+
+
+
+    <script>
+        var svg = d3.select("svg"),
+            width = +svg.attr('width'),
+            height = +svg.attr('height');
+        
+        svg.call(d3.zoom()
+                .on("zoom", zoomed)
+                .scaleExtent([1, 2])
+                // .translateExtent([[0, 0], [width, height]])     // No translate at all
+                // .translateExtent([[0, -height], [width, height * 2]])        // Only vertical transitions allowed
+                // .translateExtent([[-width, 0], [width*2, height]])
+                .translateExtent([[-150, -150], [width + 150, height + 150]])       // Can't move out of 150px from initial position
+            );
+        var g = svg.append("g");
+        var circle = g.append("circle")
+              .attr("cx",  250)
+              .attr("cy", 250)
+              .attr("r", 50)
+              .style("fill", "#B8DEE6");
+
+        var scircle = g.append("circle")
+              .attr("cx",  100)
+              .attr("cy", 100)
+              .attr("r", 30)
+              .style("fill", "aqua");
+
+        function zoomed() {
+            // window.ggwp = d3.event.target;
+            // console.log(d3.event.target);
+            circle.attr("transform", d3.event.transform);
+            // scircle.attr("transform", d3.event.transform);
+        }
+    </script>
+</body>
+</html>

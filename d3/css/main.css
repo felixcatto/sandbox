@@ -1,0 +1,29 @@
+svg {
+    // background: rgba(0,0,0, 0.2);
+    outline: 1px dotted steelblue;
+}
+
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis--x path {
+  display: none;
+}
+
+.date-wrap {
+    fill: #fff;
+    stroke: #cecece;
+}
+.tick text {
+    // fill: #a6a6a6;
+    fill: purple;
+}
+.tick line{
+    opacity: 0.15;
+}
