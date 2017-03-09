@@ -49,12 +49,13 @@
           y.domain([0, d3.max(data, function(d) { return d.total; })]).nice();
           z.domain(keys);
 
-          g.append("g")
+          window.unknown = g.append("g")
             .selectAll("g")
             .data(d3.stack().keys(keys)(data))
             .enter().append("g")
-              .attr("fill", function(d) { return z(d.key); })
-            .selectAll("rect")
+              .attr('class', 'unknown')
+              .attr("fill", function(d) { return z(d.key); });
+          unknown.selectAll("rect")
             .data(function(d) { return d; })
             .enter().append("rect")
               .attr("x", function(d) { return x(d.data.State); })
