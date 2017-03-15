@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>127.0.0.1</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/nouislider.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="js/nouislider.min.js"></script>
+    <script src="js/main.js"></script>
+</head>
+<body>
+    <div class="html-slider"></div>
+    <p class="html-slider-value"></p>
+
+    <script>
+        const htmlSlider = document.querySelector('.html-slider');
+        const htmlSliderValue = document.querySelector('.html-slider-value');
+        noUiSlider.create(htmlSlider, {
+            start: [ 4000 , 5000],
+            connect: [true, true, false],
+            range: {
+                'min': [  0 ],
+                'max': [ 10000 ]
+            }
+        });
+
+        htmlSlider.noUiSlider.on('update', function( values, handle ) {
+            // rangeSliderValueElement.innerHTML = values[handle];
+            window.values = values;
+            window.handle = handle;
+            htmlSliderValue.innerHTML = values[handle];
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+body {
+    padding: 30px 20px;
+}
+
+.html-slider {
+    width: 300px;
+}
+
+.noUi-base > div:nth-child(1) {
+    background: #a6a6a6;
+}
+
+.noUi-base > div:nth-child(2) {
+    display: none;
+}
