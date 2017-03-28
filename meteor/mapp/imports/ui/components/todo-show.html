@@ -1,0 +1,15 @@
+<template name="todo_show">
+    <p>got it</p>
+    <div class="row">
+        <div class="col-xs-8">
+            <input type="text" class="form-control js-add-todo-input">
+        </div>
+        <div class="col-xs-4">
+            <button class="btn btn-primary js-add-todo">Add new todo</button>
+        </div>
+    </div>
+    {{#each todo in todos}}
+        <p>lol where my data</p>
+        <p>{{todo.text}}</p>
+    {{/each}}
+</template>
