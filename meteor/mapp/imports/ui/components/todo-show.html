@@ -8,8 +8,14 @@
             <button class="btn btn-primary js-add-todo">Add new todo</button>
         </div>
     </div>
-    {{#each todo in todos}}
-        <p>lol where my data</p>
-        <p>{{todo.text}}</p>
-    {{/each}}
+    <br>
+    <ul class="todo-list">
+        {{#each todo in todos}}
+            <li class="todo-list__item js-todo" data-id="{{todo._id}}">
+                <input type="checkbox" checked="{{todo.checked}}">
+                <span class="todo-list__text {{checkedText todo}}">{{todo.text}}</span>
+                <span class="todo-list__remove glyphicon glyphicon-trash js-remove-todo"></span>
+            </li>
+        {{/each}} 
+    </ul>
 </template>

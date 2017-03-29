@@ -1,0 +1,28 @@
+.todo-list {
+    // width: 600px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &__item {
+        position: relative;
+        width: 600px;
+    }
+    & input:checked {
+        opacity: 0.5
+    }
+    &__text_checked {
+        text-decoration: line-through;
+        opacity: 0.5
+    }
+    &__remove {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin-top: auto;
+        margin-bottom: auto;
+        cursor: pointer;
+        color: #a94442;
+    }
+}
