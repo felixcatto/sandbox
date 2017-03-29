@@ -1,0 +1,30 @@
+.todos {
+    
+    &__title {
+        color: purple;
+        text-align: center;
+    }
+}
+
+
+
+.todo-list {
+    list-style: none;
+    background: #3f51b5;
+    color: #fff;
+
+    &__item {
+        
+    }
+    & input:checked {
+        opacity: 0.5
+    }
+    &__text_checked {
+        text-decoration: line-through;
+        opacity: 0.5
+    }
+    &__remove {
+        cursor: pointer;
+        color: #ff9800;
+    }
+}

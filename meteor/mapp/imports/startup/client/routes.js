@@ -3,7 +3,9 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
 import '/imports/ui/layouts/layout.js';
 import '/imports/ui/pages/index-page.js';
-import '/imports/ui/pages/todo-show-page.js';
+import '/imports/ui/pages/todos-page.js';
+import '/imports/ui/pages/lists-page.js';
+
 
 
 FlowRouter.route('/', {
@@ -13,9 +15,16 @@ FlowRouter.route('/', {
     },
 });
 
-FlowRouter.route('/todo', {
-    name: 'todo',
+FlowRouter.route('/lists', {
+    name: 'lists',
     action() {
-        BlazeLayout.render('layout', { template: 'todo_show_page' });
+        BlazeLayout.render('layout', { template: 'lists_page' });
+    },
+});
+
+FlowRouter.route('/todos/:id', {
+    name: 'todos',
+    action() {
+        BlazeLayout.render('layout', { template: 'todos_page' });
     },
 });

@@ -1,0 +1,22 @@
+<template name="lists">
+    <div class="lists">
+        <h3 class="lists__title">Array of lists</h3>
+        <div class="lists__add row">
+            <div class="col-xs-4">
+                <label>Add new list</label>
+            </div>
+            <div class="col-xs-8">
+                <input type="text" class="form-control">
+            </div>
+        </div>
+
+        <ul class="lists-array well">
+            {{#each list in lists}}
+                <li class="js-list" data-id={{list._id}}>
+                    <a href="{{pathFor 'todos' id=list._id}}" class="lists-array__link">{{list.name}}</a>
+                    <span class="lists-array__remove glyphicon glyphicon-trash js-remove-list"></span>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+</template>

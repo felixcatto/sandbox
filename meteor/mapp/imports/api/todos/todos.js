@@ -10,6 +10,7 @@ Todos.schema = new SimpleSchema({
     text: { type: String },
     checked: { type: Boolean },
     createdAt: {type: Date },
+    listId: { type: String, regEx: SimpleSchema.RegEx.Id, optional: true },
 });
 
 Todos.attachSchema(Todos.schema);

@@ -1,0 +1,23 @@
+<template name="todos_show">
+    <div class="todos">
+        <h3 class="todos__title">List: {{ list.name }}</h3>
+        <div class="row">
+            <div class="col-xs-4">
+                <label>Add new todo</label>
+            </div>
+            <div class="col-xs-8">
+                <input type="text" class="form-control js-add-todo-input">
+            </div>
+        </div>
+        <br>
+        <ul class="todo-list well">
+            {{#each todo in todos}}
+                <li class="todo-list__item js-todo" data-id="{{todo._id}}">
+                    <input type="checkbox" checked="{{todo.checked}}">
+                    <span class="todo-list__text {{checkedText todo}}">{{todo.text}}</span>
+                    <span class="todo-list__remove glyphicon glyphicon-trash js-remove-todo"></span>
+                </li>
+            {{/each}} 
+        </ul>
+    </div>
+</template>

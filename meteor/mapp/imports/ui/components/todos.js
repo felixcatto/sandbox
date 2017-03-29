@@ -1,20 +1,15 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { Todos } from '../../api/todos/todos.js';
-import './todo-show.html';
+import './todos.html';
 
 
 
-Template.todo_show.onCreated(function() {
+Template.todos_show.onCreated(function() {
     // this.A = new ReactiveVar(null);
     // this.B = new ReactiveVar(null);
     // this.F = () => { console.log(this.A.get()) };
-
-    this.getTodoId = function(el) {
-        const todo = $(el).parent('.js-todo');
-        return todo.length == 0 ? null : todo.attr('data-id');
-    };
-
+    //
     // this.autorun(() => {
     //     console.log('autorunned');
     // });
@@ -22,29 +17,27 @@ Template.todo_show.onCreated(function() {
     // //     console.log(this.data.todos.fetch());
     // // });
     // this.autorun(this.F);
+    
+    this.getTodoId = function(el) {
+        const todo = $(el).parent('.js-todo');
+        return todo.length == 0 ? null : todo.attr('data-id');
+    };
 });
 
 
-Template.todo_show.helpers({
+Template.todos_show.helpers({
     checkedText(todo) {
         return todo && todo.checked && 'todo-list__text_checked';
     },
 });
 
 
-Template.todo_show.events({
-    'click .js-add-todo'(event, instance) {
-        const input = instance.$('.js-add-todo-input');
-        Meteor.call('todos.insert', {
-            text: input.val(),
-            checked: false,
-        });
-        input.val('');
-    },
+Template.todos_show.events({
     'keydown input[type=text]'(event, instance) {
         if (event.which == 13) {
             const input = $(event.target);
             Meteor.call('todos.insert', {
+                listId: instance.data.list._id,
                 text: input.val(),
                 checked: false,
             });
