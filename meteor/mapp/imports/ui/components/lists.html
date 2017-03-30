@@ -6,16 +6,20 @@
                 <label>Add new list</label>
             </div>
             <div class="col-xs-8">
-                <input type="text" class="form-control">
+                <input type="text" class="form-control js-add-list">
             </div>
         </div>
 
         <ul class="lists-array well">
             {{#each list in lists}}
-                <li class="js-list" data-id={{list._id}}>
-                    <a href="{{pathFor 'todos' id=list._id}}" class="lists-array__link">{{list.name}}</a>
-                    <span class="lists-array__remove glyphicon glyphicon-trash js-remove-list"></span>
-                    <a href="{{ pathFor 'list_edit' id=list._id }}" class="lists-array__edit glyphicon glyphicon-edit js-edit-list"></a>
+                <li class="lists-array__item js-list" data-id={{list._id}}>
+                    {{#if editing list}}
+                        <input type="text" class="lists-array__edit-input form-control js-edit-input">
+                    {{else}}
+                        <a href="{{pathFor 'todos' id=list._id}}" class="lists-array__link">{{list.name}}</a>
+                        <i class="lists-array__remove glyphicon glyphicon-trash js-remove-list"></i>
+                        <i class="lists-array__edit glyphicon glyphicon-edit js-edit-list"></i>
+                    {{/if}}
                 </li>
             {{/each}}
         </ul>
