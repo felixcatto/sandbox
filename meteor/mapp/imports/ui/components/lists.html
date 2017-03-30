@@ -15,6 +15,7 @@
                 <li class="js-list" data-id={{list._id}}>
                     <a href="{{pathFor 'todos' id=list._id}}" class="lists-array__link">{{list.name}}</a>
                     <span class="lists-array__remove glyphicon glyphicon-trash js-remove-list"></span>
+                    <a href="{{ pathFor 'list_edit' id=list._id }}" class="lists-array__edit glyphicon glyphicon-edit js-edit-list"></a>
                 </li>
             {{/each}}
         </ul>

@@ -7,7 +7,6 @@ import '/imports/ui/components/lists.js';
 
 Template.lists_page.onCreated(function() {
     this.subscribe('lists');
-    this.subscribe('todos');
 });
 
 

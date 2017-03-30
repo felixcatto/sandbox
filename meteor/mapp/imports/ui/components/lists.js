@@ -24,4 +24,9 @@ Template.lists.events({
         const id = instance.getListId(event.target);
         Meteor.call('lists.remove', id);
     },
+    'click .js-edit-list'(event, instance) {
+        const id = instance.getListId(event.target);
+        // console.log('sorry, this is doesn\'t work now :\'(')
+        // Meteor.call('lists.remove', id);
+    },
 });

@@ -29,6 +29,16 @@ Template.todos_show.helpers({
     checkedText(todo) {
         return todo && todo.checked && 'todo-list__text_checked';
     },
+    checkedItem(todo) {
+        return todo && todo.checked && 'todo-list__item_checked';
+    },
+    incompleteCount() {
+        let count = 0;
+        Template.instance().data.todos.forEach(el => {
+            if (!el.checked) count += 1;
+        });
+        return count;
+    },
 });
 
 
