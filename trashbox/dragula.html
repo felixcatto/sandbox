@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>127.0.0.1</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/dragula.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="js/dragula.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="root">
+            <div id="left" class="icontainer icontainer_half">
+                <img src="/img/s1.jpg" class="img_left">
+                <img src="/img/s2.jpg" class="img_left">
+                <img src="/img/s3.jpg" class="img_left">
+                <img src="/img/s4.jpg" class="img_left">
+            </div>
+            <div id="right" class="icontainer icontainer_half">
+                <img src="/img/r1.jpg" class="img_right">
+                <img src="/img/r2.jpg" class="img_right">
+                <img src="/img/r3.jpg" class="img_right">
+                <img src="/img/r4.jpg" class="img_right">
+                <img src="/img/m1.jpg">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        dragula([document.querySelector('#left'), document.querySelector('#right')]);
+        // dragula([document.querySelector('.root')]);
+        // window.drake = dragula([
+        //     document.querySelector('#left'),
+        //     document.querySelector('#right'),
+        //     document.querySelector('#bottom'),
+        // ], {
+        //     direction: 'horizontal'
+        // });
+    </script>
+</body>
+</html>

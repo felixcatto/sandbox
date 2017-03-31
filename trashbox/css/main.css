@@ -1,5 +1,9 @@
 body {
     padding: 30px 20px;
+    background: linear-gradient(180deg, #363795, #005C97);
+}
+.container {
+    background: #fff;
 }
 
 .html-slider {
@@ -12,4 +16,33 @@ body {
 
 .noUi-base > div:nth-child(2) {
     display: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+
+.container {
+    font-size: 0;
+}
+.root {
+    display: table;
+    // display: flex;
+    // flex-wrap: wrap;
+    // align-items: flex-start;
+}
+img {
+    display: inline-block;
+    margin-bottom: 10px;
+    // width: 50%;
+    // float: left;
+}
+.icontainer {
+    display: table-cell;
+    vertical-align: top;
+    width: 50%;
+}
+.icontainer_half {
+
 }
