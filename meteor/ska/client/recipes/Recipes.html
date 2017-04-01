@@ -1,0 +1,10 @@
+<template name="Recipes">
+    {{#if Template.subscriptionsReady }}
+        {{> NewRecipe recipesCollection=recipesCollection }}
+        <section class="recipes">
+            {{#each recipe in recipes}}
+                {{> Recipe recipe=recipe }}
+            {{/each}}
+        </section>
+    {{/if}}
+</template>

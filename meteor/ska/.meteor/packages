@@ -31,7 +31,8 @@ aldeed:collection2
 accounts-ui
 accounts-password
 matb33:bootstrap-glyphicons
-msavin:jetsetter
 zimme:active-route
 gwendall:auth-client-callbacks
 aldeed:autoform@5.0.0
+meteortoys:allthings
+datariot:ganalytics
