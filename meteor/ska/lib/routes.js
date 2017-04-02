@@ -47,3 +47,19 @@ FlowRouter.route('/recipe/:id', {
         BlazeLayout.render('MainLayout', { main: 'RecipeSingle' });
     }
 });
+
+FlowRouter.route('/menu', {
+    name: 'menu',
+    action() {
+        GAnalytics.pageview();
+        BlazeLayout.render('MainLayout', { main: 'Menu' });
+    }
+});
+
+FlowRouter.route('/shopping-list', {
+    name: 'shopping-list',
+    action() {
+        GAnalytics.pageview();
+        BlazeLayout.render('MainLayout', { main: 'ShoppingList' });
+    }
+});

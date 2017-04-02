@@ -324,7 +324,7 @@ input, select, textarea
         .add-to-menu
             display none
         .remove-from-menu  
-            display block
+            display inline-block
     h3
         font-size: 3em;
         opacity: 0.3;
@@ -346,6 +346,20 @@ input, select, textarea
         trans()
         &:hover
             color red 
+            opacity 0.6
+    .fa-pencil
+        opacity 0.3
+        cursor pointer
+        position absolute
+        top 0
+        right 30px
+        font-size 1.6em  
+        display block
+        padding 20px 
+        color black
+        trans()
+        &:hover
+            color dark-purp 
             opacity 0.6
     .ingredient
         display inline-block

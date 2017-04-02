@@ -1,11 +1,18 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Meteor } from 'meteor/meteor';
 
 
 
 export const Recipes = new Mongo.Collection('recipes');
 Recipes.allow({
     insert: function(userId, doc) {
+        return !!userId;
+    },
+    update: function(userId, doc) {
+        return !!userId;
+    },
+    remove: function(userId, doc) {
         return !!userId;
     }
 });
@@ -59,6 +66,19 @@ const RecipeSchema = new SimpleSchema({
     }
 });
 Recipes.attachSchema(RecipeSchema);
+
+Meteor.methods({
+    toggleMenuItem(id, currentState) {
+        Recipes.update(id, {
+            $set: {
+                inMenu: !currentState
+            }
+        });
+    },
+    deleteRecipe(id) {
+        Recipes.remove({_id: id});
+    }
+});
 
 
 

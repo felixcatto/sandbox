@@ -1,9 +1,13 @@
 <template name="Recipes">
     {{#if Template.subscriptionsReady }}
-        {{> NewRecipe recipesCollection=recipesCollection }}
+        {{#if addNewRecipeMode }}
+            {{> NewRecipe recipesCollection=recipesCollection closeForm=closeForm }}
+        {{else}}
+            <button class="js-add-recipe" style="margin-bottom: 15px;">New Recipe</button>
+        {{/if}}
         <section class="recipes">
             {{#each recipe in recipes}}
-                {{> Recipe recipe=recipe }}
+                {{> Recipe recipesCollection=recipesCollection recipe=recipe }}
             {{/each}}
         </section>
     {{/if}}
