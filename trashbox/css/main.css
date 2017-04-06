@@ -1,4 +1,9 @@
+html {
+    height: 100%;
+}
+
 body {
+    height: 100%;
     padding: 30px 20px;
     background: linear-gradient(180deg, #363795, #005C97);
 }
@@ -45,4 +50,24 @@ img {
 }
 .icontainer_half {
 
+}
+
+
+
+
+
+
+
+
+
+
+.img-fluid-container {
+    max-width: 600px;
+    margin-left: auto;
+}
+.bg-img {
+    height: 0;
+    padding-bottom: 66.67%;
+    background: url('../img/cat.jpg') no-repeat;
+    background-size: cover;
 }
