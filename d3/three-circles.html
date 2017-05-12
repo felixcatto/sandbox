@@ -25,10 +25,10 @@
         // var data = [32, 57, 112, 293];
 
         function render(data) {
-            var circle = svg.selectAll("circle")
-                .data(data, function(d) { return d; });
-
-            var t = d3.transition().duration(500);
+            const getCx = (d, i) => i * 100 + 30;
+            const t = d3.transition().duration(500);
+            const circle = svg.selectAll("circle")
+                .data(data, d => d);
 
             circle.exit().transition(t)
                 .attr("r", 0)
@@ -37,15 +37,15 @@
             circle.enter().append('circle')
                 .attr('class', 'circle')
                 .attr("cy", 60)
-                .attr("cx", function(d, i) { return i * 100 + 30; })
+                .attr("cx", getCx)
                 .attr('r', 0)
               .transition(t)
-                .attr('r', function(d) { return d; });
+                .attr('r', d => d);
 
             circle
-                .attr("r", function(d) { return d; })
-                .transition(t)
-                .attr("cx", function(d, i) { return i * 100 + 30; });
+                .attr("r", d => d)
+              .transition(t)
+                .attr("cx", getCx);
         }
 
         render([12, 18]);

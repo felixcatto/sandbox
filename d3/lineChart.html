@@ -1,72 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-  <meta charset="UTF-8">
+  <meta charset='UTF-8'>
   <title>Document</title>
-  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src='https://d3js.org/d3.v4.min.js'></script>
+  <style>
+    svg {
+      outline: 1px dotted purple;
+    }
+  </style>
 </head>
 <body>
   <p>ggwp</p>
-  <svg width="960" height="500"></svg>
+  <svg width='960' height='500'></svg>
 
   <script>
     console.log('ggwp lanaya');
 
-    var svg = d3.select("svg"),
+    var svg = d3.select('svg'),
       margin = {top: 20, right: 20, bottom: 30, left: 50},
-      width = +svg.attr("width") - margin.left - margin.right,
-      height = +svg.attr("height") - margin.top - margin.bottom,
-      g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      width = +svg.attr('width') - margin.left - margin.right,
+      height = +svg.attr('height') - margin.top - margin.bottom,
+      g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-    var parseTime = d3.timeParse("%d-%b-%y");
-
+    var parseTime = d3.timeParse('%d-%b-%y');
     var x = d3.scaleTime()
       .rangeRound([0, width]);
-
     var y = d3.scaleLinear()
       .rangeRound([height, 0]);
-
     var line = d3.line()
-      .x(function(d) { return x(d.date); })
-      .y(function(d) { return y(d.close); });
+      .x(d => x(d.date))
+      .y(d => y(d.close))
+      .curve(d3.curveCardinal);
 
-    d3.tsv("lineChart.tsv", (d) => {
-      d.date = parseTime(d.date);
-      d.close = +d.close;
-      return d;
-    }, (error, data) => {
-      if (error) throw error;
+    var render = (data) => {
+      x.domain(d3.extent(data, d => d.date));
+      y.domain([0, d3.max(data, d => d.close)]);
+      g.append('g')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(d3.axisBottom(x));
+      g.append('g')
+        .call(d3.axisLeft(y))
+       .append('text')
+        .attr('fill', '#000')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 6)
+        .attr('dy', '0.71em')
+        .attr('text-anchor', 'end')
+        .text('Price ($)');
+      g.append('path')
+        .datum(data)
+        .attr('fill', 'none')
+        .attr('stroke', 'steelblue')
+        .attr('stroke-linejoin', 'round')
+        .attr('stroke-linecap', 'round')
+        .attr('stroke-width', 1.5)
+        .attr('d', line);
+      g.selectAll('circle').data(data)
+       .enter().append('circle')
+        .attr('r', (d, i) => 5)
+        .attr('cx', d => x(d.date))
+        .attr('cy', d => y(d.close))
+        .attr('fill', '#fff')
+        .attr('stroke', 'steelblue');
+    };
 
-      x.domain(d3.extent(data, function(d) { return d.date; }));
-      y.domain(d3.extent(data, function(d) { return d.close; }));
+    // data = [{
+    //   date: Date,
+    //   close: Number,
+    // }, {
+    //   ...
+    // }]
 
-      debugger;
+    function rAtoB(min, max) {
+      return Math.floor(Math.random()*(max-min+1)+min);
+    }
+    function gen() {
+      return Array(5).fill(0).map((el, i) => {
+        return {
+          date: new Date(2017, 1, i),
+          close: rAtoB(0, 100),
+        };
+      });
+    }
 
-      // g.append("g")
-      //     .attr("transform", "translate(0," + height + ")")
-      //     .call(d3.axisBottom(x))
-      //   .select(".domain")
-      //     .remove();
+    // d3.tsv('lineChart.tsv', (d) => {
+    //   d.date = parseTime(d.date);
+    //   d.close = +d.close;
+    //   return d;
+    // }, (error, data) => {
+    //   render(data);
+    // });
+    render(gen());
 
-      // g.append("g")
-      //     .call(d3.axisLeft(y))
-      //   .append("text")
-      //     .attr("fill", "#000")
-      //     .attr("transform", "rotate(-90)")
-      //     .attr("y", 6)
-      //     .attr("dy", "0.71em")
-      //     .attr("text-anchor", "end")
-      //     .text("Price ($)");
-
-      // g.append("path")
-      //     .datum(data)
-      //     .attr("fill", "none")
-      //     .attr("stroke", "steelblue")
-      //     .attr("stroke-linejoin", "round")
-      //     .attr("stroke-linecap", "round")
-      //     .attr("stroke-width", 1.5)
-      //     .attr("d", line);
-    });
   </script>
 </body>
 </html>
