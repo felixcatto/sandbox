@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="js/jquery-2.1.4.min.js"></script>
+  <script src="js/jq-validation.js"></script>
+</head>
+<body>
+  <div class="container">
+    <p>ggwp</p>
+    <form>
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <div class="ggwp">
+          <input type="text" name="email" class="form-control">
+        </div>
+        <div class="help-block"></div>
+      </div>
+      <div class="form-group">
+        <label>House pet</label>
+        <input type="text" name="pet" class="form-control">
+      </div>
+      <button type="submit" id="submit" class="btn btn-primary">Go</button>
+    </form>
+  </div>
+
+
+
+  <script>
+    $.validator.addMethod('vasa', (value, element, params) => {
+      const form = $('form');
+      const json = form.serializeJSON();
+      return value === 'vasa' && json.email;
+    }, 'bad name, sorry bro, you are not allowed...');
+
+    $.validator.addMethod('goodpet', (value, element, params) => {
+      return value === 'kot';
+    }, 'bad pet');
+
+    const form = $('form');
+    form.validate({
+      rules: {
+        name: {
+          // required: true,
+          vasa: true,
+        },
+        email: {
+          required: true,
+          email: true,
+        },
+      },
+      messages: {
+        email: 'please enter your email',
+      },
+      errorPlacement: (errorMessageEl, incorrectInputEl) => {
+        const defaultBehavior = () => errorMessageEl.insertAfter(incorrectInputEl);
+        const formGroup = incorrectInputEl.parents('.form-group');
+        if (!formGroup.length) {
+          defaultBehavior();
+          return;
+        }
+
+        const helpBlock = formGroup.find('.help-block');
+        if (!helpBlock.length) {
+          defaultBehavior();
+          return;
+        }
+
+        helpBlock.append(errorMessageEl);
+      },
+    });
+
+    $('[name="pet"]').rules('add', {
+      required: true,
+      goodpet: () => true,  // have no idea about this sintax :/
+      messages: {
+        required: 'without pet you SHALL NOT PASS',
+      },
+    });
+
+
+
+    // UTILITY
+    function getFormData ($form) {
+      var unindexed_array = $form.serializeArray();
+      var indexed_array = {};
+      $.map(unindexed_array, function(n, i){
+          indexed_array[n['name']] = n['value'];
+      });
+      return indexed_array;
+    }
+
+    function serializeJSON () {
+      return getFormData(this);
+    }
+
+    $.fn.serializeJSON = serializeJSON;
+  </script>
+</body>
+</html>
