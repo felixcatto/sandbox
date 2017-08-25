@@ -27,20 +27,24 @@
     var x = d3.scaleTime()
       .rangeRound([0, width]);
     var y = d3.scaleLinear()
-      .rangeRound([height, 0]);
+      .rangeRound([height, 0])
+      .domain([0, 100]);
     var line = d3.line()
       .x(d => x(d.date))
       .y(d => y(d.close))
       .curve(d3.curveCardinal);
 
     var render = (data) => {
-      x.domain(d3.extent(data, d => d.date));
-      y.domain([0, d3.max(data, d => d.close)]);
+      const startDate = d3.min(data, d => d.date);
+      const endDate = d3.max(data, d => d.date);
+      x.domain([startDate, endDate]);
       g.append('g')
         .attr('transform', 'translate(0,' + height + ')')
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x)
+          .tickValues(getDatesRangeInclusive(startDate, endDate, 7))
+          .tickFormat(d3.timeFormat("%d.%m")));
       g.append('g')
-        .call(d3.axisLeft(y))
+        .call(d3.axisLeft(y).tickFormat(d => `$${d}`))
        .append('text')
         .attr('fill', '#000')
         .attr('transform', 'rotate(-90)')
@@ -78,10 +82,22 @@
     function gen() {
       return Array(5).fill(0).map((el, i) => {
         return {
-          date: new Date(2017, 1, i),
+          date: new Date(2017, 1, i+1),
           close: rAtoB(0, 100),
         };
       });
+    }
+    function addDays(date, days) {
+      var result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result;
+    }
+    function getDatesRangeInclusive(start, end, desiredLabelsCount) {
+      const datesCount = d3.timeDay.count(start, end);
+      const skipInterval = datesCount > desiredLabelsCount
+        ? Math.ceil(datesCount / desiredLabelsCount)
+        : 1;
+      return d3.timeDay.range(start, addDays(end, 1), skipInterval);
     }
 
     // d3.tsv('lineChart.tsv', (d) => {
