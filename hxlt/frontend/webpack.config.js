@@ -32,6 +32,7 @@ const commonConfig = {
       errors: true,
       warnings: true,
     },
+    devtool: 'cheap-module-source-map',
   },
   node: {
     fs: 'empty',
