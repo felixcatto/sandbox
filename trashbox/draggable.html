@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>draggable</title>
+  <script src="js/d3.min.js"></script>
+  <style>
+    body {
+      background: cornsilk;
+    }
+    .bound {
+      position: relative;
+      margin-top: 100px;
+      margin-left: 300px;
+      width: 300px;
+      height: 300px;
+      border: 2px solid purple;
+    }
+    .el {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 50px;
+      height: 50px;
+      background: steelblue;
+      border-radius: 50%;
+      cursor: pointer;
+      will-change: transform;
+    }
+  </style>
+</head>
+<body>
+  <div class="bound">
+    <div class="el"></div>
+  </div>
+
+
+
+  <script>
+    const draggable = document.querySelector('.el');
+    const extent = { x: [0, 300 - draggable.clientWidth], y: [0, 300 - draggable.clientHeight] };
+    const callback = (el, diffx, diffy) => el.style.transform = `translate(${diffx}px, ${diffy}px)`;
+    d3.select(draggable).call(idrag(extent, callback));
+
+    function idrag(extent, callback) {
+      // extent = { x: [min, max], y: [min, max] }
+      // callback = (el, diffx, diffy) => action
+      const start = { x: 0, y: 0 };
+      const diff = { x: 0, y: 0 };
+      const translated = { x: 0, y: 0 };
+      const drag = d3.drag()
+        .on('start', () => {
+          start.x = d3.event.x;
+          start.y = d3.event.y;
+        })
+        .on('drag', function () {
+          const dx = d3.event.x - start.x + translated.x;
+          if (dx < extent.x[0]) {
+            diff.x = extent.x[0];
+          } else if (dx > extent.x[1]) {
+            diff.x = extent.x[1];
+          } else {
+            diff.x = dx;
+          }
+
+          const dy = d3.event.y - start.y + translated.y;
+          if (dy < extent.y[0]) {
+            diff.y = extent.y[0];
+          } else if (dy > extent.y[1]) {
+            diff.y = extent.y[1];
+          } else {
+            diff.y = dy;
+          }
+
+          requestAnimationFrame(() => callback(this, diff.x, diff.y));
+        })
+        .on('end', () => {
+          translated.x = diff.x;
+          translated.y = diff.y;
+        })
+
+      return drag;
+    }
+  </script>
+</body>
+</html>
