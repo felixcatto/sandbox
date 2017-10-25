@@ -2117,3 +2117,98 @@ diff('fixtures/file4', 'fixtures/file5', (err, data) => {
 Подсказки
 Данные, которые читаются из файла, преобразуются к строке используя метод toString.
 Альтернативный способ, это передача в readFile вместо двух, три аргумента. Подробнее можно посмотреть в документации.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Async 3
+Реализуйте и экспортируйте по умолчанию функцию asyncFilter.
+
+const coll = [10, 53, true, false, '', NaN, 22];
+asyncFilter(coll, x => x, result => {
+  console.log(result);
+  // [10, 53, true, 22];
+});
+
+function syncFilter(coll, func) {
+  return coll.reduce((acc, el) => {
+    if (func(el)) {
+      return [...acc, el];
+    }
+
+    return acc;
+  }, [])
+}
+
+
+function syncFilter(coll, func) {
+  const iter = (coll, acc) => {
+    if (coll.length === 0) {
+      return acc;
+    }
+
+    const [head, ...rest] = coll;
+    if (func(head)) {
+      return iter(rest, [...acc, head]);
+    }
+
+    return iter(rest, acc);
+  };
+
+  return iter(coll, []);
+}
+
+
+function asyncFilter(coll, func, callback) {
+  const iter = (coll, acc) => {
+    if (coll.length === 0) {
+      return callback(acc);
+    }
+
+    const [head, ...rest] = coll;
+    if (func(head)) {
+      return setTimeout(() => iter(rest, [...acc, head]), 0);
+    }
+
+    return setTimeout(() => iter(rest, acc), 0);
+  };
+
+  return iter(coll, []);
+}
