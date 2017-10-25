@@ -1,4 +1,176 @@
 // Collections
+
+class Enumerable {
+  constructor(collection, operations) {
+    this.collection = collection;
+    this.operations = operations || [];
+    this.memo = null;
+  }
+
+  build(fn) {
+    return new Enumerable(this.collection.slice(), this.operations.concat(fn));
+  }
+
+  select(fn) {
+    return this.build(coll => coll.map(fn));
+  }
+
+  orderBy(fn, direction = 'asc') {
+    const comparator = (a, b) => {
+      const a1 = fn(a);
+      const b1 = fn(b);
+      const compareResult = direction === 'asc' ? 1 : -1;
+      if (a1 > b1) {
+        return compareResult;
+      } else if (a1 < b1) {
+        return -compareResult;
+      }
+
+      return 0;
+    };
+    return this.build(coll => coll.sort(comparator));
+  }
+
+  where(fn) {
+    return this.build(coll => coll.filter(fn));
+  }
+
+  compute() {
+    console.log('start compute');
+    if (this.memo) return;
+    console.log('real compute');
+
+    const reducer = (acc, func) => func(acc);
+    this.collection = this.operations.reduce(reducer, this.collection);
+    this.memo = true;
+  }
+
+  get length() {
+    this.compute();
+    return this.collection.length;
+  }
+
+  toArray() {
+    this.compute();
+    return this.collection;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Enumerable {
+  constructor(collection, operations) {
+    this.collection = collection;
+    this.operations = operations || [];
+    this.memo = null;
+  }
+
+  build(fn) {
+    return new Enumerable(this.collection.slice(), this.operations.concat(fn));
+  }
+
+  select(fn) {
+    return this.build(coll => coll.map(fn));
+  }
+
+  orderBy(fn, direction = 'asc') {
+    const comparator = (a, b) => {
+      const a1 = fn(a);
+      const b1 = fn(b);
+      const compareResult = direction === 'asc' ? 1 : -1;
+      if (a1 > b1) {
+        return compareResult;
+      } else if (a1 < b1) {
+        return -compareResult;
+      }
+
+      return 0;
+    };
+    return this.build(coll => coll.sort(comparator));
+  }
+
+  where(fn) {
+    return this.build(coll => coll.filter(fn));
+  }
+
+  compute() {
+    console.log('start compute');
+    if (this.memo) {
+      return this.memo;
+    };
+    console.log('real compute');
+
+    const reducer = (acc, func) => func(acc);
+    this.memo = this.operations.reduce(reducer, this.collection);
+    return this.memo;
+  }
+
+  get length() {
+    const collection = this.compute();
+    return collection.length;
+  }
+
+  toArray() {
+    const collection = this.compute();
+    return collection;
+  }
+}
+
+
+cars = [
+  { brand: 'bmw', model: 'm5', year: 2014 },
+  { brand: 'bmw', model: 'm4', year: 2013 },
+  { brand: 'kia', model: 'sorento', year: 2014 },
+  { brand: 'kia', model: 'rio', year: 2010 },
+  { brand: 'kia', model: 'sportage', year: 2012 },
+];
+coll = new Enumerable(cars);
+
+x = coll.where(car => car.brand === 'kia').orderBy(car => car.year);
+
+
+
+
+
+
+
+
+
+
 т.е. мне надо 
 * переводить обекты в функцию фильтрации (аргумент .filter)
 * применять по очереди .filter с разными функциями к коллекции
@@ -108,6 +280,1170 @@ console.log(getCarsCountByYear(cars));
 //    2013: 1,
 //    2014: 2,
 //  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function getAttributesAsLine() {
+  return Object.keys(this.attributes).reduce((acc, key) =>
+    `${acc} ${key}="${this.attributes[key]}"`, '');
+}
+
+export default function Node(name, attributes = {}) {
+  this.name = name;
+  this.attributes = attributes;
+
+  this.getAttributesAsLine = getAttributesAsLine;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Конструктор 'makeSegment', который принимает на вход две точки и возвращает сегмент. Первая точка это начало сегмента, вторая это конец.
+Селекторы 'startSegment' и 'endSegment', которые извлекают из сегмента его начальную и конечную точку соответственно.
+Вспомогательную функцию 'segmentToString', которая возвращает текстовое представление сегмента: [(1, 2), (-4, -2)].
+Функцию 'midpointSegment', которая находит точку на середине отрезка по формулам: 
+x = (x1 + x2) / 2 и y = (y1 + y2) / 2.
+
+
+// eslint-disable-next-line
+import { makePoint, getX, getY, toString as pointToString } from 'hexlet-points';
+// eslint-disable-next-line
+import { cons, car, cdr } from 'hexlet-pairs';
+
+// BEGIN (write your solution here)
+const makeSegment = (point1, point2) => cons(point1, point2);
+const startSegment = segment => car(segment);
+const endSegment = segment => cdr(segment);
+const segmentToString = (segment) => {
+  const point1 = startSegment(segment);
+  const point2 = endSegment(segment);
+  return `[${pointToString(point1)}, ${pointToString(point2)}]`;
+};
+const midpointSegment = (segment) => {
+  const point1 = startSegment(segment);
+  const point2 = endSegment(segment);
+  const x = (getX(point1) + getX(point2)) / 2;
+  const y = (getY(point1) + getY(point2)) / 2;
+  return makePoint(x, y);
+};
+
+export { makeSegment, startSegment, endSegment, segmentToString, midpointSegment };
+// END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Exceptions 2
+tree = new Tree('/');
+tree.addChild('var')
+  .addChild('lib')
+  .addChild('run');
+tree.addChild('etc');
+tree.addChild('home');
+
+// example: getDeepChild
+const subtree = tree.getDeepChild(['var', 'lib']);
+subtree.getKey(); // lib
+
+const parent = subtree.getParent();
+parent.getKey(); // var
+
+tree.removeChild('home'); // true
+tree.removeChild('nonexistentNode'); // false
+
+
+
+
+
+
+
+class Tree {
+  constructor(key, meta, parent) {
+    this.parent = parent;
+    this.key = key;
+    this.meta = meta;
+    this.children = new Map();
+  }
+
+  getKey() {
+    return this.key;
+  }
+
+  getMeta() {
+    return this.meta;
+  }
+
+  addChild(key, meta) {
+    const child = new Tree(key, meta, this);
+    this.children.set(key, child);
+
+    return child;
+  }
+
+  getChild(key) {
+    return this.children.get(key);
+  }
+
+  // BEGIN (write your solution here)
+  hasChildren() {
+    return this.children.size !== 0;
+  }
+
+  hasChild(key) {
+    return this.children.has(key);
+  }
+
+  getParent() {
+    return this.parent;
+  }
+
+  removeChild(key) {
+    return this.children.delete(key);
+  }
+
+  getDeepChild(keys) {
+    if (!keys.length) return undefined;
+
+    return keys.reduce((currentNode, key) => {
+      if (!currentNode) return undefined;
+
+      const child = currentNode.getChild(key);
+      if (child) {
+        return child;
+      }
+
+      return undefined;
+    }, this);
+  }
+
+  getChildren() {
+    return Array.from(this.children.values());
+  }
+
+  // END
+}
+
+
+
+tree = new Tree('/');
+tree.addChild('var')
+  .addChild('lib')
+  .addChild('run');
+tree.addChild('etc');
+tree.addChild('home');
+
+// example: getDeepChild
+const subtree = tree.getDeepChild(['var', 'lib']);
+subtree.getKey(); // lib
+
+const parent = subtree.getParent();
+parent.getKey(); // var
+
+tree.removeChild('home'); // true
+tree.removeChild('nonexistentNode'); // false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Exceptions 3
+README
+Файловая система должна корректно обрабатывать пустые пути, делая внутри нормализацию. То есть, если ей передать путь ///etc/config//my///, то он транслируется в /etc/config/my.
+
+HexletFs.js
+Реализуйте следующие части интерфейса типа HexletFs.
+
+isDirectory(path)
+
+isFile(path)
+
+mkdirSync(path)
+
+touchSync(path) - создает пустой файл. На самом деле, в реальной файловой системе, команда touch меняет время последнего обращения к файлу, а побочным эффектом этой команды является создание файла в случае его отсутствия. По этой причине данной командой часто пользуются для создания файлов.
+
+Пример:
+
+files.isDirectory('/etc'); // false
+
+files.mkdirSync('/etc');
+files.isDirectory('/etc'); // true
+
+files.mkdirSync('/etc/nginx');
+files.isDirectory('/etc/nginx'); // true
+
+files.isFile('/file.txt'); // false
+
+files.touchSync('/file.txt');
+files.isFile('/file.txt'); // true
+Подсказки
+Реализуйте функцию getPathParts, которая разбивает путь на массив имен. Без этой функции не будет работать метод findNode, осуществляющий глубокий поиск файла (каталога) внутри текущего каталога.
+Для работы с путями используйте возможности встроенного в Node.js модуля Path.
+
+
+
+
+
+
+import path from 'path';
+import Tree from 'hexlet-trees'; // eslint-disable-line
+
+// BEGIN (write your solution here)
+const getPathParts = filepath =>
+  filepath.split(path.sep).filter(part => part !== '');
+// END
+
+export default class {
+  constructor() {
+    this.tree = new Tree('/', { type: 'dir' });
+  }
+  // BEGIN (write your solution here)
+  touchSync(filepath) {
+    const { dir, base } = path.parse(filepath);
+    return this.findNode(dir).addChild(base, { type: 'file' });
+  }
+
+  isFile(filepath) {
+    // const parts = getPathParts(filepath);
+    // const current = this.tree.getDeepChild(parts);
+    const current = this.findNode(filepath);
+    return current && current.getMeta().type === 'file';
+  }
+
+  mkdirSync(filepath) {
+    const { dir, base } = path.parse(filepath);
+    return this.findNode(dir).addChild(base, { type: 'dir' });
+  }
+
+  isDirectory(filepath) {
+    // const parts = getPathParts(filepath);
+    // const current = this.tree.getDeepChild(parts);
+    const current = this.findNode(filepath);
+    return current && current.getMeta().type === 'dir';
+  }
+  // END
+
+  findNode(filepath) {
+    const parts = getPathParts(filepath);
+    return parts.length === 0 ? this.tree : this.tree.getDeepChild(parts);
+  }
+
+  findPenultimateNode(filepath) {
+    const parts = getPathParts(filepath);
+    if (parts.length === 1) {
+      return undefined;
+    }
+
+    return this.tree.getDeepChild(parts.slice(0, -1));
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Exceptions 4
+Задача состоит в том, чтобы реализовать тип Stats и его формирование посредством динамической диспетчеризации благодаря подтипам Node.
+
+Stats.js
+Реализуйте тип Stats со следующим интерфейсом:
+constructor
+isFile()
+isDirectory()
+
+Node.js
+Реализуйте надтип Node, интерфейсом которого являются функции:
+getStats()
+getName()
+
+Dir.js, File.js
+Реализуйте подтипы Dir и File (надтип Node). Варианты использования этих типов можно увидеть в файле HexletFs.js.
+
+
+class Node {
+  constructor(name, type) {
+    this.name = name;
+    this.stats = new Stats(type);
+  }
+
+  getStats() {
+    return this.stats;
+  }
+
+  getName() {
+    return this.name;
+  }
+}
+
+class File extends Node {
+  constructor(name) {
+    super(name, 'file');
+  }
+}
+
+class Dir extends Node {
+  constructor(name) {
+    super(name, 'dir');
+  }
+}
+
+class Stats {
+  constructor(type) {
+    this.type = type;
+  }
+
+  isFile() {
+    return this.type === 'file';
+  }
+
+  isDirectory() {
+    return this.type === 'dir';
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Tech Solution
+class Dir {
+  constructor(name) {
+    this.name = name;
+  }
+
+  getStats() {
+    return new Stats(this.isFile(), this.isDirectory());
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  isDirectory() {
+    return true;
+  }
+
+  isFile() {
+    return false;
+  }
+}
+
+
+class File {
+  constructor(name, body) {
+    this.name = name;
+    this.body = body;
+  }
+
+  getStats() {
+    return new Stats(this.isFile(), this.isDirectory());
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  getBody() {
+    return this.body;
+  }
+
+  isDirectory() {
+    return false;
+  }
+
+  isFile() {
+    return true;
+  }
+}
+
+class Stats {
+  constructor(file, directory) {
+    this.file = file;
+    this.directory = directory;
+  }
+
+  isFile() {
+    return this.file;
+  }
+
+  isDirectory() {
+    return this.directory;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Exceptions 4
+HexletFs.js
+Реализуйте следующие возможности файловой системы HexletFs:
+
+
+mkdirpSync(path)
+Создает директории рекурсивно (в отличие от mkdir).
+Если в пути встречается файл, то возвращает false, т.к. нельзя создать директорию внутри файла.
+Если все отработало корректно, то возвращается true
+
+
+touchSync(path)
+Эта функция обновляет (в метаданных) время доступа к файлу и, как побочный эффект, создает файл, в случае его отсутствия. По этой причине команду touch часто используют как способ создать файл. В данном упражнении она делает только это.
+Если в пути встречается файл, то возвращает false, т.к. нельзя создать файл внутри файла
+Если все отработало корректно, то возвращается true
+
+
+readdirSync(path)
+Возвращает список файлов (и папок) указанной директории.
+Если директории не существует, то возвращает false
+Если передан файл, то возвращает false
+
+
+rmdirSync(path)
+Удаляет директорию.
+
+Если передан файл, то возвращает false и ничего не удаляет
+Если директории не существует, то возвращает false
+Если директория непустая, то возвращает false
+Если все отработало корректно, то возвращается true
+
+
+
+
+
+import path from 'path';
+import Tree from 'hexlet-trees'; // eslint-disable-line
+import { Dir, File } from 'hexlet-fs'; // eslint-disable-line
+
+
+const getPathParts = filepath =>
+  filepath.split(path.sep).filter(part => part !== '');
+
+export default class {
+  constructor() {
+    this.tree = new Tree('/', new Dir('/'));
+  }
+
+  statSync(filepath) {
+    const current = this.findNode(filepath);
+    if (!current) {
+      return null;
+    }
+    return current.getMeta().getStats();
+  }
+
+  mkdirSync(filepath) {
+    const { base, dir } = path.parse(filepath);
+    const parent = this.findNode(dir);
+    if (!parent || parent.getMeta().getStats().isFile()) {
+      return false;
+    }
+    return parent.addChild(base, new Dir(base));
+  }
+
+  // BEGIN (write your solution here)
+  mkdirpSync(filepath) {
+    return getPathParts(filepath).reduce((subtree, part) => {
+      if (!subtree) {
+        return false;
+      }
+      const current = subtree.getChild(part);
+      if (!current) {
+        return subtree.addChild(part, new Dir(part));
+      }
+      if (current.getMeta().getStats().isFile()) {
+        return false;
+      }
+
+      return current;
+    }, this.tree);
+  }
+
+  touchSync(filepath) {
+    const { base, dir } = path.parse(filepath);
+    const parent = this.findNode(dir);
+    if (!parent) {
+      return false;
+    }
+    if (parent.getMeta().isFile()) {
+      return false;
+    }
+    return parent.addChild(base, new File(base, ''));
+  }
+
+  readdirSync(filepath) {
+    const current = this.findNode(filepath);
+    if (!current || current.getMeta().getStats().isFile()) {
+      return false;
+    }
+    return current.getChildren()
+      .map(child => child.getMeta().getName());
+  }
+
+  rmdirSync(filepath) {
+    const { base } = path.parse(filepath);
+    const current = this.findNode(filepath);
+    if (!current) {
+      return false;
+    }
+    if (current.getMeta().getStats().isFile() || current.hasChildren()) {
+      return false;
+    }
+    return current.getParent().removeChild(base);
+  }
+  // END
+
+  findNode(filepath) {
+    const parts = getPathParts(filepath);
+    return parts.length === 0 ? this.tree : this.tree.getDeepChild(parts);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Exceptions 5
+import errors from 'errno';
+
+errors.code.ENOTEMPTY;
+// → {
+//     "errno": 53,
+//     "code": "ENOTEMPTY",
+//     "description": "directory not empty"
+//   }
+HexletFs.js
+Реализуйте следующие возможности файловой системы HexletFs:
+
+unlinkSync(path)
+Удаляет файл (в реальной фс все чуть сложнее, см. hard link).
+
+Возможные ошибки:
+
+ENOENT - файл не найден
+EPERM - операция не разрешена. Такая ошибка возникает в случае, если path это директория
+writeFileSync(path, content)
+Записывает content в файл по пути path.
+
+Возможные ошибки:
+
+ENOENT - родительская директория, в которой нужно создать файл, не существует
+EISDIR - path является директорией
+readFileSync(path)
+Читает содержимое файла по пути path.
+
+ENOENT - файл не найден
+EISDIR - path является директорией
+Подсказки
+Тип File содержит метод getBody, который возвращает содержимое файла.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import path from 'path';
+import errors from 'errno'; // eslint-disable-line
+import Tree from 'hexlet-trees'; // eslint-disable-line
+import { Dir, File } from 'hexlet-fs'; // eslint-disable-line
+
+const getPathParts = filepath =>
+  filepath.split(path.sep).filter(part => part !== '');
+
+export default class {
+  constructor() {
+    this.tree = new Tree('/', new Dir('/'));
+  }
+
+  statSync(filepath) {
+    const current = this.findNode(filepath);
+    if (!current) {
+      return [null, errors.code.ENOENT];
+    }
+    return [current.getMeta().getStats(), null];
+  }
+
+  // BEGIN (write your solution here)
+  unlinkSync(filepath) {
+    const current = this.findNode(filepath);
+    if (!current) {
+      return [null, errors.code.ENOENT];
+    } else if (current.getMeta().isDirectory()) {
+      return [null, errors.code.EPERM];
+    }
+    return [current.getParent().removeChild(current.getKey()), null];
+  }
+
+  writeFileSync(filepath, body) {
+    const { base, dir } = path.parse(filepath);
+    const parent = this.findNode(dir);
+    if (!parent) {
+      return [null, errors.code.ENOENT];
+    }
+    const current = parent.getChild(base);
+    if (current && current.getMeta().isDirectory()) {
+      return [null, errors.code.EISDIR];
+    }
+    return [parent.addChild(base, new File(base, body)), null];
+  }
+
+  readFileSync(filepath) {
+    const current = this.findNode(filepath);
+    if (!current) {
+      return [null, errors.code.ENOENT];
+    }
+    if (current.getMeta().isDirectory()) {
+      return [null, errors.code.EISDIR];
+    }
+    return [current.getMeta().getBody(), null];
+  }
+  // END
+
+  mkdirpSync(filepath) {
+    const iter = (parts, subtree) => {
+      if (parts.length === 0) {
+        return [subtree, null];
+      }
+      const [part, ...rest] = parts;
+      const current = subtree.getChild(part);
+      if (!current) {
+        return iter(rest, subtree.addChild(part, new Dir(part)));
+      }
+      if (current.getMeta().isFile()) {
+        return [null, errors.code.ENOTDIR];
+      }
+
+      return iter(rest, current);
+    };
+    const parts = getPathParts(filepath);
+    return iter(parts, this.tree);
+  }
+
+  touchSync(filepath) {
+    const { base, dir } = path.parse(filepath);
+    const parent = this.findNode(dir);
+    if (!parent) {
+      return [null, errors.code.ENOENT];
+    }
+    if (parent.getMeta().isFile()) {
+      return [null, errors.code.ENOTDIR];
+    }
+    return [parent.addChild(base, new File(base, '')), null];
+  }
+
+  readdirSync(filepath) {
+    const dir = this.findNode(filepath);
+    if (!dir) {
+      return [null, errors.code.ENOENT];
+    } else if (dir.getMeta().isFile()) {
+      return [null, errors.code.ENOTDIR];
+    }
+    return [dir.getChildren().map(child => child.getKey()), null];
+  }
+
+  findNode(filepath) {
+    const parts = getPathParts(filepath);
+    return parts.length === 0 ? this.tree : this.tree.getDeepChild(parts);
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Exceptions 6
+HexletFs.js
+Реализуйте функцию copySync(src, dest), которая копирует файл из src в dest.
+
+Если dest это путь до папки, то имя файла берется из src
+Если dest это путь до файла (существующего или нет), то его содержимое становится равным src
+Возможные ошибки:
+
+EISDIR - возникает в случае, если src это директория, а не файл
+ENOENT - возникает в случае, если src не существует, а так же возникает в случае, если не существует директорий по пути dest (копирование не создает директорий)
+
+
+
+
+import path from 'path';
+import errors from 'errno'; // eslint-disable-line
+import Tree from 'hexlet-trees'; // eslint-disable-line
+import { Dir, File } from 'hexlet-fs'; // eslint-disable-line
+
+import HexletFsError from './HexletFsError';
+
+const getPathParts = filepath =>
+  filepath.split(path.sep).filter(part => part !== '');
+
+export default class {
+  constructor() {
+    this.tree = new Tree('/', new Dir('/'));
+  }
+
+  statSync(filepath) {
+    const current = this.findNode(filepath);
+    if (!current) {
+      throw new HexletFsError(errors.code.ENOENT, filepath);
+    }
+    return current.getMeta().getStats();
+  }
+
+  // BEGIN (write your solution here)
+  copySync(src, dest) {
+    const data = this.readFileSync(src);
+    const destNode = this.findNode(dest);
+    if (destNode && destNode.getMeta().isDirectory()) {
+      const { base } = path.parse(src);
+      const fullDest = path.join(dest, base);
+      return this.writeFileSync(fullDest, data);
+    }
+    return this.writeFileSync(dest, data);
+  }
+  // END
+
+  writeFileSync(filepath, body) {
+    const { dir, base } = path.parse(filepath);
+    const parent = this.findNode(dir);
+    if (!parent) {
+      throw new HexletFsError(errors.code.ENOENT, filepath);
+    }
+    const current = parent.getChild(base);
+    if (current && current.getMeta().isDirectory()) {
+      throw new HexletFsError(errors.code.EISDIR, filepath);
+    }
+    parent.addChild(base, new File(base, body));
+  }
+
+  touchSync(filepath) {
+    const { dir, base } = path.parse(filepath);
+    const parent = this.findNode(dir);
+    if (!parent) {
+      throw new HexletFsError(errors.code.ENOENT, filepath);
+    }
+    if (parent.getMeta().isFile()) {
+      throw new HexletFsError(errors.code.ENOTDIR, filepath);
+    }
+    return parent.addChild(base, new File(base, ''));
+  }
+
+  mkdirpSync(filepath) {
+    getPathParts(filepath).reduce((subtree, part) => {
+      const current = subtree.getChild(part);
+      if (!current) {
+        return subtree.addChild(part, new Dir(part));
+      }
+      if (current.getMeta().isFile()) {
+        throw new HexletFsError(errors.code.ENOTDIR, filepath);
+      }
+
+      return current;
+    }, this.tree);
+  }
+
+  readFileSync(filepath) {
+    const current = this.findNode(filepath);
+    if (!current) {
+      throw new HexletFsError(errors.code.ENOENT, filepath);
+    }
+    if (current.getMeta().isDirectory()) {
+      throw new HexletFsError(errors.code.EISDIR, filepath);
+    }
+    return current.getMeta().getBody();
+  }
+
+  findNode(filepath) {
+    const parts = getPathParts(filepath);
+    return parts.length === 0 ? this.tree : this.tree.getDeepChild(parts);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
