@@ -2120,16 +2120,46 @@ diff('fixtures/file4', 'fixtures/file5', (err, data) => {
 
 
 
+const compare = (data1, data2) => {
+  const lines1 = data1.split('\n').slice(0, -1);
+  const lines2 = data2.split('\n').slice(0, -1);
+  const result = [];
+  const maxLength = lines1.length > lines2.length ? lines1.length : lines2.length;
+  const getString = str => str === undefined ? null : str;
+  for (let i = 0; i < maxLength; i++) {
+    const line1 = getString(lines1[i]);
+    const line2 = getString(lines2[i]);
+    if (line1 !== line2) {
+      result.push([line1, line2]);
+    }
+  }
 
+  return result;
+};
 
+function diff(path1, path2, callback) {
+  fs.readFile(path1, (e, data1) => {
+    if (e) {
+      callback(e);
+      return e;
+    }
 
+    fs.readFile(path2, (e, data2) => {
+      if (e) {
+        callback(e);
+        return e;
+      }
 
+      const result = compare(data1.toString(), data2.toString());
+      return callback(null, result);
+    });
+  });
+}
 
-
-
-
-
-
+diff('fixtures/file4', 'fixtures/file5', (err, data) => {
+  console.log(data);
+  // [['text', 'ext'], ['', 'haha'], ['ehu', ''], ['', 'text'], ['aha', null]];
+});
 
 
 
@@ -2212,3 +2242,189 @@ function asyncFilter(coll, func, callback) {
 
   return iter(coll, []);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Async 5
+Реализуйте и экспортируйте по умолчанию функцию retry. 
+Задача функции состоит в том, чтобы в случае ошибки повторять вызовы, так, чтобы в сумме,
+функция была вызвана столько раз, сколько передано первым параметром.
+Если передан 0, то ставит значение попыток равным 5, что является значением по умолчанию.
+
+В примере ниже, в худшем случае, функция будет вызвана три раза.
+
+retry(3, callback =>
+  fs.readFile('file.txt', (err, body) => {
+    callback(err, body);
+  }), (err, result) => {
+    console.log(result);
+});
+
+
+function retry(count, execFunc, resultFunc) {
+  if (!count) {
+    count = 5;
+  }
+
+  let calledTimes = 0;
+  const cb = (err, result) => {
+    calledTimes += 1;
+    if (calledTimes === count) {
+      return resultFunc(err, result);
+    }
+
+    if (err) {
+      return execFunc(cb);
+    }
+
+    return resultFunc(err, result);
+  };
+
+  execFunc(cb);
+}
+
+
+export default (times, fn, callback = noop) => {
+  const retryAttempt = (attempts) => {
+    const cb = (err, result) => {
+      if (!err || attempts === 0) {
+        callback(err, result);
+        return;
+      }
+      retryAttempt(attempts - 1);
+    };
+
+    fn(cb);
+  };
+
+  retryAttempt(times === 0 ? 4 : times - 1);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Async 6
+Реализуйте и экспортируйте по умолчанию функцию concat.
+Эта функция применяется в том случае, когда асинхронная операция возвращает коллекцию,
+а на выходе нужно получить массив, состоящий из всех элементов коллекций, 
+которые вернула каждая асинхронная операция.
+
+concat(['dir1', 'dir2', 'dir3'], fs.readdir, (err, files) => {
+  // files is now a list of filenames that exist in the 3 directories
+});
+
+const noop = (...args) => {};
+
+const once = (fn) => {
+  let called = false;
+
+  return (...args) => {
+    if (called) return;
+    called = true;
+    fn(...args);
+  };
+};
+
+
+function concat(list, asyncFn, callback) {
+  const promiseFn = (arg) => {
+    return new Promise((resolve, reject) => {
+      asyncFn(arg, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  };
+
+  Promise.all(list.map(el => promiseFn(el)))
+    .then((args) => {
+      console.log(args);
+    })
+}
+
+
+
+
+const each = (coll, iteratee, callback = noop) => {
+  const oncedCallback = once(callback);
+  let completed = 0;
+  if (coll.length === 0) {
+    callback(null);
+    return;
+  }
+
+  const cb = err => {
+    completed++;
+    if (err) {
+      oncedCallback(err);
+      return;
+    }
+    if (completed === coll.length) {
+      oncedCallback(null);
+    }
+  };
+
+  coll.forEach(item => iteratee(item, cb));
+};
+
+export default (coll, fn, callback) => {
+  let result = [];
+  each(coll, (item, cb) => {
+    fn(item, (err, y) => {
+      result = result.concat(y || []);
+      cb(err);
+    });
+  }, err => {
+    callback(err, result);
+  });
+};
