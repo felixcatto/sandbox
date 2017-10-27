@@ -2428,3 +2428,207 @@ export default (coll, fn, callback) => {
     callback(err, result);
   });
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Finite State Machine 1
+В unix существует такая утилита как awk, она позволяет проводить различные манипуляции 
+с входным потоком (текстом) и получать на выходе новый текст. 
+Например иногда, бывает нужно взять вывод одной программы 
+и оставить от него только первый столбец. Пример:
+
+ls -la
+
+drwxr-xr-x  14 mokevnin  staff  476 Dec  9 20:31 .
+drwxr-xr-x   3 mokevnin  staff  102 Dec  9 20:29 ..
+-rw-r--r--   1 mokevnin  staff    0 Dec  9 20:31 .bash_history
+-rw-r--r--   1 mokevnin  staff  117 Dec  9 20:29 .eslintrc.yml
+ls -la | awk '{print $1}'
+
+drwxr-xr-x
+drwxr-xr-x
+-rw-r--r--
+-rw-r--r--
+solution.js
+Реализуйте и экспортируйте функцию по умолчанию, которая принимает на вход текст 
+и возвращает массив состоящий из первых слов каждой строки текста.
+Пустые строчки должны игнорироваться.
+
+Строки разделяются переводом строки
+В любом месте строки может быть сколько угодно пробелов
+Текст должен перебираться посимвольно (мы пишем лексер)
+const text = '  what who   \nhellomy\n hello who are you\n';
+const result = solution(text);
+// [
+//   'what',
+//   'hellomy',
+//   'hello',
+// ];
+Решение должно быть автоматным
+
+Подсказки
+Управляющие символы, такие как \t, \n называются словом символы,
+потому что это одиночные символы. А запись \n всего лишь представление.
+
+
+const text = '  what who   \nhellomy\n hello who are you\n';
+function getFirstWords(str) {
+  let state = 'outsideBeforeFW'; // 'outsideBeforeFW', 'insideFirstWord', 'outsideAfterFW'
+  const result = [];
+  let firstWord = '';
+  const isWhiteSpace = char => char === ' ';
+  const isEndline = char => char === '\n';
+  const isWordChar = char => char !== ' ' && char !== '\n';
+  for (let i = 0; i < str.length; i++) {
+    let char = str[i];
+    switch (state) {
+      case 'outsideBeforeFW':
+        if (isWordChar(char)) {
+          state = 'insideFirstWord';
+          firstWord += char;
+        }
+        break;
+      case 'insideFirstWord':
+        if (isWhiteSpace(char)) {
+          state = 'outsideAfterFW';
+          result.push(firstWord);
+          firstWord = '';
+        } else if (isEndline(char)) {
+          state = 'outsideBeforeFW';
+          result.push(firstWord);
+          firstWord = '';
+        } else if (isWordChar(char)) {
+          firstWord += char;
+        }
+        break;
+      case 'outsideAfterFW':
+        if (isEndline(char)) {
+          state = 'outsideBeforeFW';
+        }
+        break;
+    }
+  }
+
+  return result;
+}
+
+getFirstWords(text);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Finite State Machine 2
+Реализуйте логику работы часов из теории.
+
+В режиме будильника, часы и минуты изменяются независимо и никак друг на друга не влияют
+(как и в большинстве реальных будильников).
+То есть если происходит увеличение минут с 59 до 60 (сброс на 00),
+то цифра с часами остается неизменной
+Интерфейсными методами часов являются:
+
+clickMode() - нажатие на кнопку Mode
+longClickMode() - долгое нажатие на кнопку Mode
+clickH() - нажатие на кнопку H
+clickM() - нажатие на кнопку M
+
+tick() - при вызове увеличивает время на одну минуту и, если нужно, активирует звонок будильника
+isAlarmOn() - показывает включен ли режим будильника
+isAlarmTime() - возвращает true, если время на часах совпадает со временем на будильнике
+minutes() - возвращает минуты, установленные на часах
+hours() - возвращает часы, установленные на часах
+alarmMinutes() - возвращает минуты, установленные на будильнике
+alarmHours() - возвращает часы, установленные на будильнике
+getCurrentMode() - возвращает текущий режим (alarm | clock | bell)
+
+Основной спецификацией к данной задачe нужно считать тесты.
+    const clock = new AlarmClock();
+    expect(clock.minutes()).toBe(0);
+    expect(clock.hours()).toBe(12);
+    expect(clock.alarmHours()).toBe(6);
+    expect(clock.alarmMinutes()).toBe(0);
+
+
+AlarmClock.js
+Реализуйте интерфейсные методы и логику работы часов.
+
+State.js/AlarmState.js/BellState.js/ClockState.js
+Реализуйте иерархию состояний, в корне которой находится State.
+
+
+
+
+
+
+После этого, если текущее время совпадает со временем будильника, включается звонок,
+который отключается либо нажатием кнопки Mode, либо самопроизвольно через минуту.
+
+
+
+Подведем итог. У нас есть следующие действия:
+  Установка времени
+  Установка времени срабатывания будильника
+  Включение/Выключение будильника
+  Отключение звонка будильника
+
+Интерфейсными методами часов являются:
+  clickMode() - нажатие на кнопку Mode
+  longClickMode() - долгое нажатие на кнопку Mode
+  clickH() - нажатие на кнопку H
+  clickM() - нажатие на кнопку M
