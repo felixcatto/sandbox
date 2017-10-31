@@ -27,21 +27,7 @@ img {
 
 
 
-.root {
-    display: table;
-}
-img {
-    display: inline-block;
-    margin-bottom: 10px;
-}
-.icontainer {
-    display: table-cell;
-    vertical-align: top;
-    width: 50%;
-}
-.icontainer_half {
 
-}
 
 
 
