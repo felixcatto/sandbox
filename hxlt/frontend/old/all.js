@@ -2457,6 +2457,236 @@ export default (coll, fn, callback) => {
 
 
 
+// Async 7
+Реализуйте и экспортируйте по умолчанию функцию filter.
+
+filter(['file1', 'file2', 'file3'], (filePath, callback) => {
+  fs.access(filePath, err => {
+    callback(null, !err)
+  });
+}, (err, results) => {
+  // results now equals an array of the existing files
+});
+
+
+export default (coll, iteratee, callback = noop) => {
+  const oncedCallback = once(callback);
+  let completed = 0;
+  const length = coll.length;
+  if (length === 0) {
+    callback(null, []);
+  }
+
+  const mappedColl = [];
+  const iteratorCallback = (item, index, err, result) => {
+    if (err) {
+      oncedCallback(err);
+      return;
+    }
+    if (result) {
+      mappedColl[index] = item;
+    }
+    completed++;
+    if (completed === length) {
+      oncedCallback(err, mappedColl.filter(el => !!el));
+    }
+  };
+
+  coll.forEach((item, index) => iteratee(item, iteratorCallback.bind(null, item, index)));
+};
+>>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<<<<<<< Updated upstream
+// Finite State Machine 2
+Реализуйте логику работы часов из теории.
+
+В режиме будильника, часы и минуты изменяются независимо и никак друг на друга не влияют
+(как и в большинстве реальных будильников).
+То есть если происходит увеличение минут с 59 до 60 (сброс на 00),
+то цифра с часами остается неизменной
+Интерфейсными методами часов являются:
+
+clickMode() - нажатие на кнопку Mode
+longClickMode() - долгое нажатие на кнопку Mode
+clickH() - нажатие на кнопку H
+clickM() - нажатие на кнопку M
+
+tick() - при вызове увеличивает время на одну минуту и, если нужно, активирует звонок будильника
+isAlarmOn() - показывает включен ли режим будильника
+isAlarmTime() - возвращает true, если время на часах совпадает со временем на будильнике
+minutes() - возвращает минуты, установленные на часах
+hours() - возвращает часы, установленные на часах
+alarmMinutes() - возвращает минуты, установленные на будильнике
+alarmHours() - возвращает часы, установленные на будильнике
+getCurrentMode() - возвращает текущий режим (alarm | clock | bell)
+
+Основной спецификацией к данной задачe нужно считать тесты.
+    const clock = new AlarmClock();
+    expect(clock.minutes()).toBe(0);
+    expect(clock.hours()).toBe(12);
+    expect(clock.alarmHours()).toBe(6);
+    expect(clock.alarmMinutes()).toBe(0);
+
+
+AlarmClock.js
+Реализуйте интерфейсные методы и логику работы часов.
+
+State.js/AlarmState.js/BellState.js/ClockState.js
+Реализуйте иерархию состояний, в корне которой находится State.
+=======
+
+
+
+
+// Async 8
+Расширьте реализацию дерева, добавив два события: add и remove, которые должны происходить
+на добавление и удаление узлов. Сам узел должен передаваться в функцию обратного вызова.
+
+tree = new Tree('start');
+tree.addChild('example');
+
+tree.on('add', node => {
+  console.log('add %s', node.getKey());
+});
+tree.addChild('test');
+
+tree.on('remove', node => {
+  console.log('remove %s', node.getKey());
+});
+tree.removeChild('example');
+>>>>>>> Stashed changes
+
+
+
+
+<<<<<<< Updated upstream
+
+
+После этого, если текущее время совпадает со временем будильника, включается звонок,
+который отключается либо нажатием кнопки Mode, либо самопроизвольно через минуту.
+
+
+
+Подведем итог. У нас есть следующие действия:
+  Установка времени
+  Установка времени срабатывания будильника
+  Включение/Выключение будильника
+  Отключение звонка будильника
+
+Интерфейсными методами часов являются:
+  clickMode() - нажатие на кнопку Mode
+  longClickMode() - долгое нажатие на кнопку Mode
+  clickH() - нажатие на кнопку H
+  clickM() - нажатие на кнопку M
+=======
+import EventEmitter from 'events';
+
+class Tree extends EventEmitter {
+  constructor(key, parent) {
+    super();
+    this.parent = parent;
+    this.key = key;
+    this.children = new Map();
+  }
+
+  getKey() {
+    return this.key;
+  }
+
+  getParent() {
+    return this.parent;
+  }
+
+  // BEGIN (write your solution here)
+  addChild(key) {
+    const child = new Tree(key, this);
+    this.emit('add', child);
+    this.children.set(key, child);
+    return child;
+  }
+
+  removeChild(key) {
+    const child = this.children.get(key);
+    this.emit('remove', child);
+    return this.children.delete(key);
+  }
+  // END
+}
+
+export default Tree;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2548,87 +2778,3 @@ function getFirstWords(str) {
 getFirstWords(text);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Finite State Machine 2
-Реализуйте логику работы часов из теории.
-
-В режиме будильника, часы и минуты изменяются независимо и никак друг на друга не влияют
-(как и в большинстве реальных будильников).
-То есть если происходит увеличение минут с 59 до 60 (сброс на 00),
-то цифра с часами остается неизменной
-Интерфейсными методами часов являются:
-
-clickMode() - нажатие на кнопку Mode
-longClickMode() - долгое нажатие на кнопку Mode
-clickH() - нажатие на кнопку H
-clickM() - нажатие на кнопку M
-
-tick() - при вызове увеличивает время на одну минуту и, если нужно, активирует звонок будильника
-isAlarmOn() - показывает включен ли режим будильника
-isAlarmTime() - возвращает true, если время на часах совпадает со временем на будильнике
-minutes() - возвращает минуты, установленные на часах
-hours() - возвращает часы, установленные на часах
-alarmMinutes() - возвращает минуты, установленные на будильнике
-alarmHours() - возвращает часы, установленные на будильнике
-getCurrentMode() - возвращает текущий режим (alarm | clock | bell)
-
-Основной спецификацией к данной задачe нужно считать тесты.
-    const clock = new AlarmClock();
-    expect(clock.minutes()).toBe(0);
-    expect(clock.hours()).toBe(12);
-    expect(clock.alarmHours()).toBe(6);
-    expect(clock.alarmMinutes()).toBe(0);
-
-
-AlarmClock.js
-Реализуйте интерфейсные методы и логику работы часов.
-
-State.js/AlarmState.js/BellState.js/ClockState.js
-Реализуйте иерархию состояний, в корне которой находится State.
-
-
-
-
-
-
-После этого, если текущее время совпадает со временем будильника, включается звонок,
-который отключается либо нажатием кнопки Mode, либо самопроизвольно через минуту.
-
-
-
-Подведем итог. У нас есть следующие действия:
-  Установка времени
-  Установка времени срабатывания будильника
-  Включение/Выключение будильника
-  Отключение звонка будильника
-
-Интерфейсными методами часов являются:
-  clickMode() - нажатие на кнопку Mode
-  longClickMode() - долгое нажатие на кнопку Mode
-  clickH() - нажатие на кнопку H
-  clickM() - нажатие на кнопку M
