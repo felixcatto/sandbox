@@ -2956,7 +2956,7 @@ x = new AlarmClock();
 
 // Finite State Machine 3
 Order.js
-Реализуйте и экспортируйте по умолчанию тип Order. Сделайте так чтобы на каждое изменение состояния в массив history добавлялась запись об этом в виде { state: <name>, createdAt: new Date() }. Используйте для этого событие onEnterState библиотеки javascript-state-machine.
+Реализуйте и экспортируйте по умолчанию тип Order. Сделайте так чтобы на каждое изменение состояния в массив history добавлялась запись об этом в виде `{ state: <name>, createdAt: new Date() }`. Используйте для этого событие onEnterState библиотеки javascript-state-machine.
 
 Эта библиотека неявно проставляет состояние 'none' и делает переход в начальный стейт (в нашем случае -'init'). Нас эти состояния не интересуют, поэтому в 'history' их нужно избегать.
 Реализуйте конечный автомат процесса заказа товаров в магазине:
@@ -2972,3 +2972,45 @@ solution.js
 Все как в реальной жизни ;)
 Подсказки
 State Machine Factory
+
+
+Order.js
+
+import StateMachine from 'javascript-state-machine'; // eslint-disable-line
+
+
+class Order {
+  constructor(items) {
+    this.items = items;
+    this.history = [];
+    this._fsm(); // eslint-disable-line
+  }
+}
+
+StateMachine.factory(Order, {
+  init: 'init',
+  transitions: [
+    { name: 'accept', from: 'init', to: 'pending' },
+    { name: 'ship', from: 'pending', to: 'shipped' },
+    { name: 'complete', from: 'shipped', to: 'completed' },
+    { name: 'cancel', from: ['init', 'pending'], to: 'canceled' },
+    { name: 'refund', from: ['shipped', 'completed'], to: 'refunded' },
+  ],
+  methods: {
+    onEnterState(event) {
+      if (event.to !== 'init') {
+        this.history.push({ state: event.to, createdAt: new Date() });
+      }
+    },
+  },
+});
+
+
+
+
+
+Solution.js
+import Order from './Order';
+
+export const init = items => new Order(items);
+export const cancel = order => (order.can('cancel') ? order.cancel() : false);
