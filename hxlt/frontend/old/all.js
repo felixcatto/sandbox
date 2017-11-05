@@ -2494,7 +2494,6 @@ export default (coll, iteratee, callback = noop) => {
 
   coll.forEach((item, index) => iteratee(item, iteratorCallback.bind(null, item, index)));
 };
->>>>>>> Stashed changes
 
 
 
@@ -2517,48 +2516,6 @@ export default (coll, iteratee, callback = noop) => {
 
 
 
-
-
-
-
-<<<<<<< Updated upstream
-// Finite State Machine 2
-Реализуйте логику работы часов из теории.
-
-В режиме будильника, часы и минуты изменяются независимо и никак друг на друга не влияют
-(как и в большинстве реальных будильников).
-То есть если происходит увеличение минут с 59 до 60 (сброс на 00),
-то цифра с часами остается неизменной
-Интерфейсными методами часов являются:
-
-clickMode() - нажатие на кнопку Mode
-longClickMode() - долгое нажатие на кнопку Mode
-clickH() - нажатие на кнопку H
-clickM() - нажатие на кнопку M
-
-tick() - при вызове увеличивает время на одну минуту и, если нужно, активирует звонок будильника
-isAlarmOn() - показывает включен ли режим будильника
-isAlarmTime() - возвращает true, если время на часах совпадает со временем на будильнике
-minutes() - возвращает минуты, установленные на часах
-hours() - возвращает часы, установленные на часах
-alarmMinutes() - возвращает минуты, установленные на будильнике
-alarmHours() - возвращает часы, установленные на будильнике
-getCurrentMode() - возвращает текущий режим (alarm | clock | bell)
-
-Основной спецификацией к данной задачe нужно считать тесты.
-    const clock = new AlarmClock();
-    expect(clock.minutes()).toBe(0);
-    expect(clock.hours()).toBe(12);
-    expect(clock.alarmHours()).toBe(6);
-    expect(clock.alarmMinutes()).toBe(0);
-
-
-AlarmClock.js
-Реализуйте интерфейсные методы и логику работы часов.
-
-State.js/AlarmState.js/BellState.js/ClockState.js
-Реализуйте иерархию состояний, в корне которой находится State.
-=======
 
 
 
@@ -2579,31 +2536,10 @@ tree.on('remove', node => {
   console.log('remove %s', node.getKey());
 });
 tree.removeChild('example');
->>>>>>> Stashed changes
 
 
 
 
-<<<<<<< Updated upstream
-
-
-После этого, если текущее время совпадает со временем будильника, включается звонок,
-который отключается либо нажатием кнопки Mode, либо самопроизвольно через минуту.
-
-
-
-Подведем итог. У нас есть следующие действия:
-  Установка времени
-  Установка времени срабатывания будильника
-  Включение/Выключение будильника
-  Отключение звонка будильника
-
-Интерфейсными методами часов являются:
-  clickMode() - нажатие на кнопку Mode
-  longClickMode() - долгое нажатие на кнопку Mode
-  clickH() - нажатие на кнопку H
-  clickM() - нажатие на кнопку M
-=======
 import EventEmitter from 'events';
 
 class Tree extends EventEmitter {
@@ -2778,3 +2714,261 @@ function getFirstWords(str) {
 getFirstWords(text);
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Finite State Machine 2
+Реализуйте логику работы часов из теории.
+
+В режиме будильника, часы и минуты изменяются независимо и никак друг на друга не влияют (как и в большинстве реальных будильников). То есть если происходит увеличение минут с 59 до 60 (сброс на 00), то цифра с часами остается неизменной
+Интерфейсными методами часов являются:
+
+clickMode() - нажатие на кнопку Mode
+longClickMode() - долгое нажатие на кнопку Mode
+clickH() - нажатие на кнопку H
+clickM() - нажатие на кнопку M
+tick() - при вызове увеличивает время на одну минуту и, если нужно, активирует звонок будильника
+isAlarmOn() - показывает включен ли режим будильника
+isAlarmTime() - возвращает true, если время на часах совпадает со временем на будильнике
+minutes() - возвращает минуты, установленные на часах
+hours() - возвращает часы, установленные на часах
+alarmMinutes() - возвращает минуты, установленные на будильнике
+alarmHours() - возвращает часы, установленные на будильнике
+getCurrentMode() - возвращает текущий режим (alarm | clock | bell)
+Основной спецификацией к данной задачe нужно считать тесты.
+
+AlarmClock.js
+Реализуйте интерфейсные методы и логику работы часов.
+
+State.js/AlarmState.js/BellState.js/ClockState.js
+Реализуйте иерархию состояний, в корне которой находится State.
+
+
+class ClockState {
+  constructor(clock) {
+    this.clock = clock;
+    this.stateName = 'clock';
+  }
+  getCurrentMode() {
+    return this.stateName;
+  }
+  clickMode() {
+    this.clock.setState(new AlarmState(this.clock));
+  }
+  clickH() {
+    const hours = this.clock._hours;
+    this.clock._hours = hours === 23 ? 0 : hours + 1;
+  }
+  clickM() {
+    const minutes = this.clock._minutes;
+    this.clock._minutes = minutes === 59 ? 0 : minutes + 1;
+  }
+  tick() {
+    if (this.clock.isAlarmTime() && this.clock.isAlarmOn()) {
+      this.clock.setState(new BellState(this.clock));
+    }
+  }
+}
+
+
+class AlarmState {
+  constructor(clock) {
+    this.clock = clock;
+    this.stateName = 'alarm';
+  }
+  getCurrentMode() {
+    return this.stateName;
+  }
+  clickMode() {
+    this.clock.setState(new ClockState(this.clock));
+  }
+  clickH() {
+    const hours = this.clock._alarmHours;
+    this.clock._alarmHours = hours === 23 ? 0 : hours + 1;
+  }
+  clickM() {
+    const minutes = this.clock._alarmMinutes;
+    this.clock._alarmMinutes = minutes === 59 ? 0 : minutes + 1;
+  }
+  tick() {
+    if (this.clock.isAlarmTime() && this.clock.isAlarmOn()) {
+      this.clock.setState(new BellState(this.clock));
+    }
+  }
+}
+
+
+class BellState {
+  constructor(clock) {
+    this.clock = clock;
+    this.stateName = 'bell';
+  }
+  getCurrentMode() {
+    return this.stateName;
+  }
+  clickMode() {
+    this.clock.setState(new ClockState(this.clock));
+  }
+  clickH() {
+    return;
+  }
+  clickM() {
+    return
+  }
+  tick() {
+    this.clock.setState(new ClockState(this.clock));
+  }
+}
+
+
+class AlarmClock {
+  constructor() {
+    this._minutes = 0;
+    this._hours = 12;
+    this._alarmHours = 6;
+    this._alarmMinutes = 0;
+    this._isAlarmOn = false;
+    this.state = new ClockState(this);
+  }
+
+  setState(state) {
+    this.state = state;
+  }
+
+  clickMode() {
+    this.state.clickMode();
+  }
+  longClickMode() {
+    this._isAlarmOn = !this._isAlarmOn;
+  }
+  clickH() {
+    this.state.clickH();
+  }
+  clickM() {
+    this.state.clickM();
+  }
+  tick() {
+    if (this._minutes === 59 && this._hours === 23) {
+      this._hours = 0;
+      this._minutes = 0;
+    } else if (this._minutes === 59 && this._hours !== 23) {
+      this._hours += 1;
+      this._minutes = 0;
+    } else if (this._minutes !== 59) {
+      this._minutes += 1;
+    }
+
+    this.state.tick();
+    console.log(`${this._hours} : ${this._minutes}`);
+  }
+
+  isAlarmOn() {
+    return this._isAlarmOn;
+  }
+  isAlarmTime() {
+    return this._minutes === this._alarmMinutes && this._hours === this._alarmHours;
+  }
+  minutes() {
+    return this._minutes;
+  }
+  hours() {
+    return this._hours;
+  }
+  alarmMinutes() {
+    return this._alarmMinutes;
+  }
+  alarmHours() {
+    return this._alarmHours;
+  }
+  getCurrentMode() {
+    return this.state.getCurrentMode();
+  }
+}
+
+
+
+
+x = new AlarmClock();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Finite State Machine 3
+Order.js
+Реализуйте и экспортируйте по умолчанию тип Order. Сделайте так чтобы на каждое изменение состояния в массив history добавлялась запись об этом в виде { state: <name>, createdAt: new Date() }. Используйте для этого событие onEnterState библиотеки javascript-state-machine.
+
+Эта библиотека неявно проставляет состояние 'none' и делает переход в начальный стейт (в нашем случае -'init'). Нас эти состояния не интересуют, поэтому в 'history' их нужно избегать.
+Реализуйте конечный автомат процесса заказа товаров в магазине:
+
+Начальное состояние: init. Событие accept переводит автомат в pending (только из init). Событие ship переводит в состояние shipped (только из pending). Событие complete переводит в состояние completed (только из shipped). Событие cancel переводит в состояние canceled (только из состояний init и pending) Событие refund переводит в состояние refunded (только из состояний shipped и completed)
+
+Немного пояснения. Отменить заказ можно только до тех пор пока он не был отправлен клиенту. Если заказ уже был отправлен или доставлен, то клиент может сделать возврат. В реальной жизни на эти переходы будут происходить дополнительные действия связанные с обработкой платежа, отправки почты и тому подобное.
+
+solution.js
+Реализуйте обработчик (функцию) cancel который генерирует на автомате аналогичные события в случае если их возможно применить.
+
+Это задание подразумевает то, что хорошо изучите документацию библиотеки.
+Все как в реальной жизни ;)
+Подсказки
+State Machine Factory
