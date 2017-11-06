@@ -2670,7 +2670,7 @@ const result = solution(text);
 потому что это одиночные символы. А запись \n всего лишь представление.
 
 
-const text = '  what who   \nhellomy\n hello who are you\n';
+// Manual State Management Pattern (not)
 function getFirstWords(str) {
   let state = 'outsideBeforeFW'; // 'outsideBeforeFW', 'insideFirstWord', 'outsideAfterFW'
   const result = [];
@@ -2711,7 +2711,93 @@ function getFirstWords(str) {
   return result;
 }
 
+const text = '  what who   \nhellomy\n hello who are you\n';
 getFirstWords(text);
+
+
+
+
+
+
+
+
+
+
+// State Machine Pattern
+function getFirstWords(str) {
+  fsm = new StateMachine({
+    init: 'outsideBeforeFW',
+    transitions: [
+      { name: 'storeChar',    from: ['outsideBeforeFW', 'insideFirstWord'],  to: 'insideFirstWord' },
+      { name: 'storeFirstWord', from: 'insideFirstWord',  to: 'outsideAfterFW' },
+      { name: 'storeFirstWordNewLine', from: 'insideFirstWord',  to: 'outsideBeforeFW' },
+      { name: 'goToNewLine', from: 'outsideAfterFW',  to: 'outsideBeforeFW' },
+    ],
+    methods: {
+      onStoreChar(event, char) {
+        firstWord += char;
+      },
+      onStoreFirstWord(event, char) {
+        result.push(firstWord);
+        firstWord = '';
+      },
+      onStoreFirstWordNewLine(event, char) {
+        result.push(firstWord);
+        firstWord = '';
+      },
+    },
+  });
+
+  const result = [];
+  let firstWord = '';
+  const isWhiteSpace = char => char === ' ';
+  const isEndline = char => char === '\n';
+  const isWordChar = char => char !== ' ' && char !== '\n';
+  for (let i = 0; i < str.length; i++) {
+    let char = str[i];
+    switch (fsm.state) {
+      case 'outsideBeforeFW':
+        if (isWordChar(char)) {
+          fsm.storeChar(char);
+        }
+        break;
+      case 'insideFirstWord':
+        if (isWhiteSpace(char)) {
+          fsm.storeFirstWord(char);
+        } else if (isEndline(char)) {
+          fsm.storeFirstWordNewLine(char);
+        } else if (isWordChar(char)) {
+          fsm.storeChar(char);
+        }
+        break;
+      case 'outsideAfterFW':
+        if (isEndline(char)) {
+          fsm.goToNewLine(char);
+        }
+        break;
+    }
+  }
+
+  return result;
+}
+
+const text = '  what who   \nhellomy\n hello who are you\n';
+getFirstWords(text);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2769,7 +2855,7 @@ AlarmClock.js
 State.js/AlarmState.js/BellState.js/ClockState.js
 Реализуйте иерархию состояний, в корне которой находится State.
 
-
+// State Pattern
 class ClockState {
   constructor(clock) {
     this.clock = clock;
@@ -2795,8 +2881,6 @@ class ClockState {
     }
   }
 }
-
-
 class AlarmState {
   constructor(clock) {
     this.clock = clock;
@@ -2822,8 +2906,6 @@ class AlarmState {
     }
   }
 }
-
-
 class BellState {
   constructor(clock) {
     this.clock = clock;
@@ -2845,8 +2927,6 @@ class BellState {
     this.clock.setState(new ClockState(this.clock));
   }
 }
-
-
 class AlarmClock {
   constructor() {
     this._minutes = 0;
@@ -2911,10 +2991,124 @@ class AlarmClock {
   }
 }
 
+x = new AlarmClock();
 
 
+
+
+// State Machine Pattern
+class AlarmClock {
+  constructor() {
+    this.minutes = 0;
+    this.hours = 12;
+    this.alarmHours = 6;
+    this.alarmMinutes = 0;
+    this.isAlarmEnabled = false;
+    this._fsm();
+  }
+
+  clickMode() {
+    this.stateMethods.clickMode();
+  }
+  longClickMode() {
+    this.isAlarmEnabled = !this.isAlarmEnabled;
+  }
+  clickH() {
+    this.stateMethods.clickH();
+  }
+  clickM() {
+    this.stateMethods.clickM();
+  }
+  tick() {
+    if (this.minutes === 59 && this.hours === 23) {
+      this.hours = 0;
+      this.minutes = 0;
+    } else if (this.minutes === 59 && this.hours !== 23) {
+      this.hours += 1;
+      this.minutes = 0;
+    } else if (this.minutes !== 59) {
+      this.minutes += 1;
+    }
+
+    this.stateMethods.tick();
+    console.log(this.getTime());
+  }
+  isAlarmOn() {
+    return this.isAlarmEnabled;
+  }
+  isAlarmTime() {
+    return this.minutes === this.alarmMinutes && this.hours === this.alarmHours;
+  }
+  getTime() {
+    return `${this.hours} : ${this.minutes}`;
+  }
+  getAlarmTime() {
+    return `${this.alarmHours} : ${this.alarmMinutes}`;
+  }
+  getCurrentMode() {
+    return this.state;
+  }
+}
+
+StateMachine.factory(AlarmClock, {
+  init: 'clockState',
+  transitions: [
+    { name: 'clockToBell', from: 'clockState', to: 'bellState' },
+    { name: 'clockToAlarm', from: 'clockState', to: 'alarmState' },
+    { name: 'alarmToBell', from: 'alarmState', to: 'bellState' },
+    { name: 'alarmToClock', from: 'alarmState', to: 'clockState' },
+    { name: 'bellToClock', from: 'bellState', to: 'clockState' },
+  ],
+  methods: {
+    onClockState() {
+      this.stateMethods = {
+        clickMode: () => this.clockToAlarm(),
+        clickH: () => (this.hours = this.hours === 23 ? 0 : this.hours + 1),
+        clickM: () => (this.minutes = this.minutes === 59 ? 0 : this.minutes + 1),
+        tick: () => {
+          if (this.isAlarmTime() && this.isAlarmOn()) {
+            this.clockToBell();
+          }
+        },
+      };
+    },
+    onAlarmState() {
+      this.stateMethods = {
+        clickMode: () => this.alarmToClock(),
+        clickH: () => (this.alarmHours = this.alarmHours === 23 ? 0 : this.alarmHours + 1),
+        clickM: () => (this.alarmMinutes = this.alarmMinutes === 59 ? 0 : this.alarmMinutes + 1),
+        tick: () => {
+          if (this.isAlarmTime() && this.isAlarmOn()) {
+            this.alarmToBell();
+          }
+        },
+      };
+    },
+    onBellState() {
+      this.stateMethods = {
+        clickMode: () => this.bellToClock(),
+        clickH: () => {},
+        clickM: () => {},
+        tick: () => this.bellToClock(),
+      };
+    },
+  },
+});
 
 x = new AlarmClock();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

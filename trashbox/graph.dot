@@ -1,0 +1,10 @@
+digraph "fsm" {
+  "outsideBeforeFW";
+  "insideFirstWord";
+  "outsideAfterFW";
+  "outsideBeforeFW" -> "insideFirstWord" [ label=" storeChar " ];
+  "insideFirstWord" -> "insideFirstWord" [ label=" storeChar " ];
+  "insideFirstWord" -> "outsideAfterFW" [ label=" storeFirstWord " ];
+  "insideFirstWord" -> "outsideBeforeFW" [ label=" storeFirstWordNewLine " ];
+  "outsideAfterFW" -> "outsideBeforeFW" [ label=" goToNewLine " ];
+}
