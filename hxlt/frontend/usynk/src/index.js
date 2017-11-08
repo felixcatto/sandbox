@@ -422,5 +422,284 @@ const getSearch = (queryParams, params) => {
 }
 
 // BEGIN (write your solution here)
+const prepareData = (data, headers) => {
+  if (data === undefined) {
+    return [data, headers];
+  }
+  const preparedData = querystring.stringify(data);
+  const bufferData = Buffer.from(preparedData, 'utf-8');
+  return [bufferData, {
+    ...headers,
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Length': Buffer.byteLength(bufferData),
+  }];
+};
 
+export default (config) => {
+  const [data, headers] = prepareData(config.data, config.headers || {});
+
+  const urlObject = url.parse(config.url, true);
+  const search = getSearch(urlObject.query, config.params);
+
+  const options = {
+    hostname: urlObject.hostname,
+    port: urlObject.port,
+    method: config.method,
+    path: `${urlObject.pathname}${search}`,
+    headers,
+  };
+
+  return new Promise((resolve, reject) => {
+    const req = http.request(options, (res) => {
+      const response = {
+        status: res.statusCode,
+        statusText: res.statusMessage,
+        headers: res.headers,
+      };
+
+      const responseData = [];
+      res.on('data', (chunk) => {
+        responseData.push(chunk.toString());
+      });
+
+      res.on('end', () => {
+        response.data = responseData.join('');
+        resolve(response);
+      });
+    });
+
+    req.on('error', (err) => {
+      reject(err);
+    });
+
+    req.end(data);
+  });
+};
 // END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Usync 5
+solution.js
+Реализуйте и экспортируйте по умолчанию функцию, которая обновляет значение по ключу backends/current в consul. Функция принимает на вход два адреса: 1) адрес по которому можно получить список серверов 2) адрес для обновления значения текущего незагруженного поддомена (post запросом).
+
+Функция должна вернуть promise, выполняющий обновление значения по ключу backends/current.
+
+Подсказки
+Функции get и post возвращают promise.
+
+export default (backendsListUrl, setCurrentBackendUrl) => get(backendsListUrl)
+  .then((result) => {
+    const data = JSON.parse(result.data);
+    const promises = data.map(({ url }) => get(`${url}/status`));
+
+    return Promise.all(promises);
+  })
+  .then((responses) => {
+    const values = responses.map(v => JSON.parse(v.data))
+      .sort((v1, v2) => v1.workload - v2.workload);
+    const best = values[0];
+    return post(setCurrentBackendUrl, { value: best.url });
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Usync 6
+// x = { 
+//   a: 'vasa eto boroda',
+//   b: 'ggwp lanaya',
+//   c: 'privet medved',
+//   [Symbol.iterator]: function() {
+//     let nextIndex = 0;
+
+//     const next = () => {
+//       if (nextIndex < this.collection.length) {
+//         const value = this.collection[nextIndex++];
+//         return { value, done: false };
+//       }
+//       return { done: true };
+//     };
+//     return { next };
+//   },
+// };
+
+// for (let v of x) console.log(v);
+
+
+
+
+
+
+// const makeIterator = function* (coll) {
+//   for (const value of coll) {
+//     yield value;
+//   }
+// };
+
+
+
+
+
+
+// const obj = {
+//   collection: ['yo', 'ya'],
+//   [Symbol.iterator]: function* () {
+//     yield* this.collection;
+//   },
+// };
+
+// for (const v of obj) {
+//   console.log(v);
+// }
+
+// function* gen(list, getNext) {
+//   let currentEl = list[0];
+//   for (let i = 0; i < list.length; i += 1) {
+//     yield currentEl;
+//     currentEl = getNext(currentEl);
+//   }
+// }
+
+
+
+
+
+
+
+
+// Реализуйте и экспортируйте по умолчанию класс, который представляет собой бесконечную последовательность. Объекты этого класса должны быть итерируемыми.
+
+// import Seq from './seq';
+
+// const seq = new Seq(1, x => x + 1);
+// // или так: const result = seq.skip(50).skip(150).take(3);
+// const result = seq.skip(200).take(3);
+// for (const value of result) {
+//   actual.push(value);
+//   console.log(value);
+// }
+// // 201
+// // 202
+// // 203
+
+// for (const value of seq.skip(10).take(1)) {
+//   console.log(value);
+// }
+// // 11
+// Как видно из примера выше, методы класса построены с применением fluent interface.
+
+// Конструктор класса принимает на вход три параметра:
+
+// Стартовое значение последовательности
+// Функцию, которая генерирует новое значение последовательности на основе предыдущего
+// Количество элементов последовательности, по умолчанию последовательность бесконечна (Infinity)
+// Также на классе определено две функции: skip(n) и take(m). Первая пропускает первые n элементов, вторая ограничивает коллекцию m элементами.
+
+
+class Seq {
+  constructor(start, next, count = Infinity) {
+    this.start = start;
+    this.next = next;
+    this.count = count;
+    this.current = start;
+
+    this[Symbol.iterator] = function* gen() {
+      for (let i = 0; i < count; i += 1) {
+        yield this.current;
+        this.current = next(this.current);
+      }
+    };
+  }
+
+  take(count) {
+    return new Seq(this.start, this.next, count);
+  }
+
+  skip(count) {
+    let newStart = this.current;
+    for (let i = 0; i < count; i += 1) {
+      newStart = this.next(newStart);
+    }
+    return new Seq(newStart, this.next, this.count);
+  }
+}
