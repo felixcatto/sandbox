@@ -27,6 +27,18 @@
       cursor: pointer;
       will-change: transform;
     }
+    .svg-bound {
+      margin-top: 100px;
+      display: block;
+      width: 300px;
+      height: 300px;
+      border: 2px dashed purple;
+    }
+    .svg-el {
+      fill: steelblue;
+      cursor: pointer;
+      will-change: transform;
+    }
   </style>
 </head>
 <body>
@@ -34,7 +46,9 @@
     <div class="el"></div>
   </div>
 
-
+  <svg class="svg-bound">
+    <!-- <circle class="svg-el" cx="50" cy="50" r="25"></circle> -->
+  </svg>
 
   <script>
     const draggable = document.querySelector('.el');
@@ -80,6 +94,23 @@
         })
 
       return drag;
+    }
+
+
+
+
+
+    const svg = d3.select('.svg-bound');
+    const svgDraggable = svg.selectAll('circle').data([{ x: 50, y: 50, r: 25 }]);
+    svgDraggable.enter().append('circle')
+      .attr('class', 'svg-el')
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      .attr('r', d => d.r)
+      .call(d3.drag().on('drag', dragged));
+
+    function dragged(d) {
+      d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
     }
   </script>
 </body>
