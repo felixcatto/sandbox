@@ -703,3 +703,282 @@ class Seq {
     return new Seq(newStart, this.next, this.count);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Usync 6
+Реализуйте и экспортируйте по умолчанию функцию co. Она должна принимать на вход генератор и возвращать promise. Функция co опирается на то, что внутри генератора yield используется только для promise.
+
+co(function* () {
+  const a = yield Promise.resolve(1);
+  const b = yield Promise.resolve(2);
+  const c = yield Promise.resolve(3);
+
+  return [a, b, c]; // [1, 2, 3]
+}).then(data => console.log(data));
+// [1, 2, 3]
+В случае, если promise внутри генератора переходит в состояние rejected, то co трансформирует возникшую ошибку в исключение.
+
+co(function* () {
+  try {
+    yield Promise.reject(new Error('boom'));
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+var getPromise = (val, err) =>
+  new Promise((resolve, reject) => {
+    if (err) {
+      reject(err);
+      return;
+    }
+    setTimeout(() => resolve(val), val);
+  });
+
+function* gen() {
+  const x = yield getPromise(1000);
+  console.log(x);
+  const y = yield getPromise(500);
+  console.log(y);
+  return x + y;
+}
+
+
+const co = (generator) => {
+  const iterator = generator();
+
+  const next = (result) => {
+    const value = result.value;
+    if (result.done) {
+      return value;
+    }
+
+    return value.then(res => next(iterator.next(res)));
+  };
+
+  return next(iterator.next());
+};
+
+
+x = co(gen);
+x.then(result => console.log(result));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Usync 7
+var getPromise = (val, err) =>
+  new Promise((resolve, reject) => {
+    if (err) {
+      reject(err);
+      return;
+    }
+    setTimeout(() => resolve(val), val);
+  });
+
+// var wow = async () => {
+//   return getPromise(2000);
+// }
+
+var wow = async () => {
+  const value1 = await getPromise(500);
+  const value2 = await getPromise(1000);
+  return value1 + value2;
+}
+
+wow().then(res => console.log(res));
+
+
+
+
+
+
+
+
+Эта задача полностью повторяет задачу про CSRF. Цель – увидеть катастрофическую разницу между использованием коллбеков и async/await.
+
+Для выполнения http запросов воспользуйтесь импортированными функциями из библиотеки hexlet-http-request, которую мы реализовывали в одном из уроков.
+
+solution.js
+Реализуйте и экспортируйте по умолчанию функцию, которая с помощью http запросов, эмулируя поведение пользователя, выполняет регистрацию на сайте.
+
+Функция принимает на вход следующие параметры:
+
+Адрес формы регистрации (get запрос)
+Адрес, по которому необходимо отправить данные формы (post запрос)
+nickname - значение поля nickname из формы регистрации
+На сайте реализована защита от csrf, поэтому перед непосредственной отправкой данных формы на соответствующий адрес необходимо сделать запрос на форму регистрации, извлечь из нее токен и отправить его вместе с данными формы по нужному адресу.
+
+В упражнении доступен веб-доступ, по которому открывается этот сайт. Попробуйте посмотреть исходный код страницы, найти там этот токен, а так же выполните регистрацию.
+
+Обработка ошибок
+В случае, если первый запрос вернет статус не 200, то возвращаем resolved промиз, но передаем туда ошибку.
+В случае, если второй запрос вернет статус не 302, то так же возвращаем resolved промиз с передачей внутрь ошибки.
+Подсказки
+Для извлечения токена из тела запроса воспользуйтесь функцией getToken
+
+
+
+
+export default async (registrationFormUrl, submitFormUrl, nickname) => {
+  const response = await get(registrationFormUrl);
+  if (response.status !== 200) {
+    return new Error(`Expected 200, but was ${response.status} for '${registrationFormUrl}'`);
+  }
+  const data = { nickname, token: getToken(response.data) };
+  const response2 = await post(submitFormUrl, data);
+  if (response2.status !== 302) {
+    return new Error(`Expected 302, but was ${response2.status} for '${submitFormUrl}'`);
+  }
+
+  return null;
+};

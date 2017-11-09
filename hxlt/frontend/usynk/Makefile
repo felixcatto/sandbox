@@ -7,7 +7,7 @@ build:
 
 
 start:
-	npm run babel-node ./src/index.js
+	npm run babel-node ./src/hxlttp.js
 
 
 lint:
