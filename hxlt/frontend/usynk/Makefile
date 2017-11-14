@@ -5,9 +5,11 @@ install:
 build:
 	npm run build
 
-
 start:
-	npm run babel-node ./src/hxlttp.js
+	npm run nodemon
+
+start-simple:
+	npm run babel-node ./src/server.js
 
 
 lint:
