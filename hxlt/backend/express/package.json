@@ -7,7 +7,7 @@
     "babel-node": "babel-node",
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "eslint": "eslint",
-    "nodemon": "nodemon --exec babel-node ./src/server.js"
+    "nodemon": "nodemon --exec babel-node ./bin/app.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +19,8 @@
     "eslint": "^4.10.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.12.1",
+    "supertest": "^3.0.0"
   },
   "dependencies": {
     "express": "^4.16.2"
