@@ -2,12 +2,12 @@
   "name": "myexp",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "/src/bin/app.js",
   "scripts": {
     "babel-node": "babel-node",
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "eslint": "eslint",
-    "nodemon": "DEBUG=app nodemon --exec babel-node ./bin/app.js"
+    "nodemon": "DEBUG=app nodemon --exec babel-node ./src/bin/app.js"
   },
   "author": "",
   "license": "ISC",

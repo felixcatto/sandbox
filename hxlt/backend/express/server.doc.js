@@ -1,3 +1,61 @@
+SomeThingsToDo  =>
+* res.locals в шаблонах
+* named routes
+* https://github.com/ericf/express-handlebars
+* https://github.com/expressjs/express/wiki#template-engines
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Express_0  =>
 import Express from 'express';
 import Router from 'named-routes';
@@ -125,3 +183,123 @@ app.get('*', (req, res) => {
 app.listen(3000, () => {
   console.log('Example app listening on port 3000!');
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Express_2  =>
+Реализуйте приложение, которое представляет из себя блог. Сайт должен позволят просматривать список постов и давать возможность добавлять новые посты.
+
+'GET /posts' - список постов
+'GET /posts/:id' - страница поста
+'GET /posts/new' - форма для создания нового поста
+'POST /posts' - создание нового поста. В случае успеха ожидается редирект на страницу поста, в противном случае должен быть возвращен код 422 и отрисована форма с указанием ошибок.
+Приложение содержит одну сущность - 'Post', которая содержит три обязательных поля:
+
+'title' и 'body' - задаются через форму.
+'id' - проставляется автоматически, для каждого нового поста должен увеличиваться на единицу
+
+'entities/Post'
+Реализуйте сущность Post
+
+'solution.js'
+Реализуйте недостающие обработчики express
+
+'views/posts/index.pug'
+Реализуйте вывод постов в табличной форме. Так же на страницы должны быть ссылки на просмотр постов и ссылка на создание нового.
+
+'views/posts/new.pug'
+Реализуйте форму создания нового поста
+
+'views/posts/show.pug'
+Реализуйте просмотр конкретного поста
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// <h2>{{title}}</h2>
+// <p>{{author.id}}: {{author.name}}</p>
+// <p>{{notice}}</p>
+// <ul>
+//   {{#each people}}
+//     <li>{{this.firstName}} {{this.lastName}}</li>
+//   {{/each}}
+// </ul>
+// {{> message ggwp=322}}
+// {{> message ggwp='solo'}}
+
+// export default {
+//   title: "My First Blog Post!",
+//   author: {
+//     id: 47,
+//     name: "Yehuda Katz"
+//   },
+//   body: "My first post. Wheeeee!",
+//   people: [
+//     { firstName: "Yehuda", lastName: "Katz" },
+//     { firstName: "Carl", lastName: "Lerche" },
+//     { firstName: "Alan", lastName: "Johnson" },
+//   ],
+//   helpers: {
+//     notice() {
+//       return `${this.title} - most weird phrase`;
+//     },
+//   },
+// };

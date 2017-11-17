@@ -1,4 +1,4 @@
 #!/usr/bin/env node
 
-import app from '../src/server';
+import app from '../server';
 app.listen(4000);
