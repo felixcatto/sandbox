@@ -1,0 +1,13 @@
+<form method="post">
+  <div style="margin-bottom: 15px;">
+    <label>Title</label>
+    <input type="text" name="title" style="display: block;" value="{{data.form.title}}">
+    <div>{{data.errors.title}}</div>
+  </div>
+  <div style="margin-bottom: 15px;">
+    <label>Body</label>
+    <input type="text" name="body" style="display: block;" value="{{data.form.body}}">
+    <div>{{data.errors.body}}</div>
+  </div>
+  <button>Submit</button>
+</form>

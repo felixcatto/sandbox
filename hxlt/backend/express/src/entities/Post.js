@@ -1,11 +1,11 @@
-let postIndex = 0;
-
 export default class Post {
+  static index = 0;
+
   constructor(title, body) {
-    this.id = postIndex;
+    this.id = Post.index;
     this.title = title;
     this.body = body;
-    postIndex += 1;
+    Post.index += 1;
   }
 
   getTitle() {
