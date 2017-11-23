@@ -1,15 +1,20 @@
 <div class="posts">
-  <h2>Our Posts</h2>
-  <p>
-    <a href="/posts/new">Create New Post</a>
-  </p>
-  <ul>
-    {{#each data.posts}}
-      <li>
-        <span>{{id}}:</span>
-        <a href="/posts/show/{{id}}">{{title}}</a>
-      </li>
-    {{/each}}
-  </ul>
-  <p>Total: {{postsCount}}</p>
+  <div class="container">
+    <h2>
+      <div class="posts__title-text">Our Posts</div>
+      <img src="/img/emoji.jpg" class="posts__img">
+    </h2>
+    <p>
+      <a href="/posts/new">Create New Post</a>
+    </p>
+    <ul>
+      {{#each data.posts}}
+        <li>
+          <span>{{id}}:</span>
+          <a href="/posts/show/{{id}}">{{title}}</a>
+        </li>
+      {{/each}}
+    </ul>
+    <p>Total: {{postsCount}}</p>
+  </div>
 </div>

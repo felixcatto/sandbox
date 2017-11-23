@@ -1,0 +1,9 @@
+.posts__title-text {
+  display: inline-block;
+  vertical-align: middle;
+}
+.posts__img {
+  display: inline-block;
+  vertical-align: middle;
+  height: 40px;
+}

@@ -26,6 +26,9 @@ app.set('view engine', '.hbs');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const publicFolder = path.join(__dirname, 'public');
+app.use('/', Express.static(publicFolder));
+
 
 let posts = [
   new Post('hello', 'how are your?'),
