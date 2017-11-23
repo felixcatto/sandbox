@@ -1,0 +1,13 @@
+.pseudo-form {
+  display: inline-block;
+}
+.pseudo-form__link {
+  outline: none;
+  border: none;
+  color: #337ab7;
+  background: transparent;
+}
+.pseudo-form__link:hover {
+  text-decoration: underline;
+  color: #23527c;
+}

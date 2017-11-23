@@ -8,11 +8,23 @@ export default class Post {
     Post.index += 1;
   }
 
+  getID() {
+    return this.id;
+  }
+
   getTitle() {
     return this.title;
   }
 
+  setTitle(title) {
+    this.title = title;
+  }
+
   getBody() {
     return this.body;
+  }
+
+  setBody(body) {
+    this.body = body;
   }
 }

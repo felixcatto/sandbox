@@ -4,6 +4,7 @@ import debug from 'debug';
 import exphbs from 'express-handlebars';
 import path from 'path';
 import bodyParser from 'body-parser';
+import methodOverride from 'method-override';
 
 import Post from './entities/Post';
 import postsIndexHelpers from './views/posts/index';
@@ -29,11 +30,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const publicFolder = path.join(__dirname, 'public');
 app.use('/', Express.static(publicFolder));
 
+app.use(methodOverride('_method'));
 
 let posts = [
   new Post('hello', 'how are your?'),
   new Post('nodejs', 'story about nodejs'),
 ];
+
 
 
 app.get('/', (req, res) => {
@@ -47,7 +50,7 @@ app.get('/posts', (req, res) => {
   });
 });
 
-app.get('/posts/show/:id', (req, res) => {
+app.get('/posts/:id/show', (req, res) => {
   const post = posts.find(post => post.id === +req.params.id);
   if (!post) res.send('This post don\'n exist');
 
@@ -74,7 +77,7 @@ app.post('/posts/new', (req, res) => {
   if (Object.keys(errors).length === 0) {
     const post = new Post(title, body);
     posts.push(post);
-    res.redirect(`/posts/show/${post.id}`);
+    res.redirect('/posts');
     return;
   }
 
@@ -86,5 +89,54 @@ app.post('/posts/new', (req, res) => {
     },
   });
 });
+
+app.delete('/posts/:id', (req, res) => {
+  posts = posts.filter(post => post.id !== +req.params.id);
+  res.redirect('/posts');
+});
+
+app.get('/posts/:id/edit', (req, res) => {
+  const post = posts.find(post => post.id === +req.params.id);
+  res.render('posts/edit', {
+    data: {
+      action: `/posts/${post.getID()}?_method=PUT`,
+      form: {
+        title: post.getTitle(),
+        body: post.getBody(),
+      },
+    },
+  });
+});
+
+app.put('/posts/:id', (req, res) => {
+  const post = posts.find(post => post.id === +req.params.id);
+  const { title, body } = req.body;
+  const errors = {};
+  if (!title) {
+    errors.title = 'Title Can\'t be blank';
+  }
+
+  if (!body) {
+    errors.body = 'Body Can\'t be blank';
+  }
+
+  if (Object.keys(errors).length === 0) {
+    post.setTitle(title);
+    post.setBody(body);
+    res.redirect('/posts');
+    return;
+  }
+
+  res.status(422);
+  res.render('posts/edit', {
+    data: {
+      action: `/posts/${post.getID()}?_method=PUT`,
+      form: req.body, 
+      errors,
+    },
+  });
+});
+
+
 
 export default app;

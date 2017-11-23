@@ -11,7 +11,13 @@
       {{#each data.posts}}
         <li>
           <span>{{id}}:</span>
-          <a href="/posts/show/{{id}}">{{title}}</a>
+          <span>{{title}}</span>
+
+          <a href="/posts/{{id}}/show">(Show</a>
+          <a href="/posts/{{id}}/edit">Edit</a>
+          <form method="POST" class="pseudo-form" action="/posts/{{id}}?_method=DELETE">
+            <button type="submit" class="pseudo-form__link">Delete)</button>
+          </form>
         </li>
       {{/each}}
     </ul>

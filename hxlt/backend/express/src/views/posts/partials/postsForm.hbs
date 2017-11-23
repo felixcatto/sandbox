@@ -1,0 +1,23 @@
+<form method="post" action="{{action}}">
+
+  <div class="form-group">
+    <label>Title</label>
+    <input type="text" class="form-control" name="title" value="{{data.form.title}}">
+    {{#if data.errors.title}}
+      <div class="alert alert-danger">{{data.errors.title}}</div>
+    {{/if}}
+  </div>
+
+  <div class="form-group">
+    <label>Body</label>
+    <input type="text" class="form-control" name="body" value="{{data.form.body}}">
+    {{#if data.errors.body}}
+      <div class="alert alert-danger">{{data.errors.body}}</div>
+    {{/if}}
+  </div>
+
+  <a href="/posts" class="btn btn-link">Cancel</a>
+
+  <button class="btn btn-primary">Submit</button>
+
+</form>
