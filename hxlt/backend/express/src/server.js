@@ -5,6 +5,7 @@ import exphbs from 'express-handlebars';
 import path from 'path';
 import bodyParser from 'body-parser';
 import methodOverride from 'method-override';
+import uaParser from 'ua-parser-js';
 
 import Post from './entities/Post';
 import postsIndexHelpers from './views/posts/index';
@@ -32,6 +33,11 @@ app.use('/', Express.static(publicFolder));
 
 app.use(methodOverride('_method'));
 
+app.use((req, res, next) => {
+  req.useragent = uaParser(req.headers['user-agent']);
+  next();
+});
+
 let posts = [
   new Post('hello', 'how are your?'),
   new Post('nodejs', 'story about nodejs'),
@@ -40,7 +46,12 @@ let posts = [
 
 
 app.get('/', (req, res) => {
-  res.send('<a href="posts">Go Post</a>');
+  res.send('<a href="posts">Go Post</a><br><a href="agent">See Agent info</a>');
+});
+
+app.get('/agent', (req, res) => {
+  const useragent = JSON.stringify(req.useragent, null, 2);
+  res.send(`<pre>${useragent}</pre>`);
 });
 
 app.get('/posts', (req, res) => {
@@ -131,7 +142,7 @@ app.put('/posts/:id', (req, res) => {
   res.render('posts/edit', {
     data: {
       action: `/posts/${post.getID()}?_method=PUT`,
-      form: req.body, 
+      form: req.body,
       errors,
     },
   });
