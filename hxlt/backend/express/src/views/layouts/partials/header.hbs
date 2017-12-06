@@ -1,0 +1,23 @@
+<div class="header">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-6">
+        <div class="header__nav-links">
+          <a href="/agent" class="header__nav-link">User agent</a>
+          <a href="/users" class="header__nav-link">Users</a>
+          <a href="/posts" class="header__nav-link">Posts</a>
+        </div>
+      </div>
+      <div class="col-xs-6 text-right">
+        <div class="header__user-name">
+          Hello <b>{{currentUser.getName}}</b> <i>({{currentUser.getRole}})</i>
+        </div>
+        <div class="header__login-links">
+          <a href="/users/new" class="header__link">Sign up</a>
+          <a href="/users/log-in" class="header__link">Log in</a>
+          <a href="/users/log-out" class="header__link">Log out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

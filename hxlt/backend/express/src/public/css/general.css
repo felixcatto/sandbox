@@ -11,3 +11,49 @@
   text-decoration: underline;
   color: #23527c;
 }
+
+
+
+.header {
+  background: steelblue;
+  color: #fff;
+}
+
+.header__nav-link {
+  display: inline-block;
+  vertical-align: middle;
+  color: #fff;
+  margin-right: 15px;
+}
+.header__nav-link:last-child {
+  margin-right: 0;
+}
+.header__nav-link:focus,
+.header__nav-link:hover {
+  text-decoration: none;
+  color: #fff;
+}
+
+.header__user-name {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 40px;
+}
+.header__login-links {
+  display: inline-block;
+  vertical-align: middle;
+}
+.header__link {
+  display: inline-block;
+  vertical-align: middle;
+  color: #fff;
+  margin-right: 15px;
+}
+.header__link:last-child {
+  margin-right: 0;
+}
+.header__link:focus,
+.header__link:hover {
+  text-decoration: none;
+  color: #fff;
+}
