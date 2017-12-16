@@ -1,14 +1,11 @@
 import encrypt from '../lib/encrypt';
 
 export default class User {
-  static index = 0;
-
-  constructor(name, password, role) {
-    this.id = User.index;
+  constructor(id, name, password, role) {
+    this.id = id;
     this.name = name;
-    this.password = encrypt(password);
+    this.password = password;
     this.role = role ? role : 'user';
-    User.index += 1;
     this.getName = this.getName.bind(this);
     this.getRole = this.getRole.bind(this);
     this.isGuest = this.isGuest.bind(this);

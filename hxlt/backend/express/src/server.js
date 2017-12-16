@@ -9,9 +9,10 @@ import uaParser from 'ua-parser-js';
 import session from 'express-session';
 import cookieSession from 'cookie-session';
 
-import { usersRouter, postsRouter, miscRouter } from './routes/index';
+import applyRouting from './routes/index';
 import users from './DAL/users';
 import User from './entities/User';
+import { getUserByID } from './DAL/users';
 
 
 const app = new Express();
@@ -43,8 +44,7 @@ app.set('view engine', '.hbs');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const publicFolder = path.join(__dirname, 'public');
-app.use('/', Express.static(publicFolder));
+app.use('/', Express.static(path.join(__dirname, 'public')));
 
 app.use(methodOverride('_method'));
 
@@ -62,27 +62,21 @@ app.use(cookieSession({
   },
 }));
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   if (req.session.currentUserID) {
-    const user = users.find(user => user.getID() === req.session.currentUserID);
+    const user = await getUserByID(req.session.currentUserID);
     if (!user) {
-      res.locals.currentUser = new User('Guest', '', 'guest');
+      res.locals.currentUser = new User(-1, 'Guest', '', 'guest');
     } else {
       res.locals.currentUser = user;
     }
   } else {
-    res.locals.currentUser = new User('Guest', '', 'guest');
+    res.locals.currentUser = new User(-1, 'Guest', '', 'guest');
   }
   next();
 });
 
-
-app.get('/', (req, res) => {
-  res.render('common/index');
-});
-app.use('/users', usersRouter);
-app.use('/posts', postsRouter);
-app.use('/misc', miscRouter);
+applyRouting(app);
 
 
 export default app;

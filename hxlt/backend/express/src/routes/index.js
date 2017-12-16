@@ -2,7 +2,12 @@ import express from 'express';
 import encrypt from '../lib/encrypt';
 import Post from '../entities/Post';
 import User from '../entities/User';
-import users from '../DAL/users';
+import {
+  getUsers,
+  getUserByID,
+  getUserByNameNPass,
+  insertUser,
+} from '../DAL/users';
 import posts from '../DAL/posts';
 import postsIndexHelpers from '../views/posts/index';
 
@@ -17,17 +22,19 @@ miscRouter.get('/agent', (req, res) => {
 
 // usersRouter
 const usersRouter = express.Router();
-usersRouter.get('/', (req, res) => {
-  res.render('users/list', {
-    data: { users },
+usersRouter.route('/')
+  .get(async (req, res) => {
+    const users = await getUsers();
+    res.render('users/list', {
+      data: { users },
+    });
   });
-});
 
 usersRouter.route('/new')
   .get((req, res) => {
     res.render('users/new');
   })
-  .post((req, res) => {
+  .post(async (req, res) => {
     const { name, pass } = req.body;
     const errors = {};
     if (!name) {
@@ -39,9 +46,8 @@ usersRouter.route('/new')
     }
 
     if (Object.keys(errors).length === 0) {
-      const user = new User(name, pass);
-      users.push(user);
-      req.session.currentUserID = user.getID();
+      const id = await insertUser(name, encrypt(pass), 'user');
+      req.session.currentUserID = id;
       res.redirect('/posts');
       return;
     }
@@ -64,11 +70,10 @@ usersRouter.route('/log-in')
   .get((req, res) => {
     res.render('users/login');
   })
-  .post((req, res) => {
+  .post(async (req, res) => {
     const { name, pass } = req.body;
     const errors = {};
-    const user = users
-      .find(user => user.getName() === name && user.getPassword() === encrypt(pass));
+    const user = await getUserByNameNPass(name, encrypt(pass));
     if (!user) {
       errors.error = 'Something going wrong';
     }
@@ -140,11 +145,9 @@ postsRouter.route('/:id')
   })
   .delete((req, res) => {
     const i = posts.findIndex(post => post.id === +req.params.id);
-    console.log(i);
     if (i !== -1) {
       posts.splice(i, 1);
     }
-    console.log(posts);
     res.redirect('/posts');
   })
   .put((req, res) => {
@@ -190,4 +193,11 @@ postsRouter.get('/:id/edit', (req, res) => {
 });
 
 
-export { usersRouter, postsRouter, miscRouter };
+export default (app) => {
+  app.get('/', (req, res) => {
+    res.render('common/index');
+  });
+  app.use('/users', usersRouter);
+  app.use('/posts', postsRouter);
+  app.use('/misc', miscRouter);
+};
