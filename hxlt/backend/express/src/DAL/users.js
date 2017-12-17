@@ -13,6 +13,13 @@ export const getUserByID = async (id) => {
   return new User(user.id, user.name, user.password, user.role);
 };
 
+export const getUserByName = async (name) => {
+  const user = await db.oneOrNone('select * from users where name = $1', name);
+  if (!user) return null;
+
+  return new User(user.id, user.name, user.password, user.role);
+};
+
 export const getUserByNameNPass = async (name, password) => {
   const user = await db.oneOrNone(`
     select * from users where

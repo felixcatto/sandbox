@@ -13,9 +13,11 @@ import applyRouting from './routes/index';
 import users from './DAL/users';
 import User from './entities/User';
 import { getUserByID } from './DAL/users';
+import { createAdminRole } from './DAL/fixtures';
 
 
 const app = new Express();
+
 // app.use(morgan('dev'));
 
 const viewsFolder = path.join(__dirname, 'views');
@@ -77,6 +79,8 @@ app.use(async (req, res, next) => {
 });
 
 applyRouting(app);
+
+createAdminRole();
 
 
 export default app;

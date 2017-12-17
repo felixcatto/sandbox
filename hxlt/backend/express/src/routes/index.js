@@ -5,6 +5,7 @@ import User from '../entities/User';
 import {
   getUsers,
   getUserByID,
+  getUserByName,
   getUserByNameNPass,
   insertUser,
 } from '../DAL/users';
@@ -36,13 +37,18 @@ usersRouter.route('/new')
   })
   .post(async (req, res) => {
     const { name, pass } = req.body;
+    const isUserAlreadyExist = await getUserByName(name);
     const errors = {};
     if (!name) {
-      errors.title = 'Name Can\'t be blank';
+      errors.name = 'Name can\'t be blank';
+    }
+
+    if (isUserAlreadyExist) {
+      errors.name = 'User with this name already registered';
     }
 
     if (!pass) {
-      errors.body = 'Password Can\'t be blank';
+      errors.pass = 'Password can\'t be blank';
     }
 
     if (Object.keys(errors).length === 0) {

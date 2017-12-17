@@ -5,7 +5,7 @@ export default class User {
     this.id = id;
     this.name = name;
     this.password = password;
-    this.role = role ? role : 'user';
+    this.role = role;
     this.getName = this.getName.bind(this);
     this.getRole = this.getRole.bind(this);
     this.isGuest = this.isGuest.bind(this);
