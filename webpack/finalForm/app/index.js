@@ -198,66 +198,69 @@
 
 
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import { createForm } from 'final-form';
 import arrayMutators from 'final-form-arrays';
+window.bundle = {
+  createForm,
+  arrayMutators,
+};
+// const initialState = {};
+// const finalForm = createForm({
+//   onSubmit: values => console.log(JSON.stringify(values, 0, 2)),
+//   mutators: { ...arrayMutators },
+//   initialValues: {
+//     name: 'John',
+//     customers: [],
+//   },
+// });
 
-const initialState = {};
-const finalForm = createForm({
-  onSubmit: values => console.log(JSON.stringify(values, 0, 2)),
-  mutators: { ...arrayMutators },
-  initialValues: {
-    name: 'John',
-    customers: [],
-  },
-});
+// finalForm.registerField(
+//   'name',
+//   fieldState => {
+//     initialState.name = fieldState;
+//   }, {}, {
+//     getValidator: () => value => (value === '' ? 'Required' : undefined),
+//   },
+// );
 
-finalForm.registerField(
-  'name',
-  fieldState => {
-    initialState.name = fieldState;
-  }, {}, {
-    getValidator: () => value => (value === '' ? 'Required' : undefined),
-  },
-);
+// finalForm.registerField(
+//   'customers',
+//   (fieldState) => {
+//     initialState.customers = fieldState;
+//   }, {}, {
+//     getValidator: () => (value) => {
+//       console.log(value);
+//     },
+//   }
+// );
 
-finalForm.registerField(
-  'customers',
-  (fieldState) => {
-    initialState.customers = fieldState;
-  }, {}, {
-    getValidator: () => (value) => {
-      console.log(value);
-    },
-  }
-);
+// finalForm.registerField(
+//   'customers.megaplan',
+//   (fieldState) => {
+//     initialState.megaplan = fieldState;
+//   }, {}, {
+//     getValidator: () => (value) => {
+//       console.log(value);
+//     },
+//   }
+// );
 
-finalForm.registerField(
-  'customers.megaplan',
-  (fieldState) => {
-    initialState.megaplan = fieldState;
-  }, {}, {
-    getValidator: () => (value) => {
-      console.log(value);
-    },
-  }
-);
-
-// // finalForm.mutators.push('customers', { firstName: '', lastName: '' });
-finalForm.mutators.push('customers', { megaplan: '' });
+// // // finalForm.mutators.push('customers', { firstName: '', lastName: '' });
+// finalForm.mutators.push('customers', { megaplan: '' });
 
 
-const formEl = document.querySelector('.js-form');
-const nameEl = document.querySelector('.js-name');
-const firstNameEl = document.querySelector('.js-firstname');
+// const formEl = document.querySelector('.js-form');
+// const nameEl = document.querySelector('.js-name');
+// const firstNameEl = document.querySelector('.js-firstname');
 
-formEl.addEventListener('submit', (e) => {
-  event.preventDefault();
-  finalForm.submit();
-});
-nameEl.addEventListener('change', e => initialState.name.change(e.target.value));
-nameEl.addEventListener('blur', () => initialState.name.blur());
-nameEl.addEventListener('focus', () => initialState.name.focus());
-firstNameEl.addEventListener('change', e => initialState.customers.change(e.target.value));
-firstNameEl.addEventListener('blur', () => initialState.customers.blur());
-firstNameEl.addEventListener('focus', () => initialState.customers.focus());
+// formEl.addEventListener('submit', (e) => {
+//   event.preventDefault();
+//   finalForm.submit();
+// });
+// nameEl.addEventListener('change', e => initialState.name.change(e.target.value));
+// nameEl.addEventListener('blur', () => initialState.name.blur());
+// nameEl.addEventListener('focus', () => initialState.name.focus());
+// firstNameEl.addEventListener('change', e => initialState.customers.change(e.target.value));
+// firstNameEl.addEventListener('blur', () => initialState.customers.blur());
+// firstNameEl.addEventListener('focus', () => initialState.customers.focus());
