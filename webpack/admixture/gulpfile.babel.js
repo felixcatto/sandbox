@@ -6,12 +6,15 @@ import postcss from 'gulp-postcss';
 import cssImport from "postcss-import";
 import del from'del';
 import Browser from 'browser-sync';
-import webpack from 'webpack-stream';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackConfig from './webpack.config.js';
-import merge from 'merge-stream';
 
 
 const server = Browser.create();
+const bundler = webpack(webpackConfig);
+
+bundler.plugin('done', () => server.reload());
 
 const reload = (done) => {
   server.reload();
@@ -26,21 +29,25 @@ const startServer = (done) => {
   server.init({
     open: false,
     notify: false,
-    server: {
-      baseDir: 'app',
-    },
+    server: 'app',
+    middleware: [
+      webpackDevMiddleware(bundler, {
+        publicPath: webpackConfig.output.publicPath,
+      }),
+    ],
   });
   done();
 };
 
-const bundleJs = () => {
-  return gulp.src('src/js/bundle.js')
-    .pipe(webpack(webpackConfig))
-    .pipe(gulp.dest('app/js'));
-};
+// const bundleJs = () => {
+//   return gulp.src('src/js/bundle.js')
+//     .pipe(webpack(webpackConfig))
+//     .pipe(gulp.dest('app/js'));
+// };
 
 const transpileScss = () => {
   return gulp.src('src/scss/**/*.scss')
+    .pipe(sass())
     .pipe(postcss([cssImport()]))
     .pipe(concat('main.css'))
     .pipe(gulp.dest('app/css'));
@@ -58,7 +65,6 @@ const clean = () => del(['app']);
 const watch = () => {
   gulp.watch('src/scss/**/*.scss', gulp.series(transpileScss, reload));
   // gulp.watch('src/js/**/*.js', gulp.series(transpileJs, reload));
-  gulp.watch('src/js/**/*.js', gulp.series(bundleJs, reload));
   gulp.watch('src/*.html', gulp.series(copyHtml, reload));
   gulp.watch('src/img/**', gulp.series(copyImg, reload));
 };
@@ -68,9 +74,8 @@ const dev = gulp.series(...[
   copyHtml,
   copyImg,
   transpileScss,
-  bundleJs,
   startServer,
   watch,
 ]);
 
-export { dev, bundleJs };
+export { dev };
