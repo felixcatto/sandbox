@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bootstrap": "^4.0.0",
     "consolidate": "^0.15.0",
     "express": "^4.16.2",
     "react": "^16.2.0",
@@ -22,6 +23,10 @@
     "del": "^3.0.0",
     "gulp": "^4.0.0",
     "gulp-babel": "^7.0.1",
-    "gulp-revert-path": "^2.0.0"
+    "gulp-postcss": "^7.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-revert-path": "^2.0.0",
+    "gulp-sass": "^3.1.0",
+    "postcss-import": "^11.1.0"
   }
 }
