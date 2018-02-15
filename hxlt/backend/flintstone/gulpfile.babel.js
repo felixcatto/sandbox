@@ -18,7 +18,7 @@ const startServer = (cb) => {
 
 // const copyPublic = () => gulp.src('src/public/**').pipe(gulp.dest('app/public/'));
 
-const copyLayout = () => gulp.src('src/**/*.html').pipe(gulp.dest('app'));
+const copyLayout = () => gulp.src('src/index.html').pipe(gulp.dest('app'));
 
 const transpileScss = () => {
   return gulp.src('src/public/css/index.scss')
