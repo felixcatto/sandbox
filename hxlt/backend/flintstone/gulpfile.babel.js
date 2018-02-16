@@ -15,6 +15,7 @@ const startServer = (cb) => {
   node = spawn('node', ['app/bin/server.js'], { stdio: 'inherit' });
   cb();
 };
+process.on('exit', () => node && node.kill());
 
 // const copyPublic = () => gulp.src('src/public/**').pipe(gulp.dest('app/public/'));
 

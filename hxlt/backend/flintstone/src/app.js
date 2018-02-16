@@ -2,8 +2,9 @@ import express from 'express';
 import path from 'path';
 import cons from 'consolidate';
 import react from 'react';
-import homeRouter from './pages/home/homeController';
-import weaponsRouter from './pages/weapons/weaponsController';
+import Router from 'named-routes';
+import applyHomeRouter from './pages/home/homeController';
+import applyWeaponsRouter from './pages/weapons/weaponsController';
 
 
 const app = express();
@@ -12,9 +13,12 @@ app.set('view engine', 'jsx');
 app.set('views', `${__dirname}/pages`);
 app.locals.base = `${__dirname}/index.html`;
 
+const router = new Router();
+router.extendExpress(app);
+
 app.use('/', express.static(path.join(__dirname, 'public')));
 
-app.use('/', homeRouter);
-app.use('/weapons', weaponsRouter);
+applyHomeRouter(app);
+applyWeaponsRouter(app);
 
 export default app;
