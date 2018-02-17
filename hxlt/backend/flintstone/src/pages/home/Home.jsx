@@ -1,7 +1,9 @@
 import React from 'react';
+import withContext from '../../components/withContext';
 import Layout from '../../components/Layout';
+import Stub from '../../components/Stub';
 
-module.exports = (props) => {
+const Home = (props) => {
   return (
     <Layout>
       <div className="container">
@@ -12,7 +14,10 @@ module.exports = (props) => {
           only beginning. In future we add posgress db and front-end interactive 
           components! Do not miss it :)
         </p>
+        <Stub/>
       </div>
     </Layout>
   );
-}
+};
+
+module.exports = withContext(Home);

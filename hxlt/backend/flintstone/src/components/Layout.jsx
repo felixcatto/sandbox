@@ -2,13 +2,15 @@ import React from 'react';
 import Header from './Header';
 
 
-module.exports = (props) => {
+const Layout = (props) => {
   return (
     <div>
-      <div className="container">
+      <div className="container mb-20">
         <Header/>
       </div>
       {props.children}
     </div>
   );
-}
+};
+
+module.exports = Layout;

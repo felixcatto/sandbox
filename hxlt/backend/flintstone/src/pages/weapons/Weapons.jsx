@@ -1,7 +1,8 @@
 import React from 'react';
+import withContext from '../../components/withContext';
 import Layout from '../../components/Layout';
 
-module.exports = ({ weaponsList }) => {
+const Weapons = ({ weaponsList }) => {
   return (
     <Layout>
       <div className="container">
@@ -14,4 +15,6 @@ module.exports = ({ weaponsList }) => {
       </div>
     </Layout>
   );
-}
+};
+
+module.exports = withContext(Weapons);

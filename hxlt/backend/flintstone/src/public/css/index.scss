@@ -6,3 +6,32 @@ body {
   color: #333;
   font-family: "Comic Sans MS";
 }
+
+$i: 50;
+@while  $i >= 0 {
+  .mb-#{$i} {
+    margin-bottom: $i + px !important;
+  }
+  .mt-#{$i} {
+    margin-top: $i + px !important;
+  }
+  .ml-#{$i} {
+    margin-left: $i + px !important;
+  }
+  .mr-#{$i} {
+    margin-right: $i + px !important;
+  }
+  .pb-#{$i} {
+    padding-bottom: $i + px !important;
+  }
+  .pt-#{$i} {
+    padding-top: $i + px !important;
+  }
+  .pl-#{$i} {
+    padding-left: $i + px !important;
+  }
+  .pr-#{$i} {
+    padding-right: $i + px !important;
+  }
+  $i: $i - 5;
+}

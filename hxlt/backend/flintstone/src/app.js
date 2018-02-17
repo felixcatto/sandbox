@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import cons from 'consolidate';
-import react from 'react';
 import Router from 'named-routes';
 import applyHomeRouter from './pages/home/homeController';
 import applyWeaponsRouter from './pages/weapons/weaponsController';
@@ -15,8 +14,14 @@ app.locals.base = `${__dirname}/index.html`;
 
 const router = new Router();
 router.extendExpress(app);
+app.locals.url = app.namedRoutes.build.bind(app.namedRoutes);
 
 app.use('/', express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+  res.locals.pathname = req.path;
+  next();
+});
 
 applyHomeRouter(app);
 applyWeaponsRouter(app);
