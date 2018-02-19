@@ -11,10 +11,11 @@ const Home = (props) => {
         <p>
           Welcome to our new app. It has many cool features such as automatic gulp setup,
           written in es6 style, scss -> css pipeline, react templating. But this is 
-          only beginning. In future we add posgress db and front-end interactive 
+          only beginning. In future we will add posgress db and front-end interactive 
           components! Do not miss it :)
         </p>
         <Stub/>
+        <div id="BtnGroup"></div>
       </div>
     </Layout>
   );

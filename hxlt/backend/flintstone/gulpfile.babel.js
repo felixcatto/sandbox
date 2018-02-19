@@ -7,7 +7,12 @@ import rename from 'gulp-rename';
 import sass from 'gulp-sass';
 import postcss from 'gulp-postcss';
 import cssImport from 'postcss-import';
+import webpackStream from 'webpack-stream';
+import webpackConfig from './webpack.config.js';
 
+
+
+const serverJsPath = ['src/**/*.+(js|jsx)', '!src/client/**'];
 
 let node;
 const startServer = (cb) => {
@@ -16,8 +21,6 @@ const startServer = (cb) => {
   cb();
 };
 process.on('exit', () => node && node.kill());
-
-// const copyPublic = () => gulp.src('src/public/**').pipe(gulp.dest('app/public/'));
 
 const copyLayout = () => gulp.src('src/index.html').pipe(gulp.dest('app'));
 
@@ -29,28 +32,33 @@ const transpileScss = () => {
     .pipe(gulp.dest('app/public/css'));
 };
 
-const transpileJs = () => {
-  return gulp.src('src/**/*.+(js|jsx)')
+const transpileServerJs = () => {
+  return gulp.src(serverJsPath)
     .pipe(babel())
     .pipe(revertPath())
     .pipe(gulp.dest('app'));
 };
 
+const bundleClientJs = () => {
+  return webpackStream(webpackConfig)
+    .pipe(gulp.dest('app/public/js'));
+};
+
 const clean = () => del(['app']);
 
 const watch = () => {
-  gulp.watch('src/**/*.+(js|jsx)', gulp.series(transpileJs, startServer));
-  gulp.watch('src/views/**/*.html', gulp.series(copyLayout, transpileJs, startServer));
+  gulp.watch(serverJsPath, gulp.series(transpileServerJs, startServer));
+  gulp.watch('src/index.html', gulp.series(copyLayout, transpileServerJs, startServer));
   gulp.watch('src/public/css/**/*.scss', gulp.series(transpileScss));
 };
 
-const dev = gulp.series(...[
+const dev = gulp.series(
   clean,
   copyLayout,
   transpileScss,
-  transpileJs,
+  transpileServerJs,
   startServer,
   watch,
-]);
+);
 
-export { dev };
+export { dev, bundleClientJs };
