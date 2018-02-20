@@ -1,6 +1,8 @@
 import path from 'path';
+import webpack from 'webpack';
 export default {
   entry: {
+    vendors: ['react', 'react-dom'],
     home: path.resolve(__dirname, 'src/client/pages/Home.jsx'),
   },
   output: {
@@ -28,4 +30,10 @@ export default {
       },
     ],
   },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendors',
+      minChunks: Infinity,
+    }),
+  ],
 };

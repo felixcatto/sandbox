@@ -21,4 +21,4 @@ const Home = (props) => {
   );
 };
 
-module.exports = withContext(Home);
+export default withContext(Home);

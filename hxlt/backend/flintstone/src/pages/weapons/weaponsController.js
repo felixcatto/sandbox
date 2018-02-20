@@ -1,11 +1,11 @@
-import express from 'express';
+import render from '../../lib/render';
+import Weapons from './Weapons';
 import weaponsList from './weaponsDAL';
 
 
 export default (app) => {
   app.get('/weapons', 'weapons', (req, res) => {
-    res.render('weapons/Weapons', {
-      weaponsList,
-    });
+    const html = render(res.locals, Weapons, { weaponsList });
+    res.send(html);
   });
 };

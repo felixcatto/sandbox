@@ -17,4 +17,4 @@ const Weapons = ({ weaponsList }) => {
   );
 };
 
-module.exports = withContext(Weapons);
+export default withContext(Weapons);
