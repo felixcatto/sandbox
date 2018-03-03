@@ -7,12 +7,17 @@ import rename from 'gulp-rename';
 import sass from 'gulp-sass';
 import postcss from 'gulp-postcss';
 import cssImport from 'postcss-import';
+import webpack from 'webpack';
 import webpackStream from 'webpack-stream';
+import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackConfig from './webpack.config.js';
-
+import Browser from 'browser-sync';
 
 
 const serverJsPath = ['src/**/*.js', '!src/client/**'];
+const proxyServer = Browser.create();
+const bundler = webpack(webpackConfig);
+bundler.plugin('done', () => proxyServer.reload());
 
 let node;
 const startServer = (cb) => {
@@ -21,6 +26,25 @@ const startServer = (cb) => {
   cb();
 };
 process.on('exit', () => node && node.kill());
+
+const startProxyServer = (done) => {
+  proxyServer.init({
+    open: false,
+    notify: false,
+    proxy: 'localhost:3000',
+    port: 4000,
+    middleware: [
+      webpackDevMiddleware(bundler, {
+        publicPath: webpackConfig.output.publicPath,
+      }),
+    ],
+  });
+  done();
+};
+const reload = (done) => {
+  proxyServer.reload();
+  done();
+};
 
 const copyLayout = () => gulp.src('src/index.html').pipe(gulp.dest('app'));
 
@@ -47,10 +71,9 @@ const bundleClientJs = () => {
 const clean = () => del(['app']);
 
 const watch = () => {
-  gulp.watch(serverJsPath, gulp.series(transpileServerJs, startServer));
-  gulp.watch('src/index.html', gulp.series(copyLayout, transpileServerJs, startServer));
-  gulp.watch('src/client/**/*', gulp.series(bundleClientJs, startServer));
-  gulp.watch('src/public/css/**/*.scss', gulp.series(transpileScss));
+  gulp.watch(serverJsPath, gulp.series(transpileServerJs, startServer, reload));
+  gulp.watch('src/index.html', gulp.series(copyLayout, transpileServerJs, startServer, reload));
+  gulp.watch('src/public/css/**/*.scss', gulp.series(transpileScss, reload));
 };
 
 const dev = gulp.series(
@@ -58,8 +81,8 @@ const dev = gulp.series(
   copyLayout,
   transpileScss,
   transpileServerJs,
-  bundleClientJs,
   startServer,
+  startProxyServer,
   watch,
 );
 

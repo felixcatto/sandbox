@@ -18,7 +18,7 @@ export default {
   },
   output: {
     filename: '[name].js',
-    // path: path.resolve(__dirname, 'app/public/js'),
+    publicPath: '/js',
   },
   module: {
     rules: [

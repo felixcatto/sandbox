@@ -14,7 +14,7 @@ const Home = (props) => {
           only beginning. In future we will add posgress db and front-end interactive 
           components! Do not miss it :)
         </p>
-        <Stub/>
+        <p>Update: interactive front-end components have added (3.03.2018)</p>
         <div id="BtnGroup"></div>
       </div>
     </Layout>
