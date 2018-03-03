@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import BtnGroup from '../components/BtnGroup.jsx';
+import BtnGroup from '../components/BtnGroup';
 
 
 ReactDOM.render(<BtnGroup/>, document.querySelector(`#BtnGroup`));

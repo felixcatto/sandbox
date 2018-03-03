@@ -12,7 +12,7 @@ import webpackConfig from './webpack.config.js';
 
 
 
-const serverJsPath = ['src/**/*.+(js|jsx)', '!src/client/**'];
+const serverJsPath = ['src/**/*.js', '!src/client/**'];
 
 let node;
 const startServer = (cb) => {
@@ -49,6 +49,7 @@ const clean = () => del(['app']);
 const watch = () => {
   gulp.watch(serverJsPath, gulp.series(transpileServerJs, startServer));
   gulp.watch('src/index.html', gulp.series(copyLayout, transpileServerJs, startServer));
+  gulp.watch('src/client/**/*', gulp.series(bundleClientJs, startServer));
   gulp.watch('src/public/css/**/*.scss', gulp.series(transpileScss));
 };
 
@@ -57,6 +58,7 @@ const dev = gulp.series(
   copyLayout,
   transpileScss,
   transpileServerJs,
+  bundleClientJs,
   startServer,
   watch,
 );

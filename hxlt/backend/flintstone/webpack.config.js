@@ -1,21 +1,29 @@
 import path from 'path';
 import webpack from 'webpack';
+import { capitalize } from 'lodash';
+import clientPages from './src/lib/clientPages';
+
+
+const entries = Object.values(clientPages)
+  .reduce((acc, componentName) => ({
+    ...acc,
+    [componentName]: path
+      .resolve(__dirname, `src/client/pages/${capitalize(componentName)}.js`),
+  }), {});
+
 export default {
   entry: {
-    vendors: ['react', 'react-dom'],
-    home: path.resolve(__dirname, 'src/client/pages/Home.jsx'),
+    vendors: ['react', 'react-dom', 'lodash'],
+    ...entries,
   },
   output: {
     filename: '[name].js',
     // path: path.resolve(__dirname, 'app/public/js'),
   },
-  resolve: {
-    extensions: ['.js', '.json', '.jsx'],
-  },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.js$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',

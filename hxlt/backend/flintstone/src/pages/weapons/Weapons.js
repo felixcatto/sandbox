@@ -12,6 +12,7 @@ const Weapons = ({ weaponsList }) => {
             <li>{weapon.name}</li>
           ))}
         </ul>
+        <div id="Todo"></div>
       </div>
     </Layout>
   );
