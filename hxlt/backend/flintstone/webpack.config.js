@@ -11,7 +11,7 @@ const entries = Object.values(clientPages)
       .resolve(__dirname, `src/client/pages/${capitalize(componentName)}.js`),
   }), {});
 
-export default {
+const config = {
   entry: {
     vendors: ['react', 'react-dom', 'lodash'],
     ...entries,
@@ -45,3 +45,32 @@ export default {
     }),
   ],
 };
+
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
+  );
+  config.plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        screw_ie8: true,
+        conditionals: true,
+        unused: true,
+        comparisons: true,
+        sequences: true,
+        dead_code: true,
+        evaluate: true,
+        if_return: true,
+        join_vars: true
+      },
+      output: {
+        comments: false,
+      },
+    }),
+  );
+}
+
+export default config;
