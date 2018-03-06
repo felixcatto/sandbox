@@ -1,0 +1,29 @@
+def run(self, **args):
+    """Run the command."""
+    self.which = args['which']
+
+    if self.linters.get(self.which) is None:
+        linters = []
+        settings = persist.settings.get('linters', {})
+
+        for instance in persist.linter_classes:
+            linter_settings = settings.get(instance, {})
+            disabled = linter_settings.get('@disable')
+
+            if self.which == 'all':
+                include = True
+                instance = [instance, 'disabled' if disabled else 'enabled']
+            else:
+                include = (
+                    self.which == 'enabled' and not disabled or
+                    self.which == 'disabled' and disabled
+                )
+
+            if include:
+                linters.append(instance)
+
+        linters.sort()
+        self.linters[self.which] = linters
+
+    if self.linters and self.linters[self.which]:
+        self.window.show_quick_panel(self.linters[self.which], self.on_done)

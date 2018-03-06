@@ -1,0 +1,16 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  height: 90px;
+  background: rgba(252, 90, 44, 0.89);
+
+  &__title {
+    font-size: 32px;
+    font-family: Roboto;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+  }
+}

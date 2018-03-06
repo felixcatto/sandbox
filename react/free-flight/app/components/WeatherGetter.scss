@@ -1,0 +1,24 @@
+.weather-getter {
+  display: inline-block;
+  &_inline {
+    text-align: center;
+  }
+
+  &__input {
+    width: 200px;
+    height: 48px;
+  }
+  &__input_block {
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 10px;
+  }
+  &__input_inline {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  &__link {
+    text-decoration: none;
+  }
+}
