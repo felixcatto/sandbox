@@ -1,0 +1,37 @@
+{
+  "name": "koajs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "gulp": "gulp"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "browser-sync": "^2.23.6",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-babel": "^7.0.1",
+    "gulp-postcss": "^7.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "postcss-import": "^11.1.0",
+    "webpack": "^3.11.0",
+    "webpack-dev-middleware": "^2.0.4",
+    "webpack-stream": "^4.0.1"
+  },
+  "dependencies": {
+    "koa": "^2.5.0",
+    "lodash": "^4.17.5",
+    "redux": "^3.7.2",
+    "redux-actions": "^2.3.0",
+    "redux-devtools-extension": "^2.13.2"
+  }
+}
