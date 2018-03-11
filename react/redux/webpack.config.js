@@ -4,13 +4,13 @@ import webpack from 'webpack';
 
 const config = {
   entry: {
+    vendors: ['react', 'react-dom', 'redux', 'react-redux', 'lodash'],
     index: path.resolve(__dirname, 'src/client/index.js'),
   },
   output: {
     filename: '[name].js',
     publicPath: '/js',
   },
-  devtool: 'cheap-module-eval-source-map',
   module: {
     rules: [
       {
@@ -29,10 +29,15 @@ const config = {
       },
     ],
   },
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendors',
+      minChunks: Infinity,
+    }),
+  ],
 };
 
 if (process.env.NODE_ENV === 'production') {
-  config.plugins = config.plugins || [];
   config.plugins.push(
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
@@ -57,6 +62,8 @@ if (process.env.NODE_ENV === 'production') {
       },
     }),
   );
+} else {
+  config.devtool = 'cheap-module-eval-source-map';
 }
 
 export default config;
