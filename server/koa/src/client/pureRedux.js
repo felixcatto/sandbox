@@ -248,4 +248,4 @@ store.dispatch(addTask({ id: 11, name: 'vasa eto boroda' }));
 store.dispatch(addTask({ id: 12, name: 'ggwp lanaya' }));
 store.dispatch(addTask({ id: 13, name: 'privet medved' }));
 store.dispatch(removeTask(13));
-store.dispatch(addTask({ id: 11, name: 'vasa eto boroda (updated)' }));
+store.dispatch(updateTask({ id: 11, name: 'vasa eto boroda (updated)' }));

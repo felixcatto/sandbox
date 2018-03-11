@@ -28,8 +28,14 @@
     "webpack-stream": "^4.0.1"
   },
   "dependencies": {
+    "bootstrap": "^4.0.0",
+    "immutability-helper": "^2.6.6",
     "koa": "^2.5.0",
+    "koa-static": "^4.0.2",
     "lodash": "^4.17.5",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
     "redux": "^3.7.2",
     "redux-actions": "^2.3.0",
     "redux-devtools-extension": "^2.13.2"

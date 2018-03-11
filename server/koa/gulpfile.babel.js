@@ -94,7 +94,7 @@ const watch = () => {
 const dev = gulp.series(
   clean,
   copyLayout,
-  // transpileScss,
+  transpileScss,
   transpileServerJs,
   startServer,
   startProxyServer,

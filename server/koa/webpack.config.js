@@ -4,8 +4,7 @@ import webpack from 'webpack';
 
 const config = {
   entry: {
-    vendors: ['redux', 'lodash'],
-    app: path.resolve(__dirname, 'src/client/app.js'),
+    index: path.resolve(__dirname, 'src/client/index.js'),
   },
   output: {
     filename: '[name].js',
@@ -30,15 +29,10 @@ const config = {
       },
     ],
   },
-  plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendors',
-      minChunks: Infinity,
-    }),
-  ],
 };
 
 if (process.env.NODE_ENV === 'production') {
+  config.plugins = config.plugins || [];
   config.plugins.push(
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
