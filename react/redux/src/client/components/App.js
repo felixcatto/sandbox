@@ -1,17 +1,21 @@
 import React from 'react';
 import { isEmpty } from 'lodash';
-import { updateNewTaskText, addTask } from '../actions';
 
 
 export default class App extends React.Component {
   onTaskAdd = (e) => {
     e.preventDefault();
     const { newTaskText } = this.props;
-    this.props.dispatch(addTask({ text: newTaskText }));
+    this.props.addTask({ text: newTaskText });
   };
 
   onTextChange = (e) => {
-    this.props.dispatch(updateNewTaskText(e.target.value));
+    this.props.updateNewTaskText(e.target.value);
+  };
+
+  onRemove = (id) => (e) => {
+    e.preventDefault();
+    this.props.removeTask(id);
   };
 
   render() {
@@ -32,8 +36,9 @@ export default class App extends React.Component {
           <div className="mt-3">
             <ul className="list-group">
               {tasks.map((task) => (
-                <li className="list-group-item d-flex justify-content-end" key={task.id}>
-                  {task.text}
+                <li className="list-group-item d-flex justify-content-between" key={task.id}>
+                  <div>{task.text}</div>
+                  <a href="#" onClick={this.onRemove(task.id)}>x</a>
                 </li>
               ))}
             </ul>

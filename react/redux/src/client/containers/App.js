@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import App from '../components/App.js';
+import * as actionCreators from '../actions';
 
 
 const mapStateToProps = ({ tasks, newTaskText }) => ({
@@ -7,4 +8,4 @@ const mapStateToProps = ({ tasks, newTaskText }) => ({
   newTaskText,
 });
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, actionCreators)(App);
