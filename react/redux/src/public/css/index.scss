@@ -7,6 +7,12 @@ body {
   font-family: "Comic Sans MS";
 }
 
+.line-through {
+  text-decoration: line-through;
+}
+
+
+
 $i: 50;
 @while  $i >= 0 {
   .mb-#{$i} {
@@ -32,6 +38,14 @@ $i: 50;
   }
   .pr-#{$i} {
     padding-right: $i + px !important;
+  }
+  .px-#{$i} {
+    padding-left: $i + px !important;
+    padding-right: $i + px !important;
+  }
+  .py-#{$i} {
+    padding-top: $i + px !important;
+    padding-bottom: $i + px !important;
   }
   $i: $i - 5;
 }

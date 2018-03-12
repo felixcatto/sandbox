@@ -7,7 +7,7 @@ import reducers from './reducers';
 import AppContainer from './containers/App';
 
 const initialState = {
-  tasks: { 0: { id: '0', text: 'eh nihrena sebe' } },
+  tasks: { 0: { id: '0', state: 'active', text: 'eh nifiga sebe' } },
   newTaskText: '',
 };
 const store = createStore(reducers, initialState, composeWithDevTools());
