@@ -13,10 +13,6 @@ import webpackConfig from './webpack.config.js';
 import Browser from 'browser-sync';
 
 
-const paths = {
-  dev: 'app',
-  prod: 'dist',
-};
 const serverJsPath = ['src/**/*.js', '!src/client/**'];
 const proxyServer = Browser.create();
 const bundler = webpack(webpackConfig);
@@ -26,7 +22,7 @@ bundler.plugin('done', () => proxyServer.reload());
 let node;
 const startServer = (done) => {
   if (node) node.kill();
-  node = spawn('node', ['app/bin/server.js'], { stdio: 'inherit' });
+  node = spawn('node', ['dist/bin/server.js'], { stdio: 'inherit' });
   done();
 };
 process.on('exit', () => node && node.kill());
@@ -52,36 +48,26 @@ const reload = (done) => {
 };
 
 
-const makeCopyLayout = dest => gulp.src('src/index.html').pipe(gulp.dest(dest));
-const copyLayout = makeCopyLayout.bind(null, paths.dev);
-const copyLayoutProd = makeCopyLayout.bind(null, paths.prod);
+const copyLayout = () => gulp.src('src/index.html').pipe(gulp.dest('dist'));
 
 
-const makeTranspileScss = dest => gulp.src('src/public/css/index.scss')
+const transpileScss = () => gulp.src('src/public/css/index.scss')
   .pipe(sass())
   .pipe(postcss([cssImport()]))
   .pipe(rename('index.css'))
-  .pipe(gulp.dest(`${dest}/public/css`));
-const transpileScss = makeTranspileScss.bind(null, paths.dev);
-const transpileScssProd = makeTranspileScss.bind(null, paths.prod);
+  .pipe(gulp.dest('dist/public/css'));
 
 
-const makeTranspileServerJs = dest => gulp.src(serverJsPath)
+const transpileServerJs = () => gulp.src(serverJsPath)
   .pipe(babel())
-  .pipe(gulp.dest(dest));
-const transpileServerJs = makeTranspileServerJs.bind(null, paths.dev);
-const transpileServerJsProd = makeTranspileServerJs.bind(null, paths.prod);
+  .pipe(gulp.dest('dist'));
 
 
-const makeBundleClientJs = dest => webpackStream(webpackConfig)
-  .pipe(gulp.dest(`${dest}/public/js`));
-const bundleClientJs = makeBundleClientJs.bind(null, paths.dev);
-const bundleClientJsProd = makeBundleClientJs.bind(null, paths.prod);
+const bundleClientJs = () => webpackStream(webpackConfig)
+  .pipe(gulp.dest('dist/public/js'));
 
 
-const makeClean = dest => del([dest]);
-const clean = makeClean.bind(null, paths.dev);
-const cleanProd = makeClean.bind(null, paths.prod);
+const clean = () => del(['dist']);
 
 
 const watch = () => {
@@ -103,11 +89,11 @@ const dev = gulp.series(
 
 
 const prod = gulp.series(
-  cleanProd,
-  copyLayoutProd,
-  transpileScssProd,
-  transpileServerJsProd,
-  bundleClientJsProd,
+  clean,
+  copyLayout,
+  transpileScss,
+  transpileServerJs,
+  bundleClientJs,
 );
 
 
