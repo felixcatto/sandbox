@@ -4,6 +4,14 @@ import { isEmpty } from 'lodash';
 
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeFilter: 'all',
+      states: ['all', 'active', 'finished'],
+    };
+  }
+
   onTaskAdd = (e) => {
     e.preventDefault();
     const { newTaskText } = this.props;
@@ -24,11 +32,26 @@ export default class App extends React.Component {
     this.props.toggleTaskState(id);
   };
 
+  onFilterChange = (state) => (e) => {
+    e.preventDefault();
+    this.setState(() => ({ activeFilter: state }));
+  };
+
+  renderFilterEl(state, activeFilter) {
+    return state === activeFilter
+      ? <span key={state}>{state}</span>
+      : <a key={state} href="#" onClick={this.onFilterChange(state)}>{state}</a>;
+  }
+
   render() {
     const { tasks, newTaskText } = this.props;
+    const { activeFilter, states } = this.state;
     const taskStateClass = (task) => cn({
       'line-through': task.state === 'finished',
     });
+    const filteredTasks = activeFilter === 'all'
+      ? tasks
+      : tasks.filter(el => el.state === activeFilter);
     return (
       <div className="col-5">
         
@@ -42,10 +65,10 @@ export default class App extends React.Component {
           </button>
         </form>
 
-        {!isEmpty(tasks) &&
+        {!isEmpty(filteredTasks) &&
           <div className="mt-15">
             <ul className="list-group">
-              {tasks.map((task) => (
+              {filteredTasks.map(task => (
                 <li className="list-group-item d-flex justify-content-between" key={task.id}>
                   <div className={taskStateClass(task)}>{task.text}</div>
                   <div>
@@ -57,6 +80,10 @@ export default class App extends React.Component {
             </ul>
           </div>
         }
+
+        <div className="mt-15 d-flex justify-content-around">
+          {states.map(state => this.renderFilterEl(state, activeFilter))}
+        </div>
 
       </div>
     );
