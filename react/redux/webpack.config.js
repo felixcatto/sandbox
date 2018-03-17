@@ -5,7 +5,7 @@ import webpack from 'webpack';
 const config = {
   entry: {
     vendors: ['react', 'react-dom', 'redux', 'react-redux', 'lodash'],
-    index: path.resolve(__dirname, 'src/client/index.js'),
+    index: path.resolve(__dirname, 'src/client/reduxForm.js'),
   },
   output: {
     filename: '[name].js',
