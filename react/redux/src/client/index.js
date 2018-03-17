@@ -1,16 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 import reducers from './reducers';
 import AppContainer from './containers/App';
 
-const initialState = {
-  tasks: { 0: { id: '0', state: 'active', text: 'eh nifiga sebe' } },
-  newTaskText: '',
-};
-const store = createStore(reducers, initialState, composeWithDevTools());
+const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)));
 
 render(
   <Provider store={store}>

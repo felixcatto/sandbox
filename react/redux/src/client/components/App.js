@@ -1,5 +1,6 @@
 import React from 'react';
 import cn from 'classnames';
+import { getTasks } from '../api/tasks';
 import { isEmpty } from 'lodash';
 
 
@@ -10,6 +11,11 @@ export default class App extends React.Component {
       activeFilter: 'all',
       states: ['all', 'active', 'finished'],
     };
+  }
+
+  async componentDidMount() {
+    const tasks = await getTasks();
+    tasks.forEach(task => this.props.addTask(task));
   }
 
   onTaskAdd = (e) => {
@@ -46,8 +52,12 @@ export default class App extends React.Component {
   render() {
     const { tasks, newTaskText } = this.props;
     const { activeFilter, states } = this.state;
-    const taskStateClass = (task) => cn({
+    const taskStateClass = task => cn({
       'line-through': task.state === 'finished',
+    });
+    const taskStateIconClass = task => cn('fa', {
+      'fa-undo': task.state === 'finished',
+      'fa-check': task.state === 'active',
     });
     const filteredTasks = activeFilter === 'all'
       ? tasks
@@ -72,8 +82,12 @@ export default class App extends React.Component {
                 <li className="list-group-item d-flex justify-content-between" key={task.id}>
                   <div className={taskStateClass(task)}>{task.text}</div>
                   <div>
-                    <a href="#" className="mr-5 px-5" onClick={this.onToggleState(task.id)}>-</a>
-                    <a href="#" className="px-5" onClick={this.onRemove(task.id)}>x</a>
+                    <a href="#" className="mr-5 px-5" onClick={this.onToggleState(task.id)}>
+                      <i className={taskStateIconClass(task)}></i>
+                    </a>
+                    <a href="#" className="px-5" onClick={this.onRemove(task.id)}>
+                      <i className="fa fa-times"></i>
+                    </a>
                   </div>
                 </li>
               ))}

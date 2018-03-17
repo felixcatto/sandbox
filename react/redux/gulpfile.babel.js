@@ -14,6 +14,7 @@ import Browser from 'browser-sync';
 
 
 const serverJsPath = ['src/**/*.js', '!src/client/**'];
+const assetsPath = ['src/public/**/*', '!src/public/**/*.+(css|scss)'];
 const proxyServer = Browser.create();
 const bundler = webpack(webpackConfig);
 bundler.plugin('done', () => proxyServer.reload());
@@ -51,6 +52,9 @@ const reloadProxyServer = (done) => {
 const copyLayout = () => gulp.src('src/index.html').pipe(gulp.dest('dist'));
 
 
+const copyAssets = () => gulp.src(assetsPath).pipe(gulp.dest('dist/public'));
+
+
 const transpileScss = () => gulp.src('src/public/css/index.scss')
   .pipe(sass())
   .pipe(postcss([cssImport()]))
@@ -74,12 +78,14 @@ const watch = () => {
   gulp.watch(serverJsPath, gulp.series(transpileServerJs, startServer, reloadProxyServer));
   gulp.watch('src/index.html', gulp.series(copyLayout, startServer, reloadProxyServer));
   gulp.watch('src/public/css/**/*.scss', gulp.series(transpileScss, reloadProxyServer));
+  gulp.watch(assetsPath, gulp.series(copyAssets, reloadProxyServer));
 };
 
 
 const dev = gulp.series(
   clean,
   copyLayout,
+  copyAssets,
   transpileScss,
   transpileServerJs,
   startServer,
@@ -91,6 +97,7 @@ const dev = gulp.series(
 const prod = gulp.series(
   clean,
   copyLayout,
+  copyAssets,
   transpileScss,
   transpileServerJs,
   bundleClientJs,
