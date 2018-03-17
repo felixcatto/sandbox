@@ -4,45 +4,30 @@ import { createStore, combineReducers } from 'redux';
 import { Provider, connect } from 'react-redux';
 import { createAction, handleActions } from 'redux-actions';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { reducer as formReducer, reduxForm, Field } from 'redux-form';
 
 
 class IForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      fame: '',
-      glory: '',
-    };
-  }
-
-  onChange = (name) => (e) => {
-    const value = e.target.value;
-    this.setState(() => ({ [name]: value }));
-  };
-
-  onSubmit = (e) => {
-    e.preventDefault();
-    this.props.saveForm(this.state);
+  onSubmit = (values) => {
+    console.log(values);
+    this.props.reset();
   };
 
   render() {
-    console.log(this.props);
-    const { name, fame, glory } = this.state;
     return (
       <div className="container">
-        <form action="" onSubmit={this.onSubmit}>
+        <form action="" onSubmit={this.props.handleSubmit(this.onSubmit)}>
           <div className="form-group">
             <label>Name</label>
-            <input type="text" className="form-control" value={name} onChange={this.onChange('name')} />
+            <Field name="name" className="form-control" component="input" type="text" />
           </div>
           <div className="form-group">
             <label>Fame</label>
-            <input type="text" className="form-control" value={fame} onChange={this.onChange('fame')} />
+            <Field name="fame" className="form-control" component="input" type="text" />
           </div>
           <div className="form-group">
             <label>Glory</label>
-            <input type="text" className="form-control" value={glory} onChange={this.onChange('glory')} />
+            <Field name="glory" className="form-control" component="input" type="text" />
           </div>
           <button className="btn btn-primary" type="submit">Submit</button>
         </form>
@@ -51,19 +36,14 @@ class IForm extends React.Component {
   }
 }
 
-const actionCreators = {
-  saveForm: createAction('FORM_SAVE'),
-};
-
 const reducers = combineReducers({
-  myForm: handleActions({
-    [actionCreators.saveForm]: (state, { payload: newFormState }) => newFormState,
-  }, {}),
+  form: formReducer,
 });
 
 const store = createStore(reducers, composeWithDevTools());
 
-const AppContainer = connect(state => state.myForm, actionCreators)(IForm);
+const wrappedForm = reduxForm({ form: 'myForm' })(IForm);
+const AppContainer = connect(state => state.form)(wrappedForm);
 
 render(
   <Provider store={store}>
