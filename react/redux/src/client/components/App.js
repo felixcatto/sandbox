@@ -1,6 +1,5 @@
 import React from 'react';
 import cn from 'classnames';
-import { getTasks } from '../api/tasks';
 import { isEmpty } from 'lodash';
 
 
@@ -8,24 +7,22 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      newTaskText: '',
       activeFilter: 'all',
       states: ['all', 'active', 'finished'],
     };
   }
 
-  async componentDidMount() {
-    const tasks = await getTasks();
-    tasks.forEach(task => this.props.addTask(task));
-  }
-
   onTaskAdd = (e) => {
     e.preventDefault();
-    const { newTaskText } = this.props;
+    const { newTaskText } = this.state;
     this.props.addTask({ text: newTaskText });
+    this.setState(() => ({ newTaskText: '' }));
   };
 
   onTextChange = (e) => {
-    this.props.updateNewTaskText(e.target.value);
+    const newTaskText = e.target.value;
+    this.setState(() => ({ newTaskText }));
   };
 
   onRemove = (id) => (e) => {
@@ -50,8 +47,8 @@ export default class App extends React.Component {
   }
 
   render() {
-    const { tasks, newTaskText } = this.props;
-    const { activeFilter, states } = this.state;
+    const { tasks } = this.props;
+    const { activeFilter, states, newTaskText } = this.state;
     const taskStateClass = task => cn({
       'line-through': task.state === 'finished',
     });
@@ -64,7 +61,7 @@ export default class App extends React.Component {
       : tasks.filter(el => el.state === activeFilter);
     return (
       <div className="col-5">
-        
+
         <form action="" className="form-inline">
           <div className="form-group">
             <input type="text" className="form-control mr-15" value={newTaskText}

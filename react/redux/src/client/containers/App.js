@@ -6,7 +6,7 @@ import { getTasks } from '../selectors';
 
 const mapStateToProps = (state) => ({
   tasks: getTasks(state),
-  newTaskText: state.newTaskText,
+  tasksFetchingState: state.tasksFetchingState,
 });
 
 export default connect(mapStateToProps, actionCreators)(App);
