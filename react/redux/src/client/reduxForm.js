@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from 'react-dom';
 import { createStore, combineReducers } from 'redux';
 import { Provider, connect } from 'react-redux';
-import { createAction, handleActions } from 'redux-actions';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { reducer as formReducer, reduxForm, Field } from 'redux-form';
 

@@ -1,5 +1,5 @@
-import { omit, omitBy } from 'lodash';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { omit } from 'lodash';
+import { createStore, combineReducers } from 'redux';
 import { createAction, handleActions } from 'redux-actions';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
@@ -71,42 +71,6 @@ const printState = (store) => {
 // store.dispatch(addTask({ id: 2, name: 'ggwp lanaya' }));
 // store.dispatch(addTask({ id: 3, name: 'privet medved' }));
 // store.dispatch(removeTask(2));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // TASK 2
@@ -183,50 +147,6 @@ const printState = (store) => {
 // store.dispatch(addTaskComment({ id: 3, taskId: 11, body: 'rili boroda' }));
 // store.dispatch(removeTask(1));
 // store.dispatch(removeTask(13));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // TASK 3

@@ -13,7 +13,7 @@ export default (router) => {
     .get('/tasks', (ctx) => {
       ctx.body = tasks;
     })
-    .post('/tasks', async (ctx) => {
+    .post('/tasks', (ctx) => {
       const { text } = ctx.request.body;
       const task = makeTask(text);
       tasks.push(task);

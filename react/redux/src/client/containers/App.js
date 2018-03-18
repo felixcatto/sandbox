@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
-import App from '../components/App.js';
+import App from '../components/App';
 import * as actionCreators from '../actions';
 import { getTasks } from '../selectors';
 
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   tasks: getTasks(state),
   tasksFetchingState: state.tasksFetchingState,
 });

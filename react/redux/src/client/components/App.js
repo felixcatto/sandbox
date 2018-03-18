@@ -25,17 +25,17 @@ export default class App extends React.Component {
     this.setState(() => ({ newTaskText }));
   };
 
-  onRemove = (id) => (e) => {
+  onRemove = id => (e) => {
     e.preventDefault();
     this.props.removeTask(id);
   };
 
-  onToggleState = (id) => (e) => {
+  onToggleState = id => (e) => {
     e.preventDefault();
     this.props.toggleTaskState(id);
   };
 
-  onFilterChange = (state) => (e) => {
+  onFilterChange = state => (e) => {
     e.preventDefault();
     this.setState(() => ({ activeFilter: state }));
   };

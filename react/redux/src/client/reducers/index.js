@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
-import { omit, keyBy } from 'lodash'
+import { omit, keyBy } from 'lodash';
 import * as actions from '../actions';
 
 const tasksFetchingState = handleActions({
@@ -22,7 +22,7 @@ const taskAddingState = handleActions({
 }, 'none');
 
 const tasks = handleActions({
-  [actions.fetchTasksSuccess]: (state, { payload: tasks }) => keyBy(tasks, 'id'),
+  [actions.fetchTasksSuccess]: (state, { payload: iTasks }) => keyBy(iTasks, 'id'),
   [actions.addTaskSuccess]: (state, { payload: task }) => ({ ...state, [task.id]: task }),
   [actions.removeTaskSuccess]: (state, { payload: id }) => omit(state, id),
   [actions.toggleTaskState]: (state, { payload: id }) => {

@@ -9,3 +9,6 @@ build:
 
 webpack_bundle:
 	npm run gulp bundleClientJs
+
+lint:
+	npm run eslint --silent src
