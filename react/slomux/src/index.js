@@ -45,7 +45,7 @@ class Provider extends React.Component {
   componentWillMount() {
     window.store = this.props.store
   }
-  
+
   render() {
     return this.props.children
   }
@@ -63,11 +63,16 @@ const addTodo = todo => ({
 })
 
 // reducers
-const reducer = (state = [], action) => {
-  switch(action.type) {
+// заменил стейт с [] на {}, вроде это стандарт в редаксе, что стейт должен быть обьектом. Довольно удобный стандарт.
+const reducer = (state = {}, { type, payload: todo }) => {
+  switch(type) {
     case ADD_TODO:
-      state.push(action.payload)
-      return state
+      // Одно из правил редакса "Changes are made with pure functions"
+      // push мутирует стейт, вариант ниже - нет
+      return {
+        ...state,
+        todos: [...state.todos, todo],
+      };
     default:
       return state
   }
@@ -91,35 +96,38 @@ class ToDoComponent extends React.Component {
           />
           <button onClick={this.addTodo}>Добавить</button>
           <ul>
-            {this.props.todos.map((todo, idx) => <li>{todo}</li>)}
+            {/* Реакт требует наличие уникального key на элементе массива,
+              для более эффективного ререндера
+            */}
+            {this.props.todos.map((todo, idx) => <li key={idx}>{todo}</li>)}
           </ul>
         </div>
       </div>
     )
   }
 
-  updateText(e) {
-    const { value } = e.target
-
-    this.state.todoText = value
+  // заменил функции на стрелочные, чтобы они не теряли this, когда их в onClick передаешь
+  // заменил мутирование стейта на функцию setState, возвращающую новый обьект. Вообще я всегда думал, что в реакте стейт тоже должен быть иммутабельным, но вроде все норм работает даже если напрямую его мутировать =/
+  updateText = (e) => {
+    const { value } = e.target;
+    this.setState(() => ({ todoText: value }));
   }
 
-  addTodo() {
+  addTodo = () => {
     this.props.addTodo(this.state.todoText)
-
-    this.state.todoText = ''
+    this.setState(() => ({ todoText: '' }));
   }
 }
 
 const ToDo = connect(state => ({
-  todos: state,
+  todos: state.todos,
 }), dispatch => ({
   addTodo: text => dispatch(addTodo(text)),
 }))(ToDoComponent)
 
 // init
 ReactDOM.render(
-  <Provider store={createStore(reducer, [])}>
+  <Provider store={createStore(reducer, { todos: [] })}>
     <ToDo title="Список задач"/>
   </Provider>,
   document.getElementById('app')
