@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 // Slomux - реализация Flux, в которой, как следует из нвазвания, что-то сломано.
 // Нужно выяснить что здесь сломано
 
+
 const createStore = (reducer, initialState) => {
   let currentState = initialState
   const listeners = []
@@ -19,50 +20,54 @@ const createStore = (reducer, initialState) => {
   return { getState, dispatch, subscribe }
 }
 
-const connect = (mapStateToProps, mapDispatchToProps) =>
-  Component => {
-    return class extends React.Component {
-      render() {
-        return (
-          <Component
-            {...mapStateToProps(store.getState(), this.props)}
-            {...mapDispatchToProps(store.dispatch, this.props)}
-          />
-        )
-      }
+// Заменил window.store на context API
+const Context = React.createContext();
 
-      componentDidMount() {
-        store.subscribe(this.handleChange)
-      }
-
-      handleChange = () => {
-        this.forceUpdate()
-      }
-    }
-  }
-
-class Provider extends React.Component {
-  componentWillMount() {
-    window.store = this.props.store
+class InnerConnect extends React.Component {
+  componentDidMount() {
+    const { store } = this.props;
+    store.subscribe(() => this.forceUpdate());
   }
 
   render() {
-    return this.props.children
+    const { Component, mapStateToProps, mapDispatchToProps, store, ...restProps } = this.props;
+    return (
+      <Component
+        {...mapStateToProps(store.getState(), restProps)}
+        {...mapDispatchToProps(store.dispatch, restProps)}
+      />
+    );
   }
 }
 
-// APP
+// Заменил window.store на context API
+const connect = (mapStateToProps, mapDispatchToProps) => Component => props => (
+  <Context.Consumer>
+    {store => 
+      <InnerConnect
+        Component={Component}
+        store={store}
+        mapStateToProps={mapStateToProps}
+        mapDispatchToProps={mapDispatchToProps}
+        {...props}
+      />
+    }
+  </Context.Consumer>
+)
 
-// actions
+const Provider = props => (
+  <Context.Provider value={props.store}>
+    {props.children}
+  </Context.Provider>
+)
+
 const ADD_TODO = 'ADD_TODO'
 
-// action creators
 const addTodo = todo => ({
   type: ADD_TODO,
   payload: todo,
 })
 
-// reducers
 // заменил стейт с [] на {}, вроде это стандарт в редаксе, что стейт должен быть обьектом. Довольно удобный стандарт.
 const reducer = (state = {}, { type, payload: todo }) => {
   switch(type) {
@@ -78,7 +83,6 @@ const reducer = (state = {}, { type, payload: todo }) => {
   }
 }
 
-// components
 class ToDoComponent extends React.Component {
   state = {
     todoText: ''
@@ -107,25 +111,26 @@ class ToDoComponent extends React.Component {
   }
 
   // заменил функции на стрелочные, чтобы они не теряли this, когда их в onClick передаешь
-  // заменил мутирование стейта на функцию setState, возвращающую новый обьект. Вообще я всегда думал, что в реакте стейт тоже должен быть иммутабельным, но вроде все норм работает даже если напрямую его мутировать =/
+  // заменил мутирование стейта на функцию setState.
   updateText = (e) => {
     const { value } = e.target;
-    this.setState(() => ({ todoText: value }));
+    this.setState({ todoText: value });
   }
 
   addTodo = () => {
     this.props.addTodo(this.state.todoText)
-    this.setState(() => ({ todoText: '' }));
+    this.setState({ todoText: '' });
   }
 }
 
-const ToDo = connect(state => ({
+// Прокинул собсвенные пропсы компонента
+const ToDo = connect((state, ownProps) => ({
+  ...ownProps,
   todos: state.todos,
 }), dispatch => ({
   addTodo: text => dispatch(addTodo(text)),
 }))(ToDoComponent)
 
-// init
 ReactDOM.render(
   <Provider store={createStore(reducer, { todos: [] })}>
     <ToDo title="Список задач"/>
