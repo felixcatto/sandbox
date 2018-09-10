@@ -30,27 +30,23 @@ class InnerConnect extends React.Component {
   }
 
   render() {
-    const { Component, mapStateToProps, mapDispatchToProps, store, ...restProps } = this.props;
-    return (
-      <Component
-        {...mapStateToProps(store.getState(), restProps)}
-        {...mapDispatchToProps(store.dispatch, restProps)}
-      />
-    );
+    return this.props.children();
   }
 }
 
 // Заменил window.store на context API
-const connect = (mapStateToProps, mapDispatchToProps) => Component => props => (
+const connect = (mapStateToProps, mapDispatchToProps) => Component => ownProps => (
   <Context.Consumer>
-    {store => 
-      <InnerConnect
-        Component={Component}
-        store={store}
-        mapStateToProps={mapStateToProps}
-        mapDispatchToProps={mapDispatchToProps}
-        {...props}
-      />
+    {store =>
+      <InnerConnect store={store}>
+        {() => (
+          <Component
+            {...ownProps}
+            {...mapStateToProps(store.getState(), ownProps)}
+            {...mapDispatchToProps(store.dispatch, ownProps)}
+          />
+        )}
+      </InnerConnect>
     }
   </Context.Consumer>
 )
