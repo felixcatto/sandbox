@@ -1,16 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
+const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 
-const isDevMode = process.env.NODE_ENV !== 'production';
-const mode = isDevMode ? 'development': 'production';
-const devtool = isDevMode ? 'cheap-module-eval-source-map': '';
-const plugins = isDevMode ? [new webpack.HotModuleReplacementPlugin()] : [];
-
-module.exports = {
-  mode,
-  devtool,
+const common = {
   entry: {
     index: path.resolve(__dirname, 'src/client/index.js'),
   },
@@ -47,7 +41,49 @@ module.exports = {
           },
         },
       },
+      {
+        test: /local\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          { loader: 'css-loader', options: { modules: 1 } },
+          'sass-loader',
+        ],
+      },
+      {
+        test: /(?<!local)\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
+        ],
+      },
+      {
+        test: /\.(ttf|eot|woff|woff2)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: 'font/[name].[ext]',
+          },
+        },
+      },
     ],
   },
-  plugins,
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: 'css/index.css',
+    })
+  ],
 };
+
+
+if (process.env.NODE_ENV === 'production') {
+  module.exports = merge(common, {
+    mode: 'production',
+  });
+} else {
+  module.exports = merge(common, {
+    mode: 'development',
+    devtool: 'cheap-module-eval-source-map',
+    plugins: [new webpack.HotModuleReplacementPlugin()],
+  });
+}

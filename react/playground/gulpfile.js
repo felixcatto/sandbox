@@ -8,14 +8,15 @@ const webpackConfig = require('./webpack.config.js');
 
 const devServerConfig = {
   contentBase: path.join(__dirname, 'dist'),
-  watchContentBase: true,
+  historyApiFallback: true,
   hot: true,
   host: 'localhost',
-  clientLogLevel: 'none',
   port: 3000,
+  clientLogLevel: 'none',
+  watchContentBase: true,
   watchOptions: {
     aggregateTimeout: 300,
-    poll: 2000,
+    poll: 1000,
   },
 };
 
@@ -24,7 +25,8 @@ const bundler = webpack(webpackConfig);
 const devServer = new WebpackDevServer(bundler, devServerConfig);
 
 
-const startDevServer = done => devServer.listen(3000, 'localhost', done);
+const startDevServer = done => devServer
+  .listen(devServerConfig.port, devServerConfig.host, done);
 
 
 const copyLayout = () => gulp.src('src/index.html').pipe(gulp.dest('dist'));
