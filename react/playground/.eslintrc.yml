@@ -8,6 +8,10 @@ extends:
   - 'airbnb-base'
   - 'plugin:react/recommended'
 
+settings:
+  react:
+    version: '16.6.0'
+
 rules:
   import/prefer-default-export: 0
   no-console: 1

@@ -12,7 +12,7 @@ const devServerConfig = {
   hot: true,
   host: 'localhost',
   port: 3000,
-  clientLogLevel: 'none',
+  clientLogLevel: 'error',
   watchContentBase: true,
   watchOptions: {
     aggregateTimeout: 300,
