@@ -1,0 +1,26 @@
+.square {
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+  background: linear-gradient(to right, #ff9966, #ff5e62);
+  transition: transform 0.3s ease;
+  &_left {
+    transform: translate(0, 0);
+  }
+  &_right {
+    transform: translate(330px, 0);
+  }
+}
+
+.imageContainer {
+  width: 500px;
+  margin-right: auto;
+  margin-left: auto;
+  overflow: hidden;
+}
+
+.image {
+  display: block;
+  max-width: 100%;
+  border-radius: 10px;
+}
