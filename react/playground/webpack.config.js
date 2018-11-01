@@ -10,7 +10,7 @@ const common = {
     index: path.resolve(__dirname, 'src/client/index.js'),
   },
   output: {
-    filename: 'js/index.js',
+    filename: 'js/[name].js',
     path: path.resolve(__dirname, 'dist/public'),
     publicPath: '/public/',
   },
@@ -78,9 +78,25 @@ const common = {
       },
     ]),
     new MiniCssExtractPlugin({
-      filename: 'css/index.css',
+      filename: 'css/[name].css',
     }),
   ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendors: {
+          name: 'vendors',
+          chunks: 'initial',
+          test: /node_modules/,
+        },
+      }
+    },
+  },
+  stats: {
+    warnings: false,
+    children: false,
+    modules: false,
+  },
 };
 
 

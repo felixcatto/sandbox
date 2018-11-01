@@ -20,13 +20,15 @@ const devServerConfig = {
   },
 };
 
-WebpackDevServer.addDevServerEntrypoints(webpackConfig, devServerConfig);
 const bundler = webpack(webpackConfig);
-const devServer = new WebpackDevServer(bundler, devServerConfig);
 
-
-const startDevServer = done => devServer
-  .listen(devServerConfig.port, devServerConfig.host, done);
+const startDevServer = done => {
+  WebpackDevServer.addDevServerEntrypoints(webpackConfig, devServerConfig);
+  const devBundler = webpack(webpackConfig);
+  const devServer = new WebpackDevServer(devBundler, devServerConfig);
+  devServer
+    .listen(devServerConfig.port, devServerConfig.host, done);
+};
 
 
 const copyLayout = () => gulp.src('src/index.html').pipe(gulp.dest('dist'));
