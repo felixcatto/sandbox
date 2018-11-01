@@ -12,7 +12,7 @@ const common = {
   output: {
     filename: 'js/[name].js',
     path: path.resolve(__dirname, 'dist/public'),
-    publicPath: '/public/',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -37,6 +37,7 @@ const common = {
               '@babel/preset-react',
             ],
             plugins: [
+              '@babel/plugin-syntax-dynamic-import',
               '@babel/plugin-proposal-class-properties',
             ],
           },

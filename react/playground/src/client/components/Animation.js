@@ -16,7 +16,12 @@ export default class Animation extends React.Component {
   }
 
   onShowBird = () => {
-    this.setState((prevState) => ({ isBirdShown: !prevState.isBirdShown }));
+    this.setState(prevState => ({ isBirdShown: !prevState.isBirdShown }));
+  }
+
+  onLoadModule = async () => {
+    const { default: data } = await import('../lib/async.js');
+    console.log(data);
   }
 
   render() {
@@ -28,16 +33,19 @@ export default class Animation extends React.Component {
 
     return (
       <div>
-        
+
         <h1>Trying some basic stuff</h1>
-        
+
         <div className="mb-40">
           <div className={squareClass}></div>
           <button className="btn btn-primary mr-10" onClick={this.onPositionChange('left')}>
             To Left!
           </button>
-          <button className="btn btn-primary" onClick={this.onPositionChange('right')}>
+          <button className="btn btn-primary mr-10" onClick={this.onPositionChange('right')}>
             To Right!
+          </button>
+          <button className="btn btn-primary" onClick={this.onLoadModule}>
+            Async?
           </button>
         </div>
 
