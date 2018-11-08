@@ -10,6 +10,8 @@ const webpackConfig = require('./webpack.config.js');
 
 const serverJsPath = ['src/**/*.js', '!src/client/**'];
 
+const bundler = webpack(webpackConfig);
+
 let node;
 const startServer = (done) => {
   if (node) node.kill();
@@ -18,24 +20,15 @@ const startServer = (done) => {
 };
 process.on('exit', () => node && node.kill());
 
-
-
-
 const devServerConfig = {
-  contentBase: path.join(__dirname, 'dist'),
-  historyApiFallback: true,
   hot: true,
   host: 'localhost',
   port: 3000,
   clientLogLevel: 'error',
-  watchContentBase: true,
-  watchOptions: {
-    aggregateTimeout: 300,
-    poll: 1000,
+  proxy: {
+    '*': 'http://localhost:4000',
   },
 };
-
-// const bundler = webpack(webpackConfig);
 
 const startDevServer = done => {
   WebpackDevServer.addDevServerEntrypoints(webpackConfig, devServerConfig);
@@ -45,13 +38,16 @@ const startDevServer = done => {
     .listen(devServerConfig.port, devServerConfig.host, done);
 };
 
-const reload = done => done();
+const reload = done => {
+  console.log('Boroda :\'(');
+  done();
+};
 
 
 const copyLayout = () => gulp.src('src/server/index.html').pipe(gulp.dest('dist/server'));
 
 
-// const bundleClientJs = done => bundler.run(done);
+const bundleClientJs = done => bundler.run(done);
 
 const transpileServerJs = () => gulp.src(serverJsPath)
   .pipe(babel())
@@ -63,7 +59,7 @@ const clean = () => del(['dist']);
 
 const watch = () => {
   gulp.watch(serverJsPath, gulp.series(transpileServerJs, startServer, reload));
-  gulp.watch('src/server/index.html', gulp.series(copyLayout, startServer));
+  gulp.watch('src/server/index.html', gulp.series(copyLayout, startServer, reload));
 };
 
 
@@ -72,13 +68,16 @@ const dev = gulp.series(
   copyLayout,
   transpileServerJs,
   startServer,
-  // startDevServer,
+  startDevServer,
   watch,
 );
 
 
 const prod = gulp.series(
   clean,
+  copyLayout,
+  transpileServerJs,
+  bundleClientJs,
 );
 
 
