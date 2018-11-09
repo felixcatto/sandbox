@@ -39,12 +39,14 @@ const startDevServer = done => {
 };
 
 const reload = done => {
-  console.log('Boroda :\'(');
+  // console.log('Boroda :\'(');
   done();
 };
 
 
 const copyLayout = () => gulp.src('src/server/index.html').pipe(gulp.dest('dist/server'));
+
+const copyViews = () => gulp.src('src/server/views/**/*').pipe(gulp.dest('dist/server/views'));
 
 
 const bundleClientJs = done => bundler.run(done);
@@ -59,13 +61,15 @@ const clean = () => del(['dist']);
 
 const watch = () => {
   gulp.watch(serverJsPath, gulp.series(transpileServerJs, startServer, reload));
-  gulp.watch('src/server/index.html', gulp.series(copyLayout, startServer, reload));
+  gulp.watch('src/server/index.html', gulp.series(copyLayout, startServer));
+  gulp.watch('src/server/views/**/*', gulp.series(copyViews));
 };
 
 
 const dev = gulp.series(
   clean,
   copyLayout,
+  copyViews,
   transpileServerJs,
   startServer,
   startDevServer,

@@ -1,11 +1,10 @@
-import Router from 'koa-router';
-
-
-const router = new Router();
-
-export default (app) => {
+export default (app, router) => {
   router.get('/', (ctx) => {
     ctx.body = ctx.template;
+  });
+
+  router.get('/pug', (ctx) => {
+    ctx.render('index', { fo2o: 'ggwp', colors: ['red', 'green', 'blue'] });
   });
 
   app
