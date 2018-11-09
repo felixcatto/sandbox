@@ -2,12 +2,15 @@ const path = require('path');
 const gulp = require('gulp');
 const del = require('del');
 const webpack = require('webpack');
-const WebpackDevServer = require('webpack-dev-server');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const babel = require('gulp-babel');
 const { spawn } = require('child_process');
 const Browser = require('browser-sync');
 const webpackConfig = require('./webpack.config.js');
+const sass = require('gulp-sass');
+const concat = require('gulp-concat');
+const postcss = require('gulp-postcss');
+const cssImport = require('postcss-import');
 
 
 const serverJsPath = ['src/**/*.js', '!src/client/**'];
@@ -44,10 +47,13 @@ const reload = (done) => {
   done();
 };
 
-const copyLayout = () => gulp.src('src/server/index.html').pipe(gulp.dest('dist/server'));
+const transpileScss = () => gulp.src('src/**/*.scss')
+  .pipe(sass())
+  .pipe(postcss([cssImport()]))
+  .pipe(concat('index.css'))
+  .pipe(gulp.dest('dist/public/css'));
 
 const copyViews = () => gulp.src('src/server/views/**/*').pipe(gulp.dest('dist/server/views'));
-
 
 const bundleClientJs = done => bundler.run(done);
 
@@ -55,20 +61,18 @@ const transpileServerJs = () => gulp.src(serverJsPath)
   .pipe(babel())
   .pipe(gulp.dest('dist'));
 
-
 const clean = () => del(['dist']);
-
 
 const watch = () => {
   gulp.watch(serverJsPath, gulp.series(transpileServerJs, startServer, reload));
-  gulp.watch('src/server/index.html', gulp.series(copyLayout, startServer, reload));
+  gulp.watch('src/**/*.scss', gulp.series(transpileScss, reload));
   gulp.watch('src/server/views/**/*', gulp.series(copyViews, reload));
 };
 
 
 const dev = gulp.series(
   clean,
-  copyLayout,
+  transpileScss,
   copyViews,
   transpileServerJs,
   startServer,
@@ -79,7 +83,6 @@ const dev = gulp.series(
 
 const prod = gulp.series(
   clean,
-  copyLayout,
   transpileServerJs,
   bundleClientJs,
 );
