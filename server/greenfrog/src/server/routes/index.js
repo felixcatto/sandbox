@@ -1,10 +1,10 @@
 export default (app, router) => {
-  router.get('/', (ctx) => {
-    ctx.body = ctx.template;
+  router.get('home', '/', (ctx) => {
+    ctx.render('common/index');
   });
 
-  router.get('/pug', (ctx) => {
-    ctx.render('index', { fo2o: 'ggwp', colors: ['red', 'green', 'blue'] });
+  router.get('articles', '/articles', (ctx) => {
+    ctx.render('articles/index');
   });
 
   app

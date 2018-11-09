@@ -10,8 +10,6 @@ import applyRouting from './routes';
 
 const app = new Koa();
 const router = new Router();
-const template = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
-app.context.template = template;
 
 app.use(serve(path.join(__dirname, '../public')));
 
@@ -29,16 +27,6 @@ const pug = new Pug({
   ],
 });
 pug.use(app);
-
-pug.locals.someKey = 'some value'
-pug.locals.foo = 'FOO BAR?';
-pug.locals.youAreUsingPug = true;
-
-app.use((ctx, next) => {
-  // console.log(ctx.cookies.get('_railsapp_session'));
-  // ctx.cookies.set('koa_app', 'vasa eto bruda');
-  next();
-});
 
 app.use(async (ctx, next) => {
   await next();
