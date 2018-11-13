@@ -1,0 +1,18 @@
+-
+  const action = type === 'edit'
+    ? `${urlFor('editUser', user.id)}?_method=PUT`
+    : `${urlFor('createUser')}`;
+
+form(action=`${action}`, method="POST")
+  .row.mb-20
+    .col-4
+      label First Name
+      input.form-control(name="firstName", value=`${user.firstName}`)
+    .col-4
+      label Last Name
+      input.form-control(name="lastName", value=`${user.lastName}`)
+    .col-4
+      label Email
+      input.form-control(name="email", value=`${user.email}`)
+  a.mr-10(href=`${urlFor('users')}`) Back
+  button.btn.btn-primary(type="submit") Save

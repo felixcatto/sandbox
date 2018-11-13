@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const common = {
   entry: {
-    index: path.resolve(__dirname, 'src/client/index.js'),
+    index: path.resolve(__dirname, 'client/index.js'),
   },
   output: {
     filename: 'js/[name].js',

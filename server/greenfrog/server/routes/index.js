@@ -1,11 +1,15 @@
+import applyUserRouting from './user';
+import applyArticleRouting from './article';
+
+
 export default (app, router) => {
   router.get('home', '/', (ctx) => {
     ctx.render('common/index');
   });
 
-  router.get('articles', '/articles', (ctx) => {
-    ctx.render('articles/index');
-  });
+  applyUserRouting(router);
+
+  applyArticleRouting(router);
 
   app
     .use(router.routes())

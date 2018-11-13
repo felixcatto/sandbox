@@ -1,0 +1,15 @@
+extends ../common/layout.pug
+
+block content
+  .container
+    h1 Create new article
+    form(action=`${urlFor('articles')}`, method="POST")
+      .row.mb-20
+        .col-6
+          label Title
+          input.form-control(name="title")
+        .col-6
+          label Text
+          input.form-control(name="text")
+      a.mr-10(href=`${urlFor('articles')}`) Back
+      button.btn.btn-primary(type="submit") Create

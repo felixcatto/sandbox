@@ -1,17 +1,22 @@
 import Koa from 'koa';
 import serve from 'koa-static';
 import path from 'path';
-import fs from 'fs';
 import Pug from 'koa-pug';
 import Router from 'koa-router';
 import _ from 'lodash';
+import bodyParser from 'koa-bodyparser';
+import methodOverride from 'koa-methodoverride';
 import applyRouting from './routes';
+import db from './models';
 
 
 const app = new Koa();
 const router = new Router();
+app.context.db = db;
 
 app.use(serve(path.join(__dirname, '../public')));
+app.use(bodyParser());
+app.use(methodOverride('_method'));
 
 const pug = new Pug({
   viewPath: path.join(__dirname, 'views'),

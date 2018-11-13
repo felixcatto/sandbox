@@ -13,7 +13,6 @@ const postcss = require('gulp-postcss');
 const cssImport = require('postcss-import');
 
 
-const serverJsPath = ['src/**/*.js', '!src/client/**'];
 const devServer = Browser.create();
 const bundler = webpack(webpackConfig);
 bundler.plugin('done', () => devServer.reload());
@@ -47,33 +46,39 @@ const reload = (done) => {
   done();
 };
 
-const transpileScss = () => gulp.src('src/**/*.scss')
+const transpileScss = () => gulp.src('public/**/*.scss')
   .pipe(sass())
   .pipe(postcss([cssImport()]))
   .pipe(concat('index.css'))
   .pipe(gulp.dest('dist/public/css'));
 
-const copyViews = () => gulp.src('src/server/views/**/*').pipe(gulp.dest('dist/server/views'));
+const copyViews = () => gulp.src('server/views/**/*').pipe(gulp.dest('dist/server/views'));
+
+const copyMisc = gulp.series(
+  () => gulp.src('bin/*.js').pipe(gulp.dest('dist/bin')),
+  () => gulp.src('server/config/*').pipe(gulp.dest('dist/server/config')),
+);
 
 const bundleClientJs = done => bundler.run(done);
 
-const transpileServerJs = () => gulp.src(serverJsPath)
+const transpileServerJs = () => gulp.src('server/**/*.js')
   .pipe(babel())
-  .pipe(gulp.dest('dist'));
+  .pipe(gulp.dest('dist/server'));
 
 const clean = () => del(['dist']);
 
 const watch = () => {
-  gulp.watch(serverJsPath, gulp.series(transpileServerJs, startServer, reload));
-  gulp.watch('src/**/*.scss', gulp.series(transpileScss, reload));
-  gulp.watch('src/server/views/**/*', gulp.series(copyViews, reload));
+  gulp.watch('server/**/*.js', gulp.series(transpileServerJs, startServer, reload));
+  gulp.watch('server/views/**/*', gulp.series(copyViews, reload));
+  gulp.watch('public/**/*.scss', gulp.series(transpileScss, reload));
 };
 
 
 const dev = gulp.series(
   clean,
-  transpileScss,
+  copyMisc,
   copyViews,
+  transpileScss,
   transpileServerJs,
   startServer,
   startDevServer,
@@ -83,6 +88,9 @@ const dev = gulp.series(
 
 const prod = gulp.series(
   clean,
+  copyMisc,
+  copyViews,
+  transpileScss,
   transpileServerJs,
   bundleClientJs,
 );
