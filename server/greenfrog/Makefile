@@ -20,3 +20,6 @@ lint-fix:
 
 migrate:
 	npx sequelize db:migrate
+
+migrate-undo:
+	npx sequelize db:migrate:undo

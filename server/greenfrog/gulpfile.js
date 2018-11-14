@@ -57,6 +57,7 @@ const copyViews = () => gulp.src('server/views/**/*').pipe(gulp.dest('dist/serve
 const copyMisc = gulp.series(
   () => gulp.src('bin/*.js').pipe(gulp.dest('dist/bin')),
   () => gulp.src('server/config/*').pipe(gulp.dest('dist/server/config')),
+  () => gulp.src('public/font/*').pipe(gulp.dest('dist/public/font')),
 );
 
 const bundleClientJs = done => bundler.run(done);

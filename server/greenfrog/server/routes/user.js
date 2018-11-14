@@ -18,7 +18,7 @@ export default (router) => {
       ctx.render('users/new', { user: emptyObject });
     })
 
-    .get('editUser', '/users/:id', async (ctx) => {
+    .get('editUser', '/users/:id/edit', async (ctx) => {
       const user = await ctx.db.User.findOne({
         where: { id: ctx.params.id },
         raw: true,

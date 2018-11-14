@@ -1,6 +1,6 @@
 -
   const action = type === 'edit'
-    ? `${urlFor('editUser', user.id)}?_method=PUT`
+    ? `${urlFor('updateUser', user.id)}?_method=PUT`
     : `${urlFor('createUser')}`;
 
 form(action=`${action}`, method="POST")
