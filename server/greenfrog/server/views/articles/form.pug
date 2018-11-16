@@ -1,7 +1,7 @@
 -
   const action = type === 'edit'
-    ? `${urlFor('updateArticle', article.id)}?_method=PUT`
-    : `${urlFor('createArticle')}`;
+    ? `${urlFor('article', article.id)}?_method=PUT`
+    : `${urlFor('articles')}`;
 
 form(action=`${action}`, method="POST")
   .row.mb-20

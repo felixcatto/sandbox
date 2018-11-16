@@ -2,10 +2,10 @@
 //- comment: Comment
 -
   const action = type === 'edit'
-    ? `${urlFor('updateComment', article.id, comment.id)}?_method=PUT`
-    : `${urlFor('createComment', article.id)}`;
+    ? `${urlFor('comment', article.id, comment.id)}?_method=PUT`
+    : `${urlFor('comments', article.id)}`;
   const backUrl = type === 'edit'
-    ? `${urlFor('showArticle', article.id)}`
+    ? `${urlFor('article', article.id)}`
     : `${urlFor('articles')}`;
 
 form(method="post", action=`${action}`)

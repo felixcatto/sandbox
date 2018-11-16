@@ -1,3 +1,4 @@
+import { User } from '../models';
 import { emptyObject } from '../lib/utils';
 
 
@@ -6,11 +7,12 @@ export default (router) => {
     'firstName',
     'lastName',
     'email',
+    'password',
   ];
 
   router
     .get('users', '/users', async (ctx) => {
-      const users = await ctx.db.User.findAll({ raw: true });
+      const users = await User.findAll({ raw: true });
       ctx.render('users/index', { users });
     })
 
@@ -19,30 +21,37 @@ export default (router) => {
     })
 
     .get('editUser', '/users/:id/edit', async (ctx) => {
-      const user = await ctx.db.User.findOne({
+      const user = await User.findOne({
         where: { id: ctx.params.id },
         raw: true,
       });
-      ctx.render('users/edit', { user, type: 'edit' });
+
+      ctx.render('users/edit', {
+        user: {
+          ...user,
+          password: '',
+        },
+        type: 'edit',
+      });
     })
 
-    .post('createUser', '/users', async (ctx) => {
-      await ctx.db.User.create(ctx.request.body, {
+    .post('users', '/users', async (ctx) => {
+      await User.create(ctx.request.body, {
         fields: userFields,
       });
       ctx.redirect(router.url('users'));
     })
 
-    .put('updateUser', '/users/:id', async (ctx) => {
-      await ctx.db.User.update(ctx.request.body, {
+    .put('user', '/users/:id', async (ctx) => {
+      await User.update(ctx.request.body, {
         where: { id: ctx.params.id },
         fields: userFields,
       });
       ctx.redirect(router.url('users'));
     })
 
-    .delete('destroyUser', '/users/:id', async (ctx) => {
-      await ctx.db.User.destroy({ where: { id: ctx.params.id } });
+    .delete('user', '/users/:id', async (ctx) => {
+      await User.destroy({ where: { id: ctx.params.id } });
       ctx.redirect(router.url('users'));
     });
 };

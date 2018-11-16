@@ -20,7 +20,7 @@ block content
                 )
                 form(
                   method="post"
-                  action=`${urlFor('destroyComment', article.id, comment.id)}?_method=delete`
+                  action=`${urlFor('comment', article.id, comment.id)}?_method=delete`
                 )
                   button.fa.fa-times.fa-control(title="Delete comment")
         p #{comment.text}

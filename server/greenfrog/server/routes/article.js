@@ -1,4 +1,5 @@
 import getCommentsRouter from './comment';
+import { Article, Comment } from '../models';
 import { emptyObject } from '../lib/utils';
 
 
@@ -10,7 +11,7 @@ export default (router) => {
 
   router
     .get('articles', '/articles', async (ctx) => {
-      const articles = await ctx.db.Article.findAll({ raw: true });
+      const articles = await Article.findAll({ raw: true });
       ctx.render('articles/index', { articles });
     })
 
@@ -18,11 +19,11 @@ export default (router) => {
       ctx.render('articles/new', { article: emptyObject });
     })
 
-    .get('showArticle', '/articles/:id', async (ctx) => {
-      const article = await ctx.db.Article.findOne({
+    .get('article', '/articles/:id', async (ctx) => {
+      const article = await Article.findOne({
         where: { id: ctx.params.id },
         include: [{
-          model: ctx.db.Comment,
+          model: Comment,
         }],
       });
 
@@ -35,30 +36,30 @@ export default (router) => {
     })
 
     .get('editArticle', '/articles/:id/edit', async (ctx) => {
-      const article = await ctx.db.Article.findOne({
+      const article = await Article.findOne({
         where: { id: ctx.params.id },
         raw: true,
       });
       ctx.render('articles/edit', { article, type: 'edit' });
     })
 
-    .post('createArticle', '/articles', async (ctx) => {
-      await ctx.db.Article.create(ctx.request.body, {
+    .post('articles', '/articles', async (ctx) => {
+      await Article.create(ctx.request.body, {
         fields: articleFields,
       });
       ctx.redirect(router.url('articles'));
     })
 
-    .put('updateArticle', '/articles/:id', async (ctx) => {
-      await ctx.db.Article.update(ctx.request.body, {
+    .put('article', '/articles/:id', async (ctx) => {
+      await Article.update(ctx.request.body, {
         where: { id: ctx.params.id },
         fields: articleFields,
       });
       ctx.redirect(router.url('articles'));
     })
 
-    .delete('destroyArticle', '/articles/:id', async (ctx) => {
-      await ctx.db.Article.destroy({ where: { id: ctx.params.id } });
+    .delete('article', '/articles/:id', async (ctx) => {
+      await Article.destroy({ where: { id: ctx.params.id } });
       ctx.redirect(router.url('articles'));
     });
 

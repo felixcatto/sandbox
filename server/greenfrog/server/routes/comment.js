@@ -1,4 +1,5 @@
 import Router from 'koa-router';
+import { Article, Comment } from '../models';
 
 
 export default (articlesRouter) => {
@@ -11,12 +12,12 @@ export default (articlesRouter) => {
   return router
     .get('editComment', '/comments/:id/edit', async (ctx) => {
       const { articleId } = ctx.params;
-      const article = await ctx.db.Article.findOne({
+      const article = await Article.findOne({
         where: { id: articleId },
         raw: true,
       });
 
-      const comment = await ctx.db.Comment.findOne({
+      const comment = await Comment.findOne({
         where: { id: ctx.params.id },
         raw: true,
       });
@@ -27,33 +28,33 @@ export default (articlesRouter) => {
       });
     })
 
-    .post('createComment', '/comments', async (ctx) => {
+    .post('comments', '/comments', async (ctx) => {
       const { articleId } = ctx.params;
-      const comment = await ctx.db.Comment.create(ctx.request.body, {
+      const comment = await Comment.create(ctx.request.body, {
         fields: commentsFields,
       });
 
-      const article = await ctx.db.Article.findOne({
+      const article = await Article.findOne({
         where: { id: articleId },
       });
 
       await article.addComment(comment);
 
-      ctx.redirect(articlesRouter.url('showArticle', articleId));
+      ctx.redirect(articlesRouter.url('article', articleId));
     })
 
-    .put('updateComment', '/comments/:id', async (ctx) => {
+    .put('comment', '/comments/:id', async (ctx) => {
       const { articleId } = ctx.params;
-      await ctx.db.Comment.update(ctx.request.body, {
+      await Comment.update(ctx.request.body, {
         where: { id: ctx.params.id },
         fields: commentsFields,
       });
-      ctx.redirect(articlesRouter.url('showArticle', articleId));
+      ctx.redirect(articlesRouter.url('article', articleId));
     })
 
-    .delete('destroyComment', '/comments/:id', async (ctx) => {
+    .delete('comment', '/comments/:id', async (ctx) => {
       const { articleId } = ctx.params;
-      await ctx.db.Comment.destroy({ where: { id: ctx.params.id } });
-      ctx.redirect(articlesRouter.url('showArticle', articleId));
+      await Comment.destroy({ where: { id: ctx.params.id } });
+      ctx.redirect(articlesRouter.url('article', articleId));
     });
 };

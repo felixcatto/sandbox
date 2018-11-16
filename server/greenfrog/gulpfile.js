@@ -58,6 +58,7 @@ const copyMisc = gulp.series(
   () => gulp.src('bin/*.js').pipe(gulp.dest('dist/bin')),
   () => gulp.src('server/config/*').pipe(gulp.dest('dist/server/config')),
   () => gulp.src('public/font/*').pipe(gulp.dest('dist/public/font')),
+  () => gulp.src('public/img/*').pipe(gulp.dest('dist/public/img')),
 );
 
 const bundleClientJs = done => bundler.run(done);
