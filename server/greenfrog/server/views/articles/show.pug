@@ -18,10 +18,7 @@ block content
                   href=`${urlFor('editComment', article.id, comment.id)}`
                   title="Edit comment"
                 )
-                form(
-                  method="post"
-                  action=`${urlFor('comment', article.id, comment.id)}?_method=delete`
-                )
+                +link(`${urlFor('comment', article.id, comment.id)}?_method=delete`)
                   button.fa.fa-times.fa-control(title="Delete comment")
         p #{comment.text}
 

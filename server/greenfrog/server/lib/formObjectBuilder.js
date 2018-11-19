@@ -1,8 +1,10 @@
-import _ from 'lodash';
+import { keyBy, pick } from 'lodash';
 
 
-export default (object, error = { errors: [] }) => ({
-  name: 'form',
-  object,
-  errors: _.groupBy(error.errors, 'path'),
+export default (object, error = { errors: [] }, id = null) => ({
+  id,
+  ...object,
+  errors: error.errors
+    .map(el => pick(el, ['path', 'message']))
+    |> ((_) => keyBy(_, 'path')),
 });

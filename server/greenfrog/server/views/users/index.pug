@@ -23,5 +23,5 @@ block content
           td.text-right
             a.d-inline-block(href=`${urlFor('editUser', user.id)}`)
               button.btn.btn-sm.btn-outline-primary.mr-5 Edit user
-            form.d-inline-block(method="POST", action=`${urlFor('user', user.id)}?_method=DELETE`)
+            +link(`${urlFor('user', user.id)}?_method=DELETE`)
               button.btn.btn-sm.btn-outline-primary(type="submit") Remove user

@@ -8,6 +8,7 @@ import methodOverride from 'koa-methodoverride';
 import session from 'koa-generic-session';
 import logger from 'koa-logger';
 import cn from 'classnames';
+import flash from 'koa-flash-simple';
 import applyRouting from './routes';
 import db from './models';
 
@@ -18,6 +19,7 @@ const router = new Router();
 app.keys = ['heavy rain'];
 
 app.use(session(app));
+app.use(flash());
 app.use(logger());
 app.use(serve(path.join(__dirname, '../public')));
 app.use(bodyParser());
@@ -48,6 +50,7 @@ app.use(async (ctx, next) => {
   });
 
   ctx.state = {
+    flash: ctx.flash,
     isSignedIn: () => userId !== undefined,
     currentUrl: ctx.url,
     userId,

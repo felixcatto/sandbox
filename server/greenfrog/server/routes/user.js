@@ -1,5 +1,6 @@
 import { User } from '../models';
 import { emptyObject } from '../lib/utils';
+import buildFormObj from '../lib/formObjectBuilder';
 
 
 export default (router) => {
@@ -36,18 +37,31 @@ export default (router) => {
     })
 
     .post('users', '/users', async (ctx) => {
-      await User.create(ctx.request.body, {
-        fields: userFields,
-      });
-      ctx.redirect(router.url('users'));
+      try {
+        await User.create(ctx.request.body, {
+          fields: userFields,
+        });
+        ctx.redirect(router.url('users'));
+      } catch (e) {
+        ctx.render('users/new', {
+          user: buildFormObj(ctx.request.body, e),
+        });
+      }
     })
 
     .put('user', '/users/:id', async (ctx) => {
-      await User.update(ctx.request.body, {
-        where: { id: ctx.params.id },
-        fields: userFields,
-      });
-      ctx.redirect(router.url('users'));
+      try {
+        await User.update(ctx.request.body, {
+          where: { id: ctx.params.id },
+          fields: userFields,
+        });
+        ctx.redirect(router.url('users'));
+      } catch (e) {
+        ctx.render('users/edit', {
+          user: buildFormObj(ctx.request.body, e, ctx.params.id),
+          type: 'edit',
+        });
+      }
     })
 
     .delete('user', '/users/:id', async (ctx) => {

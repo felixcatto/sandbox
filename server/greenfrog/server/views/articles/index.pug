@@ -23,5 +23,5 @@ block content
               button.btn.btn-sm.btn-outline-primary.mr-5 Show article
             a(href=`${urlFor('editArticle', article.id)}`)
               button.btn.btn-sm.btn-outline-primary.mr-5 Edit article
-            form(method="POST", action=`${urlFor('article', article.id)}?_method=DELETE`)
+            +link(`${urlFor('article', article.id)}?_method=DELETE`)
               button.btn.btn-sm.btn-outline-primary(type="submit") Remove article

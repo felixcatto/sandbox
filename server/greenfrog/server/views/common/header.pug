@@ -30,10 +30,7 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-20
       div
         if isSignedIn()
           span.mr-10 #{user.firstName} #{user.lastName}
-          form.d-inline-block(
-            method="POST"
-            action=`${urlFor('session')}?_method=DELETE`
-          )
+          +link(`${urlFor('session')}?_method=DELETE`)
             button.fa.fa-sign-out-alt.fa-control(type="submit" title="Logout")
         else
           span.mr-10 Guest
