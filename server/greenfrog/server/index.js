@@ -11,6 +11,7 @@ import cn from 'classnames';
 import flash from 'koa-flash-simple';
 import applyRouting from './routes';
 import db from './models';
+import getRender from './lib/getRender';
 
 
 const app = new Koa();
@@ -58,6 +59,12 @@ app.use(async (ctx, next) => {
     db,
   };
 
+  await next();
+});
+
+app.use(async (ctx, next) => {
+  const pugRender = ctx.render.bind(ctx);
+  ctx.render = getRender(ctx, pugRender);
   await next();
 });
 

@@ -2,16 +2,25 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const clientPages = require('./server/lib/clientPages');
 
+
+const entries = clientPages.reduce((acc, page) => ({
+  ...acc,
+  [page]: path.resolve(__dirname, `server/views/${page.replace(/\./g, '/')}.client.js`)
+}), {});
 
 const common = {
-  entry: {
-    index: path.resolve(__dirname, 'client/index.js'),
-  },
+  entry: entries,
   output: {
     filename: 'js/[name].js',
     path: path.resolve(__dirname, 'dist/public'),
     publicPath: '/',
+  },
+  resolve: {
+    alias: {
+      Client: path.resolve(__dirname, 'client'),
+    },
   },
   module: {
     rules: [
@@ -20,25 +29,6 @@ const common = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env', {
-                modules: false,
-                targets: {
-                  browsers: [
-                    'last 2 Chrome versions',
-                    'last 2 Edge versions',
-                    'last 2 Firefox versions',
-                    'last 2 Safari versions',
-                  ],
-                },
-              }],
-              '@babel/preset-react',
-            ],
-            plugins: [
-              '@babel/plugin-proposal-class-properties',
-            ],
-          },
         },
       },
     ],
