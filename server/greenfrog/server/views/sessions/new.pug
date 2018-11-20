@@ -8,6 +8,7 @@ block content
           .mb-15
             label Email
             input.form-control(name="email", value=`${user.email}`)
+            +error(user, 'email')
           div
             label Password
             input.form-control(name="password", value=`${user.password}`, type="password")
