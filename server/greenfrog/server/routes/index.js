@@ -1,6 +1,7 @@
 import applyUserRouting from './user';
 import applyArticleRouting from './article';
 import applySessionRouting from './session';
+import applyChatRouting from './chat';
 
 
 export default (app, router) => {
@@ -11,6 +12,7 @@ export default (app, router) => {
   applyUserRouting(router);
   applyArticleRouting(router);
   applySessionRouting(router);
+  applyChatRouting(router);
 
   app
     .use(router.routes())

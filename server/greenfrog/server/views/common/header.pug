@@ -27,6 +27,8 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-20
           a(class=activeLink(urlFor('users')) href=`${urlFor('users')}`) Users
         li.nav-item
           a(class=activeLink(urlFor('articles')) href=`${urlFor('articles')}`) Articles
+        li.nav-item
+          a(class=activeLink(urlFor('chat')) href=`${urlFor('chat')}`) Chat
       div
         if isSignedIn()
           span.mr-10 #{user.firstName} #{user.lastName}

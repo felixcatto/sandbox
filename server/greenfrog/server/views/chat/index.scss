@@ -1,0 +1,31 @@
+$headerHeight: 66px + 20px;
+$chatTitle: 48px + 25px;
+$historyMargin: 20px;
+$inputHeight: 38px;
+$chatPaddingBottom: 30px;
+$allExceptChatHistory: $headerHeight + $chatTitle + $historyMargin + $inputHeight + $chatPaddingBottom;
+
+.chat {
+  padding-bottom: $chatPaddingBottom;
+
+  &__history {
+    height: calc(100vh - #{$allExceptChatHistory});
+    overflow: auto;
+  }
+  &__message-wrap {
+    display: flex;
+    margin-bottom: 5px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &__user-avatar {
+    flex: 0 0 40px;
+    width: 40px;
+    margin-right: 10px;
+    align-self: flex-start;
+  }
+  &__user-name {
+    font-weight: bold;
+  }
+}

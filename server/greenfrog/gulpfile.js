@@ -42,17 +42,19 @@ const startDevServer = (done) => {
 };
 
 const reload = (done) => {
-  devServer.reload();
-  done();
+  setTimeout(() => {
+    devServer.reload();
+    setTimeout(done, 50);
+  }, 250);
 };
 
-const transpileScss = () => gulp.src('public/**/*.scss')
+const transpileScss = () => gulp.src(['public/**/*.scss', 'server/views/**/*.scss'])
   .pipe(sass())
   .pipe(postcss([cssImport()]))
   .pipe(concat('index.css'))
   .pipe(gulp.dest('dist/public/css'));
 
-const copyViews = () => gulp.src('server/views/**/*').pipe(gulp.dest('dist/server/views'));
+const copyViews = () => gulp.src('server/views/**/*.pug').pipe(gulp.dest('dist/server/views'));
 
 const copyMisc = gulp.series(
   () => gulp.src('bin/*.js').pipe(gulp.dest('dist/bin')),
@@ -71,8 +73,8 @@ const clean = () => del(['dist']);
 
 const watch = () => {
   gulp.watch('server/**/*.js', gulp.series(transpileServerJs, startServer, reload));
-  gulp.watch('server/views/**/*', gulp.series(copyViews, reload));
-  gulp.watch('public/**/*.scss', gulp.series(transpileScss, reload));
+  gulp.watch('server/views/**/*.pug', gulp.series(copyViews, reload));
+  gulp.watch(['public/**/*.scss', 'server/views/**/*.scss'], gulp.series(transpileScss, reload));
 };
 
 

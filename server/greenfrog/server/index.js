@@ -1,3 +1,4 @@
+import http from 'http';
 import Koa from 'koa';
 import serve from 'koa-static';
 import path from 'path';
@@ -9,9 +10,11 @@ import session from 'koa-generic-session';
 import logger from 'koa-logger';
 import cn from 'classnames';
 import flash from 'koa-flash-simple';
+import WebSocket from 'ws';
 import applyRouting from './routes';
 import db from './models';
-import getRender from './lib/getRender';
+import patchedPugRender from './lib/patchedPugRender';
+import makeChat from './lib/chat';
 
 
 const app = new Koa();
@@ -45,6 +48,7 @@ pug.use(app);
 
 app.use(async (ctx, next) => {
   const { userId } = ctx.session;
+
   const user = await db.User.findOne({
     where: { id: userId },
     raw: true,
@@ -62,12 +66,12 @@ app.use(async (ctx, next) => {
   await next();
 });
 
-app.use(async (ctx, next) => {
-  const pugRender = ctx.render.bind(ctx);
-  ctx.render = getRender(ctx, pugRender);
-  await next();
-});
+app.use(patchedPugRender);
 
 applyRouting(app, router);
 
-export default app;
+const server = http.createServer(app.callback());
+const wss = new WebSocket.Server({ server });
+makeChat(wss);
+
+export default server;
