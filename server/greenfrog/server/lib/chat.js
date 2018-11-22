@@ -1,8 +1,10 @@
+import Cookies from 'cookies';
+import { keys } from './secure';
 import db from '../models';
 
 
 export default (wss) => {
-  wss.on('connection', async (ws, request) => {
+  wss.on('connection', async (ws, req) => {
     const sendMessage = (msg, client = ws) => client.send(JSON.stringify(msg));
 
     const getAllMessages = async () => {
@@ -27,23 +29,23 @@ export default (wss) => {
         .forEach(client => func(client));
     };
 
-    const userId = request.headers.cookie
-      ?.split('; ')
-      .find(el => el.startsWith('userId='))
-      ?.split('=')[1];
+    const cookies = new Cookies(req, null, { keys });
+    const userId = cookies.get('userId', { signed: true });
 
     const user = await db.User.findOne({
       where: { id: userId },
     });
 
-    if (!user) {
-      return;
-    }
-
     const allMessages = await getAllMessages();
     sendChatHistory(allMessages);
+    sendMessage({
+      type: 'USER_INFO',
+      payload: { isAuthenticated: Boolean(user) },
+    });
 
     ws.on('message', async (message) => {
+      if (!user) return;
+
       const createdMessage = await db.Message.create({ message });
 
       await user.addMessage(createdMessage);

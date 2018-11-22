@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import PropTypes from 'prop-types';
+import Textarea from 'react-textarea-autosize';
 
 
 const withSubscription = WrappedComponent => class WithSubscription extends React.Component {
@@ -8,6 +9,7 @@ const withSubscription = WrappedComponent => class WithSubscription extends Reac
     super(props);
     this.chatRef = React.createRef();
     this.state = {
+      isAuthenticated: false,
       chatHistory: [],
       sendMessage: () => {},
       ws: null,
@@ -32,18 +34,24 @@ const withSubscription = WrappedComponent => class WithSubscription extends Reac
         }, () => {
           this.chatRef.current.scrollToBottomOfChat();
         });
+      } else if (data.type === 'USER_INFO') {
+        const { isAuthenticated } = data.payload;
+        this.setState({ isAuthenticated });
       }
     });
   }
 
   render() {
-    const { chatHistory, sendMessage, isDataReady } = this.state;
+    const {
+      chatHistory, sendMessage, isDataReady, isAuthenticated,
+    } = this.state;
 
     return (
       isDataReady ?
           <WrappedComponent
             chatHistory={chatHistory}
             sendMessage={sendMessage}
+            isAuthenticated={isAuthenticated}
             ref={this.chatRef}
           /> : null
     );
@@ -59,6 +67,7 @@ class Chat extends React.Component {
       message: PropTypes.any.isRequired,
       User: PropTypes.any.isRequired,
     })).isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
   }
 
   constructor(props) {
@@ -80,19 +89,28 @@ class Chat extends React.Component {
   }
 
   onMessageSend = (e) => {
-    if (e.key !== 'Enter') return;
+    if (e.key !== 'Enter' || e.shiftKey) return;
+    e.preventDefault();
 
     const { sendMessage } = this.props;
-    sendMessage(this.state.newMessageText);
+    const { newMessageText } = this.state;
+    if (newMessageText === '') return;
+
+    sendMessage(newMessageText);
     this.setState({ newMessageText: '' });
+  }
+
+  onInputHeightChange = (height) => {
+    this.chatHistoryRef.current.style.setProperty('--inputHeight', `${height}px`);
   }
 
   render() {
     const { newMessageText } = this.state;
-    const { chatHistory } = this.props;
+    const { chatHistory, isAuthenticated } = this.props;
 
     return (
       <div className="chat">
+
         <h1 className="mb-25">Chat Client</h1>
 
         <div className="chat__history mb-20" ref={this.chatHistoryRef}>
@@ -109,13 +127,16 @@ class Chat extends React.Component {
           ))}
         </div>
 
-        <input
-          type="text"
-          className="chat__input form-control"
+        <Textarea
+          className="form-control"
           onChange={this.onMessageChange}
           onKeyDown={this.onMessageSend}
+          onHeightChange={this.onInputHeightChange}
           value={newMessageText}
+          disabled={!isAuthenticated}
+          placeholder={isAuthenticated ? 'Message' : 'Please sign in'}
         />
+
       </div>
     );
   }

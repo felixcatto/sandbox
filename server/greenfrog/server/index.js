@@ -15,12 +15,13 @@ import applyRouting from './routes';
 import db from './models';
 import patchedPugRender from './lib/patchedPugRender';
 import makeChat from './lib/chat';
+import { keys } from './lib/secure';
 
 
 const app = new Koa();
 const router = new Router();
 
-app.keys = ['heavy rain'];
+app.keys = keys;
 
 app.use(session(app));
 app.use(flash());
@@ -47,7 +48,8 @@ const pug = new Pug({
 pug.use(app);
 
 app.use(async (ctx, next) => {
-  const { userId } = ctx.session;
+  // const { userId } = ctx.session;
+  const userId = ctx.cookies.get('userId', { signed: true });
 
   const user = await db.User.findOne({
     where: { id: userId },

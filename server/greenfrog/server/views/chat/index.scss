@@ -1,15 +1,18 @@
+:root {
+  --inputHeight: 38px;
+}
+
 $headerHeight: 66px + 20px;
 $chatTitle: 48px + 25px;
 $historyMargin: 20px;
-$inputHeight: 38px;
 $chatPaddingBottom: 30px;
-$allExceptChatHistory: $headerHeight + $chatTitle + $historyMargin + $inputHeight + $chatPaddingBottom;
+$chatHistoryHeight: calc(100vh - #{$headerHeight + $chatTitle + $historyMargin + $chatPaddingBottom} - var(--inputHeight));
 
 .chat {
   padding-bottom: $chatPaddingBottom;
 
   &__history {
-    height: calc(100vh - #{$allExceptChatHistory});
+    height: $chatHistoryHeight;
     overflow: auto;
   }
   &__message-wrap {
@@ -27,5 +30,8 @@ $allExceptChatHistory: $headerHeight + $chatTitle + $historyMargin + $inputHeigh
   }
   &__user-name {
     font-weight: bold;
+  }
+  &__user-message {
+    white-space: pre;
   }
 }
