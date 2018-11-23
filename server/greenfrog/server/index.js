@@ -11,6 +11,7 @@ import logger from 'koa-logger';
 import cn from 'classnames';
 import flash from 'koa-flash-simple';
 import WebSocket from 'ws';
+import './lib/container';
 import applyRouting from './routes';
 import db from './models';
 import patchedPugRender from './lib/patchedPugRender';
