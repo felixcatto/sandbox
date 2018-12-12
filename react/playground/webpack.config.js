@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 
 const common = {
@@ -71,13 +70,6 @@ const common = {
     ],
   },
   plugins: [
-    new CopyWebpackPlugin([
-      {
-        from: 'src/public/img/*',
-        to: 'img/',
-        flatten: true
-      },
-    ]),
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
     }),
@@ -109,6 +101,5 @@ if (process.env.NODE_ENV === 'production') {
   module.exports = merge(common, {
     mode: 'development',
     devtool: 'cheap-module-eval-source-map',
-    plugins: [new webpack.HotModuleReplacementPlugin()],
   });
 }

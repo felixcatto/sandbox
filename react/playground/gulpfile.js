@@ -2,36 +2,46 @@ const path = require('path');
 const gulp = require('gulp');
 const del = require('del');
 const webpack = require('webpack');
-const WebpackDevServer = require('webpack-dev-server');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const Browser = require('browser-sync');
+const historyApiFallback = require('connect-history-api-fallback');
 const webpackConfig = require('./webpack.config.js');
 
 
-const devServerConfig = {
-  contentBase: path.join(__dirname, 'dist'),
-  historyApiFallback: true,
-  hot: true,
-  host: 'localhost',
-  port: 3000,
-  clientLogLevel: 'error',
-  watchContentBase: true,
-  watchOptions: {
-    aggregateTimeout: 300,
-    poll: 1000,
-  },
-};
-
+const devServer = Browser.create();
 const bundler = webpack(webpackConfig);
+bundler.hooks.done.tap('done', () => devServer.reload());
 
-const startDevServer = done => {
-  WebpackDevServer.addDevServerEntrypoints(webpackConfig, devServerConfig);
-  const devBundler = webpack(webpackConfig);
-  const devServer = new WebpackDevServer(devBundler, devServerConfig);
-  devServer
-    .listen(devServerConfig.port, devServerConfig.host, done);
+const startDevServer = (done) => {
+  devServer.init({
+    server: 'dist',
+    port: 3000,
+    open: false,
+    notify: false,
+    middleware: [
+      webpackDevMiddleware(bundler, {
+        publicPath: webpackConfig.output.publicPath,
+        logLevel: 'silent',
+      }),
+      historyApiFallback(),
+    ],
+  });
+  done();
 };
+
+const reloadDev = (done) => {
+  devServer.reload();
+  done();
+};
+
 
 
 const copyLayout = () => gulp.src('src/index.html').pipe(gulp.dest('dist'));
+
+
+const copyMisc = gulp.series(
+  () => gulp.src('src/public/img/*').pipe(gulp.dest('dist/public/img')),
+);
 
 
 const bundleClientJs = done => bundler.run(done);
@@ -48,6 +58,7 @@ const watch = () => {
 const dev = gulp.series(
   clean,
   copyLayout,
+  copyMisc,
   startDevServer,
   watch,
 );
@@ -56,6 +67,7 @@ const dev = gulp.series(
 const prod = gulp.series(
   clean,
   copyLayout,
+  copyMisc,
   bundleClientJs,
 );
 
