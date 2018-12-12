@@ -47,7 +47,7 @@ const common = {
         test: /local\.scss$/,
         use: [
           MiniCssExtractPlugin.loader,
-          { loader: 'css-loader', options: { modules: 1 } },
+          { loader: 'css-loader', options: { modules: true } },
           'sass-loader',
         ],
       },
