@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import app from '../main';
+import getServer from '../main';
 
 
-app.listen(process.env.PORT || 4000);
+getServer().listen(process.env.PORT || 4000);

@@ -30,8 +30,8 @@ const clearCache = () => Object.keys(require.cache)
   .forEach(key => delete require.cache[key]);
 
 const startServer = (done) => {
-  const app = require('./dist/main').default; // eslint-disable-line
-  server = app.listen(process.env.PORT || 4000, done);
+  const getServer = require('./dist/main').default; // eslint-disable-line
+  server = getServer().listen(process.env.PORT || 4000, done);
 };
 
 const reloadServer = (done) => {
@@ -80,7 +80,12 @@ const transpileScss = () => gulp.src(['public/**/*.scss', 'views/**/*.scss'])
   .pipe(concat('index.css'))
   .pipe(gulp.dest('dist/public/css'));
 
-const copyViews = () => gulp.src('views/**/*.pug').pipe(gulp.dest('dist/views'));
+const copyLayout = () => gulp.src('views/common/index.html')
+  .pipe(gulp.dest('dist/views/common'));
+
+const copyViews = () => gulp.src('views/**/*.js')
+  .pipe(babel())
+  .pipe(gulp.dest('dist/views'));
 
 const copyMisc = gulp.series(
   () => gulp.src('public/font/*').pipe(gulp.dest('dist/public/font')),
@@ -97,13 +102,15 @@ const clean = () => del(['dist']);
 
 const watch = () => {
   gulp.watch(serverJsPath, gulp.series(transpileServerJs, reloadServer, reloadDev));
-  gulp.watch('views/**/*.pug', gulp.series(copyViews, reloadDev));
+  gulp.watch('views/common/index.html', gulp.series(copyLayout, reloadServer, reloadDev));
+  gulp.watch('views/**/*.js', gulp.series(copyViews, reloadServer, reloadDev));
   gulp.watch(['public/**/*.scss', 'views/**/*.scss'], gulp.series(transpileScss, reloadDev));
 };
 
 
 const dev = gulp.series(
   clean,
+  copyLayout,
   copyMisc,
   copyViews,
   transpileScss,
@@ -116,6 +123,7 @@ const dev = gulp.series(
 
 const prod = gulp.series(
   clean,
+  copyLayout,
   copyMisc,
   copyViews,
   transpileScss,

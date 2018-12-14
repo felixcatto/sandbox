@@ -31,17 +31,17 @@ const common = {
       },
     ],
   },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        vendors: {
-          name: 'vendors',
-          chunks: 'initial',
-          test: /node_modules/,
-        },
-      },
-    },
-  },
+  // optimization: {
+  //   splitChunks: {
+  //     cacheGroups: {
+  //       vendors: {
+  //         name: 'vendors',
+  //         chunks: 'initial',
+  //         test: /node_modules/,
+  //       },
+  //     },
+  //   },
+  // },
   stats: {
     warnings: false,
     children: false,
