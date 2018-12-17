@@ -1,5 +1,10 @@
+import applyUserRouting from './user';
+
+
 export default (app) => {
   app.get('/', 'root', (req, res) => {
-    res.render('common/index');
+    res.render('root/index');
   });
+
+  applyUserRouting(app);
 };

@@ -1,9 +1,21 @@
 import React, { useContext } from 'react';
-import Context from '../../lib/context';
+import cn from 'classnames';
+import Context from 'Lib/context';
 
 
 export default () => {
-  const { urlFor } = useContext(Context);
+  const { urlFor, currentUrl } = useContext(Context);
+
+  const activeLinkClass = (choosenUrl) => {
+    if (currentUrl !== '/' && choosenUrl === '/') {
+      return 'nav-link';
+    }
+
+    return cn('nav-link', {
+      'active': currentUrl.startsWith(choosenUrl),
+    });
+  };
+
   return (
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light mb-20">
@@ -20,10 +32,14 @@ export default () => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <a href={urlFor('root')} className="nav-link">Home</a>
+                <a href={urlFor('root')} className={activeLinkClass(urlFor('root'))}>
+                  Home
+                </a>
               </li>
               <li className="nav-item">
-                <a href={urlFor('root')} className="nav-link">Users</a>
+                <a href={urlFor('users')} className={activeLinkClass(urlFor('users'))}>
+                  Users
+                </a>
               </li>
             </ul>
           </div>

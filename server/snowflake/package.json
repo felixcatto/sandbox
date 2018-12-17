@@ -12,6 +12,10 @@
   "engines": {
     "node": "10"
   },
+  "_moduleAliases": {
+    "Views": "dist/views/common",
+    "Lib": "dist/lib"
+  },
   "devDependencies": {
     "@babel/core": "^7.2.0",
     "@babel/plugin-proposal-class-properties": "^7.2.1",
@@ -52,6 +56,7 @@
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "lodash": "^4.17.11",
+    "module-alias": "^2.1.0",
     "named-routes": "^2.0.6",
     "prop-types": "^15.6.2",
     "react": "^16.7.0-alpha.2",

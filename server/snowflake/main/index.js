@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import path from 'path';
 import express from 'express';
 import fs from 'fs';
@@ -21,6 +22,7 @@ export default () => {
       viewsDir: path.resolve(__dirname, '../views'),
       helpers: {
         urlFor: app.namedRoutes.build.bind(app.namedRoutes),
+        currentUrl: req.url,
       },
     };
     next();
