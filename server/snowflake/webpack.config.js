@@ -17,7 +17,7 @@ const common = {
   },
   resolve: {
     alias: {
-      Client: path.resolve(__dirname, 'clientComponents'),
+      Client: path.resolve(__dirname, 'client'),
     },
   },
   module: {

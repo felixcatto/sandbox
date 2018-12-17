@@ -21,6 +21,7 @@ const serverJsPath = [
 ];
 
 let server;
+let dbConnection;
 const devServer = Browser.create();
 const bundler = webpack(webpackConfig);
 bundler.hooks.done.tap('done', () => devServer.reload());
@@ -29,13 +30,16 @@ const clearCache = () => Object.keys(require.cache)
   .filter(p => !p.match(/node_modules/) && p.match(/dist/))
   .forEach(key => delete require.cache[key]);
 
-const startServer = (done) => {
-  const getServer = require('./dist/main').default; // eslint-disable-line
-  server = getServer().listen(process.env.PORT || 4000, done);
+const startServer = async (done) => {
+  const getApp = require('./dist/main').default; // eslint-disable-line
+  const { app, connection } = await getApp();
+  server = app.listen(process.env.PORT || 4000, done);
+  dbConnection = connection;
 };
 
 const reloadServer = (done) => {
-  server.close(() => {
+  server.close(async () => {
+    await dbConnection.close();
     clearCache();
     startServer(done);
   });

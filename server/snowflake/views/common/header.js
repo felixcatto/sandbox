@@ -12,7 +12,7 @@ export default () => {
     }
 
     return cn('nav-link', {
-      'active': currentUrl.startsWith(choosenUrl),
+      active: currentUrl.startsWith(choosenUrl),
     });
   };
 

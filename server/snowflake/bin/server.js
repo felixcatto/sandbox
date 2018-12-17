@@ -2,4 +2,5 @@
 import getServer from '../main';
 
 
-getServer().listen(process.env.PORT || 4000);
+getServer()
+  .then(server => server.listen(process.env.PORT || 4000));
