@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { IsEmail, MinLength } from 'class-validator';
 
 
 @Entity()
@@ -12,10 +13,15 @@ class User {
   @Column('varchar')
   lastName = '';
 
-  @Column('varchar')
+  @Column({
+    type: 'varchar',
+    unique: true,
+  })
+  @IsEmail()
   email = '';
 
   @Column('varchar')
+  @MinLength(1)
   password = '';
 }
 

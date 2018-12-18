@@ -1,4 +1,9 @@
 import { getRepository } from 'typeorm';
+import { isEmpty } from 'lodash';
+import {
+  emptyObject, createEntity, isEmailUnique, ivalidate,
+} from 'Lib/utils';
+import { encrypt } from 'Lib/secure';
 import { User } from '../entity/User';
 
 
@@ -9,11 +14,12 @@ export default (app) => {
     const users = await userRepo.createQueryBuilder()
       .orderBy('id')
       .getMany();
+
     res.render('users/index', { users });
   });
 
   app.get('/users/new', 'newUser', (req, res) => {
-    res.render('users/new');
+    res.render('users/new', { user: emptyObject });
   });
 
   app.get('/users/:id/edit', 'editUser', async (req, res) => {
@@ -31,38 +37,54 @@ export default (app) => {
     });
   });
 
-  app.put('/users/:id', 'user', async (req, res) => {
-    try {
+  app.post('/users', 'users', async (req, res) => {
+    const user = createEntity(User, req.body);
+    const errors = await ivalidate(user);
+
+    const isUserEmailUnique = await isEmailUnique(req.body.email);
+    if (!isUserEmailUnique) {
+      errors.email = 'Email already exists';
+    }
+
+    if (isEmpty(errors)) {
       const { urlFor } = res.locals;
+      const password = encrypt(req.body.password);
       await userRepo.createQueryBuilder()
-        .update()
-        .set(req.body)
-        .where('id = :id', { id: req.params.id })
+        .insert()
+        .values({ ...req.body, password })
         .execute();
 
       res.redirect(urlFor('users'));
-    } catch (e) {
-      console.log(e);
-      // ctx.render('users/edit', {
-      //   user: buildFormObj(ctx.request.body, e, ctx.params.id),
-      //   type: 'edit',
-      // });
+    } else {
+      res.render('users/new', { user, errors });
     }
   });
 
-  app.post('/users', 'users', async (req, res) => {
-    try {
+  app.put('/users/:id', 'user', async (req, res) => {
+    const { id } = req.params;
+    const user = createEntity(User, req.body);
+    const errors = await ivalidate(user);
+
+    const isUserEmailUnique = await isEmailUnique(req.body.email, id);
+    if (!isUserEmailUnique) {
+      errors.email = 'Email already exists';
+    }
+
+    if (isEmpty(errors)) {
       const { urlFor } = res.locals;
+      const password = encrypt(req.body.password);
       await userRepo.createQueryBuilder()
-        .insert()
-        .values(req.body)
+        .update()
+        .set({ ...req.body, password })
+        .where('id = :id', { id })
         .execute();
 
       res.redirect(urlFor('users'));
-    } catch (e) {
-      console.log(e);
-      res.render('users/new', {
-        user: {},
+    } else {
+      res.render('users/edit', {
+        user: { ...req.body, id },
+        errors,
+        type: 'edit',
       });
     }
   });

@@ -7,6 +7,7 @@
   "password": "1",
   "database": "dev",
   "synchronize": true,
+  "logging": true,
   "entities": [
     "dist/entity/*.js"
   ],

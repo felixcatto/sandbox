@@ -21,7 +21,6 @@ export default (props) => {
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
-            <th>Password</th>
             <th></th>
           </tr>
           {users.map(user => (
@@ -29,7 +28,6 @@ export default (props) => {
               <td>{user.firstName}</td>
               <td>{user.lastName}</td>
               <td>{user.email}</td>
-              <td>{user.password}</td>
               <td>
                 <div className="d-flex justify-content-end">
                   <a href={urlFor('editUser', { id: user.id })} className="mr-10">

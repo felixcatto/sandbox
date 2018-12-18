@@ -6,3 +6,11 @@ export const Link = ({ action, children }) => (
     {children}
   </form>
 );
+
+
+export const Error = ({ errors, name }) => (
+  errors && errors[name] ?
+    <div className="error">{errors[name]}</div>
+    :
+    null
+);

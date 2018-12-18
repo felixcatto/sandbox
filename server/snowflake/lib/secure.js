@@ -1,9 +1,7 @@
 import crypto from 'crypto';
 
 
-export const secret = 'hedgehog';
-
-export const keys = [secret];
+export const secret = process.env.SECRET;
 
 export const encrypt = value => crypto.createHmac('sha256', secret)
   .update(value)

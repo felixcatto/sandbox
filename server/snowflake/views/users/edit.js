@@ -3,11 +3,11 @@ import Layout from 'Views/layout';
 import Form from './form';
 
 
-export default ({ user, type }) => (
+export default props => (
   <Layout>
     <div className="container">
       <h1>Edit User</h1>
-      <Form user={user} type={type}/>
+      <Form {...props}/>
     </div>
   </Layout>
 );
