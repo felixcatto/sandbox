@@ -6,14 +6,13 @@ import Router from 'named-routes';
 import bodyParser from 'body-parser';
 import methodOverride from 'method-override';
 import morgan from 'morgan';
-import { createConnection } from 'typeorm';
-import '../lib/container';
+import initContainer from '../lib/container';
 import customRender from '../lib/customRender';
 import applyRouting from '../routes';
 
 
 export default async () => {
-  const connection = await createConnection();
+  await initContainer();
 
   const app = express();
   const router = new Router();
@@ -42,8 +41,6 @@ export default async () => {
   app.use(customRender);
   applyRouting(app);
 
-  return {
-    app,
-    connection,
-  };
+
+  return app;
 };

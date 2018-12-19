@@ -9,6 +9,7 @@ const concat = require('gulp-concat');
 const postcss = require('gulp-postcss');
 const cssImport = require('postcss-import');
 const repl = require('repl');
+const { getConnection } = require('typeorm');
 const webpackConfig = require('./webpack.config.js');
 
 
@@ -21,7 +22,7 @@ const serverJsPath = [
 ];
 
 let server;
-let dbConnection;
+let connection;
 const devServer = Browser.create();
 const bundler = webpack(webpackConfig);
 bundler.hooks.done.tap('done', () => devServer.reload());
@@ -32,14 +33,14 @@ const clearCache = () => Object.keys(require.cache)
 
 const startServer = async (done) => {
   const getApp = require('./dist/main').default; // eslint-disable-line
-  const { app, connection } = await getApp();
+  const app = await getApp();
   server = app.listen(process.env.PORT || 4000, done);
-  dbConnection = connection;
+  connection = getConnection();
 };
 
 const reloadServer = (done) => {
   server.close(async () => {
-    await dbConnection.close();
+    await connection.close();
     clearCache();
     startServer(done);
   });
@@ -66,9 +67,10 @@ const reloadDev = (done) => {
   done();
 };
 
-const serverConsole = (done) => {
+const serverConsole = async (done) => {
   done();
-  const container = require('./dist/lib/container').default; // eslint-disable-line
+  const initContainer = require('./dist/lib/container').default; // eslint-disable-line
+  const container = await initContainer();
   const replServer = repl.start({
     prompt: 'Console > ',
   });
