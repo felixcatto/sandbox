@@ -6,20 +6,16 @@
   "username": "postgres",
   "password": "1",
   "database": "dev",
-  "synchronize": true,
+  "synchronize": false,
   "logging": true,
   "entities": [
     "dist/entity/*.js"
   ],
-  "subscribers": [
-    "dist/subscriber/*.js"
-  ],
   "migrations": [
-    "dist/migration/*.js"
+    "db/migration/*.js"
   ],
   "cli": {
-    "entitiesDir": "dist/entity",
-    "migrationsDir": "dist/migration",
-    "subscribersDir": "dist/subscriber"
+    "entitiesDir": "entity",
+    "migrationsDir": "db/migration"
   }
 }

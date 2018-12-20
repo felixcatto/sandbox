@@ -1,6 +1,7 @@
 import 'module-alias/register';
 import path from 'path';
 import express from 'express';
+import 'express-async-errors';
 import fs from 'fs';
 import Router from 'named-routes';
 import bodyParser from 'body-parser';
@@ -40,7 +41,6 @@ export default async () => {
 
   app.use(customRender);
   applyRouting(app);
-
 
   return app;
 };

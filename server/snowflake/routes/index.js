@@ -1,4 +1,5 @@
 import applyUserRouting from './user';
+import applyArticleRouting from './article';
 
 
 export default (app) => {
@@ -7,4 +8,11 @@ export default (app) => {
   });
 
   applyUserRouting(app);
+  applyArticleRouting(app);
+
+  // eslint-disable-next-line
+  app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send(err.stack);
+  });
 };

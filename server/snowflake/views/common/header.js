@@ -41,6 +41,11 @@ export default () => {
                   Users
                 </a>
               </li>
+              <li className="nav-item">
+                <a href={urlFor('articles')} className={activeLinkClass(urlFor('articles'))}>
+                  Articles
+                </a>
+              </li>
             </ul>
           </div>
         </div>

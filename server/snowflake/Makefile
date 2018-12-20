@@ -20,10 +20,13 @@ lint-fix:
 	npx eslint --fix .
 
 migrate:
-	npx sequelize db:migrate
+	npx typeorm migration:run
 
 migrate-undo:
-	npx sequelize db:migrate:undo
+	npx typeorm migration:revert
+
+generate-migration: build
+	npx typeorm migration:generate -n New
 
 console:
 	npx gulp console
