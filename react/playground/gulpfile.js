@@ -14,7 +14,7 @@ bundler.hooks.done.tap('done', () => devServer.reload());
 
 const startDevServer = (done) => {
   devServer.init({
-    server: 'dist',
+    server: ['dist', 'dist/public'],
     port: 3000,
     open: false,
     notify: false,

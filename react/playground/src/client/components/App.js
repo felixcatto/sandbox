@@ -6,6 +6,7 @@ import './App.scss';
 import Wizard from './Wizard';
 import Animation from './Animation';
 import Chart from './Chart';
+import Goat from './Goat';
 
 
 export default function App() {
@@ -25,6 +26,9 @@ export default function App() {
           <NavLink to="/chart" activeClassName="navlink_active" className="navlink">
             D3 chart
           </NavLink>
+          <NavLink to="/goat" activeClassName="navlink_active" className="navlink">
+            Goat
+          </NavLink>
         </div>
 
         <Switch>
@@ -34,6 +38,7 @@ export default function App() {
           <Route path="/wizard" component={Wizard} />
           <Route path="/animation" component={Animation} />
           <Route path="/chart" component={Chart} />
+          <Route path="/goat" component={Goat} />
         </Switch>
       </div>
     </BrowserRouter>
