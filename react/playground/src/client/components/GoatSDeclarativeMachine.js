@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import cn from 'classnames';
 import { Machine, actions } from 'xstate';
-import { useMachine } from '../lib/utils';
+import { useMachine, getGoatUrl } from '../lib/utils';
 import ss from './Goat.local.scss';
 
 
@@ -10,7 +10,8 @@ const goatMachine = Machine(
     id: 'goat',
     initial: 'idle',
     context: {
-      goat: null,
+      goatUrl: null,
+      goatErrorMsg: '',
     },
     states: {
       idle: {
@@ -19,13 +20,20 @@ const goatMachine = Machine(
         },
       },
       loading: {
-        on: {
-          GOAT_LOAD_SUCCESS: 'loadSuccess',
-          GOAT_LOAD_ERROR: 'loadError',
+        invoke: {
+          id: 'getGoat',
+          src: (ctx, event) => getGoatUrl(),
+          onDone: {
+            target: 'loadSuccess',
+            actions: 'setGoatUrl',
+          },
+          onError: {
+            target: 'loadError',
+            actions: 'setGoatError',
+          },
         },
       },
       loadSuccess: {
-        onEntry: 'setGoatUrl',
         on: {
           GOAT_LOAD_REQUEST: 'loading',
         },
@@ -40,31 +48,22 @@ const goatMachine = Machine(
   {
     actions: {
       setGoatUrl: actions.assign({
-        goat: (ctx, event) => event.payload.goatUrl,
+        goatUrl: (ctx, event) => event.data.goatUrl,
+      }),
+      setGoatError: actions.assign({
+        goatErrorMsg: (ctx, event) => event.data.goatErrorMsg,
       }),
     },
   },
 );
 
 const GoatSDeclarativeMachine = (props) => {
-  const { goatUrl, sleep } = props;
   const [goatState, dispatch] = useMachine(goatMachine);
   console.log(goatState);
 
-  const onClick = async () => {
-    dispatch('GOAT_LOAD_REQUEST');
-    try {
-      await sleep(1500);
-      dispatch({
-        type: 'GOAT_LOAD_SUCCESS',
-        payload: { goatUrl },
-      });
-    } catch (e) {
-      dispatch('GOAT_LOAD_ERROR');
-    }
-  };
+  const onClick = () => dispatch('GOAT_LOAD_REQUEST');
 
-  const { goat } = goatState.context;
+  const { goatUrl, goatErrorMsg } = goatState.context;
 
   return (
     <div>
@@ -84,7 +83,7 @@ const GoatSDeclarativeMachine = (props) => {
           </button>
 
           <div className="mt-25">
-            <span className="alert alert-primary">{`Goat fail :'(`}</span>
+            <span className="alert alert-primary">{goatErrorMsg}</span>
           </div>
         </React.Fragment>
       }
@@ -109,7 +108,7 @@ const GoatSDeclarativeMachine = (props) => {
           </button>
 
           <div className="mt-20">
-            <img src={goat} className={ss.image} />
+            <img src={goatUrl} className={ss.image} />
           </div>
         </React.Fragment>
       }

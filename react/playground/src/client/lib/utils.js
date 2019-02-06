@@ -26,6 +26,24 @@ const useMachine = (machine) => {
   return [current, service.send];
 };
 
+const sleep = (ms, successRate = 0.66) => new Promise((resolve, reject) => {
+  if (Math.random() < successRate) {
+    setTimeout(resolve, ms);
+  } else {
+    setTimeout(reject, ms);
+  }
+});
+
+const getGoatUrl = (successRate = 0.66, ms = 1500) => new Promise((resolve, reject) => {
+  if (Math.random() < successRate) {
+    setTimeout(() => resolve({ goatUrl: '/img/goat2.jpg' }), ms);
+  } else {
+    setTimeout(() => reject({ goatErrorMsg: 'Bad network :(' }), ms);
+  }
+});
+
+
 export {
   useMachine,
+  getGoatUrl,
 };
