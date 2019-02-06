@@ -41,7 +41,7 @@ const GoatState = (props) => {
   return (
     <div>
 
-      <h1>Goat Loader :&#41;</h1>
+      <h1>{`Goat Loader :)`}</h1>
 
       <button className="btn btn-primary d-inline-flex align-items-center" onClick={onClick}>
         {!goat && !goatLoading && !goatError &&
@@ -63,7 +63,7 @@ const GoatState = (props) => {
 
       <div className="mt-25">
         {goatError &&
-          <span className="alert alert-primary">Goat fail :'&#40;</span>
+          <span className="alert alert-primary">{`Goat fail :'(`}</span>
         }
         {goatLoading &&
           <span className="alert alert-primary">Loading...</span>

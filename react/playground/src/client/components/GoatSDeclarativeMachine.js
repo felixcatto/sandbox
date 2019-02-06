@@ -25,7 +25,7 @@ const goatMachine = Machine(
         },
       },
       loadSuccess: {
-        onEntry: ['setGoatUrl'],
+        onEntry: 'setGoatUrl',
         on: {
           GOAT_LOAD_REQUEST: 'loading',
         },
@@ -46,7 +46,7 @@ const goatMachine = Machine(
   },
 );
 
-const GoatSMachine = (props) => {
+const GoatSDeclarativeMachine = (props) => {
   const { goatUrl, sleep } = props;
   const [goatState, dispatch] = useMachine(goatMachine);
   console.log(goatState);
@@ -71,41 +71,51 @@ const GoatSMachine = (props) => {
 
       <h1>{`Goat Loader :)`}</h1>
 
-      <button className="btn btn-primary d-inline-flex align-items-center" onClick={onClick}>
-        {goatState.matches('idle') &&
+      {goatState.matches('idle') &&
+        <button className="btn btn-primary d-inline-flex align-items-center" onClick={onClick}>
           <span>Load Goat Now!</span>
-        }
-        {goatState.matches('loadError') &&
-          <span>Try load again</span>
-        }
-        {goatState.matches('loading') &&
-          <React.Fragment>
+        </button>
+      }
+
+      {goatState.matches('loadError') &&
+        <React.Fragment>
+          <button className="btn btn-primary d-inline-flex align-items-center" onClick={onClick}>
+            <span>Try load again</span>
+          </button>
+
+          <div className="mt-25">
+            <span className="alert alert-primary">{`Goat fail :'(`}</span>
+          </div>
+        </React.Fragment>
+      }
+
+      {goatState.matches('loading') &&
+        <React.Fragment>
+          <button className="btn btn-primary d-inline-flex align-items-center" onClick={onClick}>
             <span>Loading...</span>
             <div className="spinner-border spinner-border-sm text-light ml-10"></div>
-          </React.Fragment>
-        }
-        {goatState.matches('loadSuccess') &&
-          <span>Load Another Goat</span>
-        }
-      </button>
+          </button>
 
-      <div className="mt-25">
-        {goatState.matches('loadError') &&
-          <span className="alert alert-primary">{`Goat fail :'(`}</span>
-        }
-        {goatState.matches('loading') &&
-          <span className="alert alert-primary">Loading...</span>
-        }
-      </div>
+          <div className="mt-25">
+            <span className="alert alert-primary">Loading...</span>
+          </div>
+        </React.Fragment>
+      }
 
       {goatState.matches('loadSuccess') &&
-        <div className="mt-20">
-          <img src={goat} className={ss.image} />
-        </div>
+        <React.Fragment>
+          <button className="btn btn-primary d-inline-flex align-items-center" onClick={onClick}>
+            <span>Load Another Goat</span>
+          </button>
+
+          <div className="mt-20">
+            <img src={goat} className={ss.image} />
+          </div>
+        </React.Fragment>
       }
 
     </div>
   );
 };
 
-export default GoatSMachine;
+export default GoatSDeclarativeMachine;

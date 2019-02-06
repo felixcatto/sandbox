@@ -4,7 +4,7 @@ import {
 } from 'react-router-dom';
 import GoatState from './GoatState';
 import GoatReducer from './GoatReducer';
-import GoatSMachine from './GoatSMachine';
+import GoatSDeclarativeMachine from './GoatSDeclarativeMachine';
 
 
 const sleep = (ms, successRate = 0.66) => new Promise((resolve, reject) => {
@@ -49,7 +49,7 @@ const Goat = (props) => {
             <GoatReducer {...goatProps} />
           )}/>
           <Route path={`${matchUrl}/state-machine`} render={() => (
-            <GoatSMachine {...goatProps} />
+            <GoatSDeclarativeMachine {...goatProps} />
           )}/>
         </Switch>
       </div>
