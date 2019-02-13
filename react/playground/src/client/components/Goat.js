@@ -3,7 +3,9 @@ import {
   BrowserRouter, Route, Switch, NavLink,
 } from 'react-router-dom';
 import GoatState from './GoatState';
+import GoatStateDeclarative from './GoatStateDeclarative';
 import GoatReducer from './GoatReducer';
+import GoatReducerDeclarative from './GoatReducerDeclarative';
 import GoatSMachine from './GoatSMachine';
 import GoatSDeclarativeMachine from './GoatSDeclarativeMachine';
 
@@ -30,8 +32,8 @@ const Goat = (props) => {
           <Route exact path={matchUrl} render={() => (
             <h1>Welcome Back, Goat!</h1>
           )}/>
-          <Route path={`${matchUrl}/state`} component={GoatState}/>
-          <Route path={`${matchUrl}/reducer`} component={GoatReducer}/>
+          <Route path={`${matchUrl}/state`} component={GoatStateDeclarative}/>
+          <Route path={`${matchUrl}/reducer`} component={GoatReducerDeclarative}/>
           <Route path={`${matchUrl}/state-machine`} component={GoatSDeclarativeMachine}/>
         </Switch>
       </div>
