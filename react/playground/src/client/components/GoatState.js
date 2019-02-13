@@ -1,42 +1,41 @@
 import React, { useState } from 'react';
 import cn from 'classnames';
+import { getGoatUrl } from '../lib/utils';
 import ss from './Goat.local.scss';
 
 
-const GoatState = (props) => {
-  const { goatUrl, sleep } = props;
-
+const GoatState = () => {
   const [goatState, setGoatState] = useState({
-    goat: null,
-    goatError: null,
+    goatUrl: null,
+    goatErrorMsg: null,
     goatLoading: false,
   });
 
   const onClick = async () => {
     setGoatState({
-      goat: null,
-      goatError: null,
+      goatUrl: null,
+      goatErrorMsg: null,
       goatLoading: true,
     });
 
     try {
-      await sleep(1500);
+      const { goatUrl } = await getGoatUrl();
 
       setGoatState({
-        goat: goatUrl,
-        goatError: null,
+        goatUrl,
+        goatErrorMsg: null,
         goatLoading: false,
       });
-    } catch (e) {
+    } catch ({ goatErrorMsg }) {
       setGoatState({
-        goat: null,
-        goatError: true,
+        goatUrl: null,
+        goatErrorMsg,
         goatLoading: false,
       });
     }
   };
 
-  const { goat, goatError, goatLoading } = goatState;
+  const { goatUrl, goatErrorMsg, goatLoading } = goatState;
 
   return (
     <div>
@@ -44,10 +43,10 @@ const GoatState = (props) => {
       <h1>{`Goat Loader :)`}</h1>
 
       <button className="btn btn-primary d-inline-flex align-items-center" onClick={onClick}>
-        {!goat && !goatLoading && !goatError &&
+        {!goatUrl && !goatLoading && !goatErrorMsg &&
           <span>Load Goat Now!</span>
         }
-        {goatError &&
+        {goatErrorMsg &&
           <span>Try load again</span>
         }
         {goatLoading &&
@@ -56,23 +55,23 @@ const GoatState = (props) => {
             <div className="spinner-border spinner-border-sm text-light ml-10"></div>
           </React.Fragment>
         }
-        {goat &&
+        {goatUrl &&
           <span>Load Another Goat</span>
         }
       </button>
 
       <div className="mt-25">
-        {goatError &&
-          <span className="alert alert-primary">{`Goat fail :'(`}</span>
+        {goatErrorMsg &&
+          <span className="alert alert-primary">{goatErrorMsg}</span>
         }
         {goatLoading &&
           <span className="alert alert-primary">Loading...</span>
         }
       </div>
 
-      {goat &&
+      {goatUrl &&
         <div className="mt-20">
-          <img src={goat} className={ss.image} />
+          <img src={goatUrl} className={ss.image} />
         </div>
       }
 

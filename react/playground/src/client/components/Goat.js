@@ -4,21 +4,9 @@ import {
 } from 'react-router-dom';
 import GoatState from './GoatState';
 import GoatReducer from './GoatReducer';
+import GoatSMachine from './GoatSMachine';
 import GoatSDeclarativeMachine from './GoatSDeclarativeMachine';
 
-
-const sleep = (ms, successRate = 0.66) => new Promise((resolve, reject) => {
-  if (Math.random() < successRate) {
-    setTimeout(resolve, ms);
-  } else {
-    setTimeout(reject, ms);
-  }
-});
-
-const goatProps = {
-  sleep,
-  goatUrl: '/img/goat2.jpg',
-};
 
 const Goat = (props) => {
   const matchUrl = props.match.url; // eslint-disable-line
@@ -42,15 +30,9 @@ const Goat = (props) => {
           <Route exact path={matchUrl} render={() => (
             <h1>Welcome Back, Goat!</h1>
           )}/>
-          <Route path={`${matchUrl}/state`} render={() => (
-            <GoatState {...goatProps} />
-          )}/>
-          <Route path={`${matchUrl}/reducer`} render={() => (
-            <GoatReducer {...goatProps} />
-          )}/>
-          <Route path={`${matchUrl}/state-machine`} render={() => (
-            <GoatSDeclarativeMachine {...goatProps} />
-          )}/>
+          <Route path={`${matchUrl}/state`} component={GoatState}/>
+          <Route path={`${matchUrl}/reducer`} component={GoatReducer}/>
+          <Route path={`${matchUrl}/state-machine`} component={GoatSDeclarativeMachine}/>
         </Switch>
       </div>
     </div>

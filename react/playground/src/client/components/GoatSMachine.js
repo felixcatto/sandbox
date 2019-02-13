@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import cn from 'classnames';
 import { Machine, actions } from 'xstate';
-import { useMachine } from '../lib/utils';
+import { useMachine, getGoatUrl } from '../lib/utils';
 import ss from './Goat.local.scss';
 
 
@@ -10,7 +10,8 @@ const goatMachine = Machine(
     id: 'goat',
     initial: 'idle',
     context: {
-      goat: null,
+      goatUrl: null,
+      goatErrorMsg: null,
     },
     states: {
       idle: {
@@ -25,12 +26,13 @@ const goatMachine = Machine(
         },
       },
       loadSuccess: {
-        onEntry: ['setGoatUrl'],
+        onEntry: 'setGoatUrl',
         on: {
           GOAT_LOAD_REQUEST: 'loading',
         },
       },
       loadError: {
+        onEntry: 'setGoatError',
         on: {
           GOAT_LOAD_REQUEST: 'loading',
         },
@@ -40,31 +42,36 @@ const goatMachine = Machine(
   {
     actions: {
       setGoatUrl: actions.assign({
-        goat: (ctx, event) => event.payload.goatUrl,
+        goatUrl: (ctx, event) => event.payload.goatUrl,
+      }),
+      setGoatError: actions.assign({
+        goatErrorMsg: (ctx, event) => event.payload.goatErrorMsg,
       }),
     },
   },
 );
 
 const GoatSMachine = (props) => {
-  const { goatUrl, sleep } = props;
   const [goatState, dispatch] = useMachine(goatMachine);
   console.log(goatState);
 
   const onClick = async () => {
     dispatch('GOAT_LOAD_REQUEST');
     try {
-      await sleep(1500);
+      const { goatUrl } = await getGoatUrl();
       dispatch({
         type: 'GOAT_LOAD_SUCCESS',
         payload: { goatUrl },
       });
-    } catch (e) {
-      dispatch('GOAT_LOAD_ERROR');
+    } catch ({ goatErrorMsg }) {
+      dispatch({
+        type: 'GOAT_LOAD_ERROR',
+        payload: { goatErrorMsg },
+      });
     }
   };
 
-  const { goat } = goatState.context;
+  const { goatUrl, goatErrorMsg } = goatState.context;
 
   return (
     <div>
@@ -91,7 +98,7 @@ const GoatSMachine = (props) => {
 
       <div className="mt-25">
         {goatState.matches('loadError') &&
-          <span className="alert alert-primary">{`Goat fail :'(`}</span>
+          <span className="alert alert-primary">{goatErrorMsg}</span>
         }
         {goatState.matches('loading') &&
           <span className="alert alert-primary">Loading...</span>
@@ -100,7 +107,7 @@ const GoatSMachine = (props) => {
 
       {goatState.matches('loadSuccess') &&
         <div className="mt-20">
-          <img src={goat} className={ss.image} />
+          <img src={goatUrl} className={ss.image} />
         </div>
       }
 
