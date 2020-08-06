@@ -1,6 +1,6 @@
 import http from 'http';
 
-let app = require('./server').default;
+let app = require('./main/server').default;
 
 const server = http.createServer(app);
 
@@ -17,11 +17,11 @@ server
 if (module.hot) {
   console.log('✅  Server-side HMR Enabled!');
 
-  module.hot.accept('./server', () => {
+  module.hot.accept('./main/server', () => {
     console.log('🔁  HMR Reloading `./server`...');
 
     try {
-      app = require('./server').default;
+      app = require('./main/server').default; // eslint-disable-line
       server.removeListener('request', currentApp);
       server.on('request', app);
       currentApp = app;

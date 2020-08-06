@@ -1,7 +1,7 @@
-import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 import { hydrate } from 'react-dom';
+import App from './client/App';
 
 hydrate(
   <BrowserRouter>

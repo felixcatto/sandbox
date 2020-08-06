@@ -1,0 +1,16 @@
+.filterButton {
+  cursor: pointer;
+  user-select: none;
+  &_active {
+    text-decoration: underline;
+    font-weight: bold;
+    color: steelblue;
+  }
+}
+
+.todoRow {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
