@@ -10,7 +10,7 @@ export const actions = {
   loadTodos: createEffect().use(async ms => api.todos.get(ms)),
 };
 
-export const makeTodoList = (
+const makeTodoList = (
   initialState = {
     data: [],
     status: asyncStates.idle,
@@ -43,5 +43,9 @@ export const makeTodoList = (
       errors: null,
     }));
 
-export const makeFilterState = (initialState = filterStates.all) =>
+export const $todoList = { $todoList: makeTodoList };
+
+const makeFilterState = (initialState = filterStates.all) =>
   createStore(initialState).on(actions.changeFilter, (state, newFilterState) => newFilterState);
+
+export const $filterState = { $filterState: makeFilterState };

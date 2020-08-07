@@ -5,7 +5,7 @@ import TodoList from './TodoList';
 import './App.scss';
 import routes from './lib/routes';
 import Context from './lib/context';
-import { actions, makeTodoList, makeFilterState } from './todolistSlice';
+import { actions, $todoList, $filterState } from './todolistSlice';
 
 const Home = () => <img src="/img/v1.jpg" className="app__splash-screen" />;
 
@@ -13,8 +13,8 @@ const App = props => {
   const initialState = process.browser ? window.INITIAL_STATE : props.initialState;
 
   const storeShape = {
-    $todoList: makeTodoList,
-    $filterState: makeFilterState,
+    ...$todoList,
+    ...$filterState,
   };
 
   const store = Object.keys(storeShape).reduce(
