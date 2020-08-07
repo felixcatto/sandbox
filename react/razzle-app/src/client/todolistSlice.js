@@ -10,12 +10,14 @@ export const actions = {
   loadTodos: createEffect().use(async ms => api.todos.get(ms)),
 };
 
-export const makeTodoList = () =>
-  createStore({
+export const makeTodoList = (
+  initialState = {
     data: [],
     status: asyncStates.idle,
     errors: null,
-  })
+  }
+) =>
+  createStore(initialState)
     .on(actions.addNewTodo, (state, text) => ({
       ...state,
       data: state.data.concat({
@@ -41,5 +43,5 @@ export const makeTodoList = () =>
       errors: null,
     }));
 
-export const makeFilterState = () =>
-  createStore(filterStates.all).on(actions.changeFilter, (state, newFilterState) => newFilterState);
+export const makeFilterState = (initialState = filterStates.all) =>
+  createStore(initialState).on(actions.changeFilter, (state, newFilterState) => newFilterState);

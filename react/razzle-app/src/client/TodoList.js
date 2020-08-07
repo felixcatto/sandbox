@@ -1,7 +1,7 @@
 import React from 'react';
 import { useStore } from 'effector-react';
 import CommonTodoList from './CommonTodoList';
-import Context from './context';
+import Context from './lib/context';
 
 const TodoList = () => {
   const { actions, $todoList, $filterState } = React.useContext(Context);

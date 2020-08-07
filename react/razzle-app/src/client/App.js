@@ -1,26 +1,43 @@
 import React from 'react';
+import { has } from 'lodash';
 import { NavLink, Switch, Route, Link } from 'react-router-dom';
 import TodoList from './TodoList';
 import './App.scss';
 import routes from './lib/routes';
-import Context from './context';
+import Context from './lib/context';
 import { actions, makeTodoList, makeFilterState } from './todolistSlice';
 
 const Home = () => <img src="/img/v1.jpg" className="app__splash-screen" />;
 
-const App = () => {
-  const store = {
-    actions,
-    $todoList: makeTodoList(),
-    $filterState: makeFilterState(),
+const App = props => {
+  const initialState = process.browser ? window.INITIAL_STATE : props.initialState;
+
+  const storeShape = {
+    $todoList: makeTodoList,
+    $filterState: makeFilterState,
   };
+
+  const store = Object.keys(storeShape).reduce(
+    (acc, storeKey) => {
+      const effectorMakeFn = storeShape[storeKey];
+      return {
+        ...acc,
+        [storeKey]: has(initialState, storeKey)
+          ? effectorMakeFn(initialState[storeKey])
+          : effectorMakeFn(),
+      };
+    },
+    { actions }
+  );
 
   return (
     <Context.Provider value={store}>
       <div className="container app__container pt-20">
         <div className="d-flex justify-content-between align-items-center mb-20">
           <h1>
-            <Link to={routes.root} className="app__root-link">ToDo list App</Link>
+            <Link to={routes.root} className="app__root-link">
+              ToDo list App
+            </Link>
           </h1>
         </div>
 

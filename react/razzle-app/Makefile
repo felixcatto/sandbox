@@ -7,7 +7,7 @@ start:
 build:
 	npm run build
 
-start-production:
+start-production: build
 	npm run start:prod
 
 lint:
