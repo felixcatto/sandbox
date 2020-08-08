@@ -5,7 +5,7 @@ import App from './client/App';
 
 hydrate(
   <BrowserRouter>
-    <App />
+    <App initialState={window.INITIAL_STATE} />
   </BrowserRouter>,
   document.getElementById('root')
 );

@@ -9,9 +9,7 @@ import { actions, $todoList, $filterState } from './todolistSlice';
 
 const Home = () => <img src="/img/v1.jpg" className="app__splash-screen" />;
 
-const App = props => {
-  const initialState = process.browser ? window.INITIAL_STATE : props.initialState;
-
+const App = ({ initialState }) => {
   const storeShape = {
     ...$todoList,
     ...$filterState,
