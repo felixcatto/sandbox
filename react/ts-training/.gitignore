@@ -1,0 +1,5 @@
+node_modules/
+dist/
+*.log
+*.d.ts
+!declarations.d.ts
