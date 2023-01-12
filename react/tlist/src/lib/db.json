@@ -1,0 +1,51 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "felix",
+      "isSignedIn": true
+    }
+  ],
+  "todos": [
+    {
+      "id": 1,
+      "text": "json-server",
+      "isCompleted": true
+    },
+    {
+      "id": 2,
+      "text": "Add redux toolkit",
+      "isCompleted": true
+    },
+    {
+      "id": 3,
+      "text": "Find a job",
+      "isCompleted": false
+    },
+    {
+      "text": "Global actions vs Local actions?",
+      "isCompleted": false,
+      "id": 9
+    },
+    {
+      "text": "is it works? (edited)",
+      "isCompleted": true,
+      "id": 10
+    },
+    {
+      "text": "vasa kak dela",
+      "isCompleted": true,
+      "id": 11
+    },
+    {
+      "text": "lulz really",
+      "isCompleted": false,
+      "id": 12
+    },
+    {
+      "text": "fully working example?",
+      "isCompleted": false,
+      "id": 14
+    }
+  ]
+}

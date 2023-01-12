@@ -1,0 +1,67 @@
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 15px;
+}
+
+.headerSuffix {
+  margin-left: 15px;
+  font-size: 18px;
+}
+
+.inputRow {
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+  margin-bottom: 15px;
+}
+
+.input {
+  width: auto;
+  flex-grow: 1;
+}
+
+.todos {
+  width: 500px;
+  margin-bottom: 10px;
+}
+
+.todo {
+  display: flex;
+}
+
+.editTodoInput {
+  flex-grow: 1;
+  margin-right: 10px;
+  padding: 0;
+  border: none;
+
+}
+
+.todoText {
+  flex-grow: 1;
+  &_completed {
+    text-decoration: line-through;
+  }
+}
+
+.filterButton {
+  cursor: pointer;
+  margin-right: 14px;
+  &:hover {
+    text-decoration: underline;
+  }
+  &_active {
+    color: var(--blue);
+    cursor: default;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
