@@ -46,7 +46,7 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.21.2",
     "bootstrap-grid": "^2.0.1",
     "font-awesome": "^4.7.0",
     "moment": "^2.18.1",
