@@ -1,0 +1,52 @@
+{
+  "name": "playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/plugin-proposal-class-properties": "^7.2.1",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.4",
+    "browser-sync": "^2.26.3",
+    "css-loader": "^2.0.0",
+    "del": "^3.0.0",
+    "eslint": "^5.10.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-react": "^7.11.1",
+    "file-loader": "^2.0.0",
+    "gulp": "^4.0.0",
+    "mini-css-extract-plugin": "^0.5.0",
+    "node-sass": "^4.11.0",
+    "sass-loader": "^7.1.0",
+    "webpack": "^4.27.1",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-middleware": "^3.4.0",
+    "webpack-merge": "^4.1.5"
+  },
+  "dependencies": {
+    "bootstrap": "^4.2.1",
+    "classnames": "^2.2.6",
+    "d3": "^5.7.0",
+    "formik": "^1.4.0",
+    "lodash": "^4.17.11",
+    "prop-types": "^15.6.2",
+    "react": "^16.8.0-alpha.0",
+    "react-addons-css-transition-group": "^15.6.2",
+    "react-dom": "^16.8.0-alpha.0",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "xstate": "^4.2.4",
+    "yup": "^0.26.6"
+  }
+}

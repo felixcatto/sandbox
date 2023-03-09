@@ -1,0 +1,31 @@
+.menuWrap {
+  position: relative;
+  height: 400px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.menu {
+  height: 100%;
+  background: purple;
+  border-radius: 10px;
+  transition: 0.3s ease;
+  &_closed {
+    transform: translateX(-90%);
+  }
+  &_open {
+    transform: translateX(0);
+  }
+}
+
+.menuButton {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  user-select: none;
+}

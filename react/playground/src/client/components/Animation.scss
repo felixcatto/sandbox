@@ -1,0 +1,16 @@
+.imageContainer {
+  &-enter {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  &-enter-active {
+    opacity: 1;
+  }
+  &-leave {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+  &-leave-active {
+    opacity: 0;
+  }
+}

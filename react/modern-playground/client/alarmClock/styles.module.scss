@@ -1,0 +1,19 @@
+.clock {
+  font-size: 20px;
+}
+
+.button {
+  margin-right: 10px;
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.mode {
+  font-weight: bold;
+  font-style: italic;
+  background: var(--purple);
+  color: #fff;
+  border-radius: 10px;
+  padding: 0px 6px;
+}

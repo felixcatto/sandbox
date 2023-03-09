@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>my gant</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Roboto';
+            src: url("/font/Roboto-Regular.ttf")  format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'RobotoMedium';
+            src: url("/font/Roboto-Medium.ttf")  format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+        svg {
+            font-family: Roboto;
+            font-size: 14px;
+            outline: 1px dotted steelblue;
+        }
+        .axis path {
+            opacity: 0.15;
+        }
+        .tick line {
+            opacity: 0.15;
+        }
+        .axis_y text {
+            display: none;
+        }
+
+        .io {
+            cursor: pointer;
+        }
+        .io_type_first .io__bar {
+          fill: #8dc63f;
+        }
+        .io_type_first .io__io-type {
+            fill: #8dc63f;
+        }
+        .io_type_renewal .io__bar {
+          fill: #8dc63f;
+        }
+        .io_type_renewal .io__io-type {
+            fill: #8dc63f;
+        }
+        .io_type_uplift .io__bar {
+          fill: #00bff3;
+        }
+        .io_type_uplift .io__io-type {
+            fill: #00bff3;
+        }
+
+        .io__io-type-text {
+            fill: #fff;
+            text-anchor: middle;
+            alignment-baseline: central;
+        }
+        .io__cost {
+            font-family: RobotoMedium;
+        }
+    </style>
+</head>
+<body>
+    <!-- <div style="width: 600px; overflow-x: scroll;"> -->
+    <svg></svg>
+
+
+
+    <script>
+        window.onload = function() {
+            // JSON.stringify(IOs.find({campaignId: 's43CdPJfFZK8sopJY'}).fetch())
+            // var data = JSON.parse('[{"_id":"idwv5WrqWL5n2RMta","name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"First budget","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"ggwp","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T06:49:38.179Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T06:49:38.189Z"},{"_id":"wuSKNc6Divjwf4QPa","name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","type":"Renewal","budget":200,"comments":"New money","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","type":"Renewal","budget":200,"comments":1,"managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T06:50:27.301Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T06:50:27.308Z"}]');
+            // var data = JSON.parse('[{"_id":"idwv5WrqWL5n2RMta","name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"Fisrt budget","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"ggwp","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T06:49:38.179Z"},{"name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"Fisrt budget","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:05:58.680Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T06:49:38.189Z","updatedBy":"eLFS6HF5bGQFC2niY","updatedAt":"2017-02-27T10:05:58.701Z"},{"_id":"wuSKNc6Divjwf4QPa","name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","type":"Renewal","budget":200,"comments":"New money","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","type":"Renewal","budget":200,"comments":1,"managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T06:50:27.301Z"},{"name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","budget":200,"comments":"New money","managementFee":0,"agencyDiscount":0,"type":"Renewal","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:06:10.276Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T06:50:27.308Z","updatedBy":"eLFS6HF5bGQFC2niY","updatedAt":"2017-02-27T10:06:10.286Z"},{"_id":"h5jG6XixdNRHuNHPv","name":"Demo Advertiser - test campaign 3 - 2017_02_27 - 2017_03_02","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":350,"comments":"Pump up company with money","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-01T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_02_27 - 2017_03_02","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":350,"comments":"Pump up company with money","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-01T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:27:44.307Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T10:27:44.320Z"}]');
+            // var data = JSON.parse('[{"_id":"idwv5WrqWL5n2RMta","name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"Fisrt budget","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"ggwp","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T06:49:38.179Z"},{"name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"Fisrt budget","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:05:58.680Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T06:49:38.189Z","updatedBy":"eLFS6HF5bGQFC2niY","updatedAt":"2017-02-27T10:05:58.701Z"},{"_id":"wuSKNc6Divjwf4QPa","name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","type":"Renewal","budget":200,"comments":"New money","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","type":"Renewal","budget":200,"comments":1,"managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T06:50:27.301Z"},{"name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","budget":200,"comments":"New money","managementFee":0,"agencyDiscount":0,"type":"Renewal","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:06:10.276Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T06:50:27.308Z","updatedBy":"eLFS6HF5bGQFC2niY","updatedAt":"2017-02-27T10:06:10.286Z"},{"_id":"h5jG6XixdNRHuNHPv","name":"Demo Advertiser - test campaign 3 - 2017_02_27 - 2017_03_02","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":350,"comments":"Pump up","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-01T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_02_27 - 2017_03_02","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":350,"comments":"Pump up company with money","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-01T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:27:44.307Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T10:27:44.320Z"},{"_id":"z9imecHPdHbi4cZLt","name":"Demo Advertiser - test campaign 3 - 2017_03_02 - 2017_02_27","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":500,"comments":"Another portion of bablo","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-01T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_03_02 - 2017_02_27","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":500,"comments":"Another portion of bablo","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-01T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T11:01:26.467Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T11:01:26.476Z"}]');        
+            // var data = JSON.parse('[{"_id":"idwv5WrqWL5n2RMta","name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"Fisrt budget","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"ggwp","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T06:49:38.179Z"},{"name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"Fisrt budget","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:05:58.680Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T06:49:38.189Z","updatedBy":"eLFS6HF5bGQFC2niY","updatedAt":"2017-02-27T10:05:58.701Z"},{"_id":"wuSKNc6Divjwf4QPa","name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","type":"Renewal","budget":200,"comments":"New money","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","type":"Renewal","budget":200,"comments":1,"managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T06:50:27.301Z"},{"name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","budget":200,"comments":"New money","managementFee":0,"agencyDiscount":0,"type":"Renewal","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:06:10.276Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T06:50:27.308Z","updatedBy":"eLFS6HF5bGQFC2niY","updatedAt":"2017-02-27T10:06:10.286Z"},{"_id":"h5jG6XixdNRHuNHPv","name":"Demo Advertiser - test campaign 3 - 2017_02_27 - 2017_03_02","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":350,"comments":"Pump up","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-01T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_02_27 - 2017_03_02","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":350,"comments":"Pump up","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-01T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:27:44.307Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T10:27:44.320Z"},{"_id":"z9imecHPdHbi4cZLt","name":"Demo Advertiser - test campaign 3 - 2017_03_02 - 2017_02_27","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":500,"comments":"Another portion of bablo","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-01T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_03_02 - 2017_02_27","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":500,"comments":"Another portion of bablo","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-01T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T11:01:26.467Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T11:01:26.476Z"},{"_id":"e9yFiyNwJXPq8WAXJ","name":"Demo Advertiser - test campaign 3 - 2017_03_07 - 2017_03_13","type":"Renewal","budget":10000,"comments":"All in","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-06T20:00:00.000Z","endDate":"2017-03-12T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_03_07 - 2017_03_13","type":"Renewal","budget":10000,"comments":"All in","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-06T20:00:00.000Z","endDate":"2017-03-12T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T11:59:08.424Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T11:59:08.436Z"}]');
+            var data = JSON.parse('[{"_id":"idwv5WrqWL5n2RMta","name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"Fisrt budget ggwp lanaya omg","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"ggwp","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T06:49:38.179Z"},{"name":"Demo Advertiser - test campaign 3 - 2017_02_20 - 2017_02_27","budget":5000,"comments":"Fisrt budget","managementFee":0,"agencyDiscount":0,"type":"First","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-19T20:00:00.000Z","endDate":"2017-02-26T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:05:58.680Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T06:49:38.189Z","updatedBy":"eLFS6HF5bGQFC2niY","updatedAt":"2017-02-27T10:05:58.701Z"},{"_id":"wuSKNc6Divjwf4QPa","name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","type":"Renewal","budget":200,"comments":"New money","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","type":"Renewal","budget":200,"comments":1,"managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T06:50:27.301Z"},{"name":"Demo Advertiser - test campaign 3 - 2017_03_01 - 2017_03_04","budget":200,"comments":"New money","managementFee":0,"agencyDiscount":0,"type":"Renewal","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:06:10.276Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T06:50:27.308Z","updatedBy":"eLFS6HF5bGQFC2niY","updatedAt":"2017-02-27T10:06:10.286Z"},{"_id":"z9imecHPdHbi4cZLt","name":"Demo Advertiser - test campaign 3 - 2017_03_02 - 2017_02_27","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":500,"comments":"Another portion of bablo","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-01T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_03_02 - 2017_02_27","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":500,"comments":"Another portion of bablo","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-01T20:00:00.000Z","endDate":"2017-03-03T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T11:01:26.467Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T11:01:26.476Z"},{"_id":"e9yFiyNwJXPq8WAXJ","name":"Demo Advertiser - test campaign 3 - 2017_03_07 - 2017_03_13","type":"Renewal","budget":10000,"comments":"All in","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-06T20:00:00.000Z","endDate":"2017-03-12T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_03_07 - 2017_03_13","type":"Renewal","budget":10000,"comments":"All in","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-06T20:00:00.000Z","endDate":"2017-03-12T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T11:59:08.424Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T11:59:08.436Z"},{"_id":"h5jG6XixdNRHuNHPv","name":"Demo Advertiser - test campaign 3 - 2017_02_27 - 2017_03_02","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":350,"comments":"Pump up","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-01T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_02_27 - 2017_03_02","type":"Uplift","baseIO":"wuSKNc6Divjwf4QPa","budget":350,"comments":"Pump up company with money","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-01T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T10:27:44.307Z"},{"name":"Demo Advertiser - test campaign 3 - 2017_02_27 - 2017_03_02","budget":350,"comments":"Pump up","managementFee":0,"agencyDiscount":0,"type":"Uplift","campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-02-28T20:00:00.000Z","endDate":"2017-03-01T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T12:01:21.276Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T10:27:44.320Z","updatedBy":"eLFS6HF5bGQFC2niY","updatedAt":"2017-02-27T12:01:21.290Z"},{"_id":"mnKFBbquyCBnBcFz9","name":"Demo Advertiser - test campaign 3 - 2017_02_27 - 2017_03_09","type":"Uplift","baseIO":"e9yFiyNwJXPq8WAXJ","budget":10,"comments":"comission...","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-06T20:00:00.000Z","endDate":"2017-03-08T20:00:00.000Z","contractUrl":"","contractFile":"","history":[{"name":"Demo Advertiser - test campaign 3 - 2017_02_27 - 2017_03_09","type":"Uplift","baseIO":"e9yFiyNwJXPq8WAXJ","budget":10,"comments":"comission...","managementFee":0,"agencyDiscount":0,"campaignId":"s43CdPJfFZK8sopJY","startDate":"2017-03-06T20:00:00.000Z","endDate":"2017-03-08T20:00:00.000Z","contractUrl":"","contractFile":"","date":"2017-02-27T12:03:18.771Z"}],"createdBy":"eLFS6HF5bGQFC2niY","createdAt":"2017-02-27T12:03:18.781Z"}]');
+            setIoDate(data);
+            setIoLvls(data);
+
+            var ioTypesMapping = {
+                First: {
+                    title: '1',
+                    class: 'io_type_first'
+                },
+                Uplift: {
+                    title: 'U',
+                    class: 'io_type_uplift'
+                },
+                Renewal: {
+                    title: 'R',
+                    class: 'io_type_renewal'
+                },
+            };
+            var minDate = d3.min(data, d => d.startDate);
+            var maxDate = d3.max(data, d => d.endDate);
+            var timeSectionWidth = 70;
+            var timeSectionHeight = 34;
+            var chartLineCount = getMaxUpliftLvls(data) * 2 + 1;
+            var barHeight = 5;
+
+            var svg = d3.select('svg'),
+                margin = {top: 30, right: 30, bottom: 30, left: 30},
+                width = d3.timeDay.count(minDate, maxDate) * timeSectionWidth,
+                height = (chartLineCount * timeSectionHeight),
+                g = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+            svg.attr('width', width + margin.left + margin.right);
+            svg.attr('height', height + margin.top + margin.bottom);
+
+            var x = d3.scaleTime().domain([minDate, maxDate]).range([0, d3.timeDay.count(minDate, maxDate) * timeSectionWidth]);
+            var y = d3.scaleLinear().domain([0, chartLineCount]).range([0, timeSectionHeight * chartLineCount]);
+
+            var yAxis = d3.axisLeft(y)
+                .ticks(chartLineCount)
+                .tickSizeInner(-d3.timeDay.count(minDate, maxDate) * timeSectionWidth)
+                .tickSizeOuter(0)
+                .tickPadding(10);
+            g.append('g')
+                .attr('class', 'axis axis_y')
+                .call(yAxis);
+
+            var xAxis = d3.axisTop(x)
+                .ticks(d3.timeDay.every(1))
+                .tickFormat(d3.timeFormat("%d %b"))
+                .tickSizeInner(- chartLineCount * timeSectionHeight)
+                .tickSizeOuter(0)
+                .tickPadding(10);
+            g.append('g')
+                .attr('class', 'axis axis_x')
+                .call(xAxis);
+
+            var items = g.selectAll('g.io')
+                .data(data);
+            var item = items.enter().append('g')
+                .attr('class', d => 'io ' + ioTypesMapping[d.type].class)
+                .attr('transform', d => {
+                    var trX = x(d.startDate);
+                    var trY = (chartLineCount - (d.lvl * 2) - 1) * timeSectionHeight;
+                    return `translate(${ trX }, ${ trY })`
+                })
+                .attr('ggwp', d => d._id);
+
+            // Bar on bottom
+            item.append('rect')
+                .attr('class', 'io__bar')
+                .attr('y', timeSectionHeight - barHeight)
+                .attr('width', d => d.timeDayDuration * timeSectionWidth)
+                .attr('height', barHeight);
+
+            // Rect with type
+            item.append('rect')
+                .attr('class', 'io__io-type')
+                .attr('width', 20)
+                .attr('height', 20)
+                .attr('rx', 5)
+                .attr('ry', 5);
+            item.append('text')
+                .attr('class', 'io__io-type-text')
+                .attr('dx', 10)
+                .attr('dy', 10)
+                .text(d => ioTypesMapping[d.type].title);
+
+            // Comments
+            var comments = item.append('text')
+                .attr('x', 25)
+                .attr('y', 15)
+                .text(d => d.comments);
+
+            // Cost
+            item.append('text')
+                .attr('class', 'io__cost')
+                .attr('y', 15)
+                .attr('x', (d, i) => {
+                    var commentText = comments._groups[0][i];
+                    return commentText.getBBox().width + 25 + 5;
+                })
+                .text(d => `$${d.budget}`);
+
+
+
+
+
+
+
+
+
+                function getMaxUpliftLvls(data) {
+                    var maxUpliftLvls = 0;
+                    var dct = {};
+                    data.forEach(el => {
+                        if (el.type == 'Uplift') {
+                            dct[el.baseIO] = (dct[el.baseIO] === undefined) ? 1 : dct[el.baseIO] + 1;
+                        }
+                    });
+
+                    for (prop in dct) {
+                        if (dct[prop] > maxUpliftLvls) {
+                            maxUpliftLvls = dct[prop];
+                        }
+                    }
+
+                    return maxUpliftLvls;
+                }
+
+                function setIoLvls(data) {
+                    var dct = {};
+                    data.forEach(el => {
+                        if (el.type == 'Uplift') {
+                            if (dct[el.baseIO] === undefined) {
+                                dct[el.baseIO] = [];
+                            }
+
+                            dct[el.baseIO].push(el);
+                        }
+                        else {
+                            el.lvl = 0;
+                        }
+                    });
+
+                    for (p in dct) {
+                        dct[p].sort((a,b) => a.startDate - b.startDate)
+                        dct[p].forEach((el, i) => {
+                            el.lvl = i + 1;
+                        });
+                    }
+                }
+
+                function setIoDate(data) {
+                    data.forEach(el => {
+                        el.startDate = new Date(el.startDate);
+                        el.endDate = new Date(el.endDate);
+                        el.timeDayDuration = d3.timeDay.count(el.startDate, el.endDate);
+                    });
+                }
+            }
+    </script>
+</body>
+</html>

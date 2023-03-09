@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>budget-managment</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="js/moment.js"></script>
+    <style>
+        :root {
+          --m-left: 50px;
+          --col-width: 66px;
+          --paddingInner: 44px;
+        }
+
+        body {
+            margin: 10px 20px;
+        }
+        svg {
+            outline: 2px ridge steelblue;
+        }
+        .graph-values {
+            width: 800px;
+            padding-top: 20px;
+            color: #707070;
+            font-size: 14px;
+        }
+        .graph-values__parameter {
+            margin-bottom: 20px;
+        }
+        .graph-values__parameter:last-child {
+            margin-bottom: 0;
+        }
+        .graph-values__caption-wrap {
+            margin-bottom: 5px;
+        }
+        .graph-values__caption-icon {
+            display: inline-block;
+            vertical-align: middle;
+            width: 15px;
+            height: 15px;
+            margin-left: 24px;
+            margin-right: calc(var(--m-left) - 15px - 24px - 4px);
+        }
+        .graph-values__caption {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .graph-values__values-wrap {
+            overflow: hidden;
+            margin-left: var(--m-left);
+        }
+        .graph-values__values {
+
+        }
+        .graph-values__values input {
+            float: left;
+            vertical-align: top;
+            width: var(--col-width);
+            margin-right: var(--paddingInner);
+        }
+        .graph-values__values input:last-child {
+            margin-right: 0;
+        }
+        .graph-values__parameter:nth-child(1) .graph-values__caption-icon {
+            background: #4197ca;
+        }
+        .graph-values__parameter:nth-child(2) .graph-values__caption-icon {
+            background: #8db7e1;
+        }
+        .graph-values__parameter:nth-child(3) .graph-values__caption-icon {
+            background: #a6ae49;
+        }
+        .graph-values__parameter:nth-child(4) .graph-values__caption-icon {
+            background: #9476b4;
+        }
+        .graph-values__parameter:nth-child(5) .graph-values__caption-icon {
+            background: #b9a1d1;
+        }
+    </style>
+</head>
+<body>
+    <svg width="800" height="480"></svg>
+    <div class="graph-values">
+        <div class="graph-values__parameter">
+            <div class="graph-values__caption-wrap">
+                <div class="graph-values__caption-icon"></div>
+                <div class="graph-values__caption">Awareness (AW)</div>
+            </div>
+            <div class="graph-values__values-wrap">
+                <div class="graph-values__values clearfix">
+                    <input type="text" class="form-control">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="graph-values__parameter">
+            <div class="graph-values__caption-wrap">
+                <div class="graph-values__caption-icon"></div>
+                <div class="graph-values__caption">Leads (LD)</div>
+            </div>
+            <div class="graph-values__values-wrap">
+                <div class="graph-values__values clearfix">
+                    <input type="text" class="form-control">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="graph-values__parameter">
+            <div class="graph-values__caption-wrap">
+                <div class="graph-values__caption-icon"></div>
+                <div class="graph-values__caption">Engagement (EN)</div>
+            </div>
+            <div class="graph-values__values-wrap">
+                <div class="graph-values__values clearfix">
+                    <input type="text" class="form-control">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="graph-values__parameter">
+            <div class="graph-values__caption-wrap">
+                <div class="graph-values__caption-icon"></div>
+                <div class="graph-values__caption">Direct response (DR)</div>
+            </div>
+            <div class="graph-values__values-wrap">
+                <div class="graph-values__values clearfix">
+                    <input type="text" class="form-control">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="graph-values__parameter">
+            <div class="graph-values__caption-wrap">
+                <div class="graph-values__caption-icon"></div>
+                <div class="graph-values__caption">Acquisition (AQ)</div>
+            </div>
+            <div class="graph-values__values-wrap">
+                <div class="graph-values__values clearfix">
+                    <input type="text" class="form-control">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        window.data = JSON.parse('[{"date":"2017-03-31T20:00:00.000Z","types":["AW","EN","LD","DR","AQ"],"AW":8000,"shortDate":"Apr 2017","EN":7170,"LD":0,"DR":1000,"AQ":1300},{"date":"2017-04-30T20:00:00.000Z","types":["AW","EN","LD","DR","AQ"],"AW":12000,"shortDate":"May 2017","EN":3000,"LD":5453,"DR":7500,"AQ":65}]');
+        window.data1 = JSON.parse('[{"date":"2017-03-31T20:00:00.000Z","types":["AW","EN","LD","DR","AQ"],"AW":2000,"shortDate":"Apr 2017","EN":7170,"LD":6000,"DR":1000,"AQ":1300},{"date":"2017-04-30T20:00:00.000Z","types":["AW","EN","LD","DR","AQ"],"AW":0,"shortDate":"May 2017","EN":3000,"LD":5453,"DR":7500,"AQ":6500}]');
+
+        var svg = d3.select("svg"),
+            scrollableInputs = d3.selectAll('.graph-values__values'),
+            margin = {top: 20, right: 20, bottom: 30, left: 50},
+            width = +svg.attr("width") - margin.left - margin.right,
+            height = +svg.attr("height") - margin.top - margin.bottom,
+            g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")"),
+            view = g.insert('g', ':first-child'),
+            timeSectionWidth = 66,
+            paddingInnerPX = 44,
+            x = d3.scaleBand(),
+            y = d3.scaleLinear(),
+            z = d3.scaleOrdinal(),
+            xAxis = d3.axisBottom(x),
+            yAxis = d3.axisLeft(y);
+
+        var zoom = d3.zoom()
+            .scaleExtent([1, 1])
+            .on('zoom', () => { 
+                view.attr('transform', d3.event.transform);
+                gX.attr('transform', `translate(${d3.event.transform.x}, ${height})`);
+                scrollableInputs.style('transform', `translateX(${d3.event.transform.x}px)`);
+            });
+        svg.call(zoom);
+        
+        var gX = g.append('g')
+            .attr('class', 'axis axis_x')
+            .attr('transform', `translate(0, ${height})`);
+        var gY = g.append('g')
+            .attr('class', 'axis axis_y');
+        gY.insert('rect', ':first-child')
+            .attr('fill', '#fff')
+            .attr('x', -margin.left)
+            .attr('y', 0)
+            .attr('width', margin.left)
+            .attr('height', height + margin.bottom);
+        
+        render(data);
+        setTimeout(() => {render(data1);}, 2500);
+
+
+
+        // UTILITY FUNCTIONS
+        function render(data) {
+            setDataTypes(data);
+            setDataTotal(data);
+            setDataDates(data);
+
+            // var timeMarks = data.map(el => el.shortDate);
+            var timeMarks = ['Jan 2017', 'Feb 2017', 'Mar 2017', 'Apr 2017', 'May 2017'];
+            // var timeMarks = ['F1', 'F2', 'F3', 'F4', 'F5', 'Jan 2017', 'Feb 2017', 'Mar 2017', 'Apr 2017', 'May 2017'];
+            var chartWidth = timeSectionWidth * timeMarks.length + (timeMarks.length-1)*paddingInnerPX;
+            var scrollRight = (width < chartWidth) ? chartWidth - width : 0;
+            zoom.translateExtent([[0, 0], [width + margin.right + margin.left + scrollRight, height + margin.top + margin.bottom]]);
+
+            x.paddingInner((timeMarks.length - (chartWidth/timeSectionWidth) + paddingInnerPX*timeMarks.length/timeSectionWidth) / (1 + paddingInnerPX/timeSectionWidth));  // lol
+            x.rangeRound([0, chartWidth]).domain(timeMarks);
+            y.rangeRound([height, 0]).domain([0, d3.max(data, d => d.total)]).nice();
+            z.range(['#4197ca', '#8db7e1', '#a6ae49', '#9476b4', '#b9a1d1']).domain(data.types);
+
+            gX.call(xAxis);
+            gY.transition().call(yAxis);
+
+            var items = view.selectAll('g')
+                .data(d3.stack().keys(data.types)(data), d => {
+                    d.forEach(el => { el.key = d.key; });
+                    return d.key;
+                });
+            var newItems = items
+              .enter().append('g')
+                .attr('fill', d => z(d.key));
+            var mergedItems = newItems.merge(items);
+
+            var rects = mergedItems.selectAll('rect')
+                .data(d => d);
+            rects.transition()
+                .attr('x', d => x(d.data.shortDate))
+                .attr('y', d => y(d[1]))
+                .attr('height', d => y(d[0]) - y(d[1]))
+            rects.enter().append('rect')
+                .attr('width', x.bandwidth())
+                .attr('x', d => x(d.data.shortDate))
+                .attr('y', d => y(d[1]))
+                .attr('height', d => y(d[0]) - y(d[1]));
+        }
+
+        function setDataTypes(data) {
+            data.types = data[0].types;
+            data.forEach(el => {
+                delete el.types;
+            });            
+        }
+
+        function setDataTotal(data) {
+            data.forEach(el => {
+                el.total = 0;
+                data.types.forEach(layer => {
+                    el.total += el[layer];
+                })
+            });
+        }
+
+        function setDataDates(data) {
+            data.forEach(el => {
+                el.date = new Date(el.date);
+            });
+        }
+    </script>
+</body>
+</html>
