@@ -1,7 +1,0 @@
-Quit from Sublime
-Go to folder Packages:
-    Windows: %APPDATA%\Sublime Text 2
-    OS X: /Users/{user}/Library/Application Support/Sublime Text 2/Packages
-    Linux: ~/.config/sublime-text-2/Packages/
-Run: git clone https://github.com/BoundInCode/Display-Functions.git
-Open Sublime and try to use.
